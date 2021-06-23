@@ -1,0 +1,12 @@
+# Scraping Utilities
+
+This is where the different utility scripts will be kept
+
+export_to_dropbox.py [LOCALPATH] [DROPBOXPATH]
+
+cleanfolder.py [LOCALFOLDER] [DROPBOXFOLDER]
+  - Note: this code assumes the same folder structure in the subdirectores in local and dropbox
+
+
+
+
