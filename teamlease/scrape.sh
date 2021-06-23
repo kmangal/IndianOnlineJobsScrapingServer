@@ -9,12 +9,8 @@ echo "=================================="
 filedate=$(date +'%Y%m%d_%H%M%S')
 echo "Log file date: ${filedate}"
 
-cd /home/ec2-user/teamlease/
-
 export PYTHONUNBUFFERED=TRUE
 
-nohup ~/teamlease/teamlease_scrape.sh ${filedate} > log/${filedate}.log &
-
-exit 0
+nohup ~/teamlease/teamlease_scrape.sh ${filedate} > log/latest_scrape.log &
 
 
