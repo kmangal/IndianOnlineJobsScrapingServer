@@ -35,18 +35,18 @@ def test_scrape(filedate):
     os.system('scrapy crawl Teamlease -o "{mainpage_local}" -a test=True -a jobcountfile="{jobcount_local}" -a logfile="{logfile_local}"'.format(mainpage_local = mainpage_local, jobcount_local = jobcount_local, logfile_local = logfile_local))
     
 
-######## Main #############
+if __name__ == '__main__':
 
-filedate = datetime.today().strftime('%Y%m%d')
+    filedate = datetime.today().strftime('%Y%m%d')
 
-# Initialize parser
-parser = argparse.ArgumentParser()
-parser.add_argument("--full", help = "Run full scrape")
-args = parser.parse_args()
+    # Initialize parser
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--full", action='store_true', help = "Run full scrape")
+    args = parser.parse_args()
 
-# Default behavior is to run a test
-if args.full:
-    run_full_scrape(filedate)    
-else:
-    test_scrape(filedate)
+    # Default behavior is to run a test
+    if args.full:
+        run_full_scrape(filedate)    
+    else:
+        test_scrape(filedate)
     
