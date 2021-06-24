@@ -22,7 +22,7 @@ class ScrapeLogger:
         self.log.addHandler(log_filehandle)
 
         # Include unhandled exceptions in the log file
-        loggerexceptionhandler = handle_exception(self, exc_type, exc_value, exc_traceback)
+        loggerexceptionhandler = functools.partial(handle_exception, logger = self)
         sys.excepthook = loggerexceptionhandler
     
         self.log.info('Log running at {}'.format(self.starttime.strftime('%m/%d/%Y %I:%M:%S %p %Z')))
