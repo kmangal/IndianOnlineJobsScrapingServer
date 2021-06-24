@@ -35,7 +35,8 @@ def run_full_scrape(filedate):
         outputfile = details_local,
         logfile = logfile_local)
         
-    # Write the log at the end
+    # Move the log and details files
+    util.export_to_dropbox.move_to_dropbox(details_local, details_dropbox)
     util.export_to_dropbox.move_to_dropbox(logfile_local, logfile_dropbox)
 
 
