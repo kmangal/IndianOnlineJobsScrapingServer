@@ -7,14 +7,6 @@ echo "=================================="
 filedate=$(date +'%Y%m%d_%H%M%S')
 echo "Log file date: ${filedate}"
 
-cd /home/ec2-user/shine/
-ls
+cd /home/ec2-user/jobs_scraping/shine/
 
-export PYTHONUNBUFFERED=TRUE
-
-# Rum the scraper in a backgorund process. Pass the filedate as an argument
-nohup ~/shine/shine_scrape.sh ${filedate} > log/${filedate}.log &
-
-exit 0
-
-
+nohup python3 -u shine_scrape.py --full > /dev/null 2>&1 &

@@ -1,10 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-    Shine - Detail Page Scrape
-    
-    23 March 2021
-    
-"""
+# Shine - Detail Page Scrape    
 
 from requests_html import HTMLSession
 from datetime import datetime, timedelta
@@ -18,7 +13,9 @@ import sys
 
 import mysql.connector
 
-import scrapelogger
+import sys
+sys.path.append('../')
+import util.scrapelogger as scrapelogger
 
 # Use list of realistic headers and rotate between them so that it looks like multiple different users are accessing the site
 HEADER_LIST = [
@@ -40,20 +37,6 @@ HEADER_LIST = [
 
 # Make this the timestamp reflects India timeszone'
 TZ = pytz.timezone('Asia/Kolkata')
-
-import argparse
-parser = argparse.ArgumentParser()
-parser.add_argument('--input', required = True, help = 'File path for mainpage intput')
-parser.add_argument('--output', required = True, help = 'File path for output')
-parser.add_argument('--all', action='store_true', default=False,
-                    dest='scrape_all',
-                    help='Scrape all listings from main page')
-parser.add_argument('--debug', action = 'store_true', default = False, 
-                    dest = 'debug', 
-                    help = 'Test run / does not write to database')
-
-args = parser.parse_args()
-print("Debug Mode", args.debug)
 
 
 def get_header():
@@ -277,9 +260,21 @@ def scrape_new_only(DB, table, session, writer, links, TOTALPAGES):
 
 
 
-def main():
+def run_scrape(inputfile, outputfile, logfile, allflag = False, testflag = False):
 
-    if args.debug:
+    logger = scrapelogger.ScrapeLogger('shine-details', logfile)
+
+    def handle_exception(exc_type, exc_value, exc_traceback):
+        if issubclass(exc_type, KeyboardInterrupt):
+            sys.__excepthook__(exc_type, exc_value, exc_traceback)
+            return
+
+        logger.log.error("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
+
+    # Include unhandled exceptions in the log file
+    sys.excepthook = handle_exception
+
+    if testflag:
         table = 'test' 
     else:
         table = 'history'
@@ -294,10 +289,10 @@ def main():
 
     session = HTMLSession()
 
-    links = get_links(args.input, args.debug)
+    links = get_links(inputfile, testflag)
     TOTALPAGES = len(links)
 
-    fout = open(args.output, 'w', newline = '')
+    fout = open(outputfile, 'w', newline = '')
 
     fnames = [
         'url', 'status', 'title', 'posted_date', 'vacancies', 'button_text', 'mainskills', 
@@ -310,7 +305,7 @@ def main():
     writer = csv.DictWriter(fout, fieldnames = fnames)
     writer.writeheader()
 
-    if args.scrape_all:
+    if allflag:
         scrape_all(DB, table, session, writer, links, TOTALPAGES)
     else:
         scrape_new_only(DB, table, session, writer, links, TOTALPAGES)
@@ -319,18 +314,28 @@ def main():
     DB.close()
 
 
-logger = scrapelogger.ScrapeLogger('Shine-details')
-
-def handle_exception(exc_type, exc_value, exc_traceback):
-    if issubclass(exc_type, KeyboardInterrupt):
-        sys.__excepthook__(exc_type, exc_value, exc_traceback)
-        return
-
-    logger.log.error("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
-
-# Include unhandled exceptions in the log file
-sys.excepthook = handle_exception
-
 if __name__ == '__main__':
-    main()
+
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--input', required = True, help = 'File path for mainpage input')
+    parser.add_argument('--output', required = True, help = 'File path for output')
+    parser.add_argument('--log', required = True, help = 'File path for log')
+    parser.add_argument('--all', action='store_true', default=False,
+                        dest='scrape_all',
+                        help='Scrape all listings from main page')
+    parser.add_argument('--test', action = 'store_true', default = False, 
+                        dest = 'test', 
+                        help = 'Test run / does not write to database')
+
+    args = parser.parse_args()    
+    inputfile = args.input
+    outputfile = args.output
+    logfile = args.log
+    allflag = args.scrape_all
+    testflag = args.test
+    
+    print("Test Mode", testflag)
+
+    run_scrape(inputfile, outputfile, logfile, allflag, testflag)
     logger.finalize()
