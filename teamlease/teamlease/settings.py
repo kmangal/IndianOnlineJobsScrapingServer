@@ -28,7 +28,7 @@ ROBOTSTXT_OBEY = False
 #DOWNLOAD_DELAY = 3
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
-#CONCURRENT_REQUESTS_PER_IP = 16
+CONCURRENT_REQUESTS_PER_IP = 2
 
 # Disable cookies (enabled by default)
 #COOKIES_ENABLED = False
@@ -79,8 +79,8 @@ AUTOTHROTTLE_ENABLED = True
 # Enable showing throttling stats for every response received:
 #AUTOTHROTTLE_DEBUG = False
 
-# Four seconds of delay
-DOWNLOAD_DELAY = 4.0
+# Five seconds of delay
+DOWNLOAD_DELAY = 5.0
 
 # Enable and configure HTTP caching (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
