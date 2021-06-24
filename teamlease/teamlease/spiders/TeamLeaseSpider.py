@@ -20,12 +20,12 @@ class TeamLeaseSpider(scrapy.Spider):
 
     name = 'Teamlease'
     allowed_domains = ['teamlease.com']
-    start_urls = ['http://www.teamlease.com/jobs/']
+    start_urls = ['https://www.teamlease.com/jobs/']
     handle_httpstatus_list = [404, 500, 502]
  
-    def __init__(self, debug = False, jobcountfile = '', logfile = '', *args, **kwargs):
+    def __init__(self, test = False, jobcountfile = '', logfile = '', *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.debug = debug
+        self.test = test
         self.failed_urls = []
         
         if not logfile:
@@ -179,8 +179,8 @@ class TeamLeaseSpider(scrapy.Spider):
             }
 
         
-        if self.debug:
-            raise CloseSpider("Debug Mode")
+        if self.test and offset_value == 100:
+            raise CloseSpider("Test Mode")
 
         if self._is_last_page(soup):
             raise CloseSpider("Reached last page")
