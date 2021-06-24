@@ -17,6 +17,28 @@ import sys
 sys.path.append('../')
 import util.scrapelogger as scrapelogger
 
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument('--input', required = True, help = 'File path for mainpage input')
+parser.add_argument('--output', required = True, help = 'File path for output')
+parser.add_argument('--log', required = True, help = 'File path for log')
+parser.add_argument('--all', action='store_true', default=False,
+                    dest='scrape_all',
+                    help='Scrape all listings from main page')
+parser.add_argument('--test', action = 'store_true', default = False, 
+                    dest = 'test', 
+                    help = 'Test run / does not write to database')
+
+args = parser.parse_args()    
+inputfile = args.input
+outputfile = args.output
+logfile = args.log
+allflag = args.scrape_all
+testflag = args.test
+    
+logger = scrapelogger.ScrapeLogger('shine-details', logfile)
+
+
 # Use list of realistic headers and rotate between them so that it looks like multiple different users are accessing the site
 HEADER_LIST = [
     {
@@ -262,8 +284,6 @@ def scrape_new_only(DB, table, session, writer, links, TOTALPAGES):
 
 def run_scrape(inputfile, outputfile, logfile, allflag = False, testflag = False):
 
-    logger = scrapelogger.ScrapeLogger('shine-details', logfile)
-
     def handle_exception(exc_type, exc_value, exc_traceback):
         if issubclass(exc_type, KeyboardInterrupt):
             sys.__excepthook__(exc_type, exc_value, exc_traceback)
@@ -316,25 +336,6 @@ def run_scrape(inputfile, outputfile, logfile, allflag = False, testflag = False
 
 if __name__ == '__main__':
 
-    import argparse
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--input', required = True, help = 'File path for mainpage input')
-    parser.add_argument('--output', required = True, help = 'File path for output')
-    parser.add_argument('--log', required = True, help = 'File path for log')
-    parser.add_argument('--all', action='store_true', default=False,
-                        dest='scrape_all',
-                        help='Scrape all listings from main page')
-    parser.add_argument('--test', action = 'store_true', default = False, 
-                        dest = 'test', 
-                        help = 'Test run / does not write to database')
-
-    args = parser.parse_args()    
-    inputfile = args.input
-    outputfile = args.output
-    logfile = args.log
-    allflag = args.scrape_all
-    testflag = args.test
-    
     print("Test Mode", testflag)
 
     run_scrape(inputfile, outputfile, logfile, allflag, testflag)
