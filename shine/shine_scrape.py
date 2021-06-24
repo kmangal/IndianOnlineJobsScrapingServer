@@ -11,7 +11,8 @@ import shine_details
 
 import util.scrapelogger as scrapelogger
 
-def run_full_scrape(filedate, logfile_local):
+def run_full_scrape(filedate):
+
     mainpage_local = 'output/mainpage/shine_mainpage_{fd}.csv'.format(fd=filedate)
     jobcount_local = 'output/jobcount/shine_jobcount_{fd}.csv'.format(fd=filedate)
     details_local = 'output/details/shine_details_{fd}.csv'.format(fd=filedate)
@@ -43,6 +44,8 @@ def run_full_scrape(filedate, logfile_local):
 
 
 def test_scrape(filedate):
+    raise Exception
+
     mainpage_local = 'test/mainpage/shine_mainpage_{fd}.csv'.format(fd=filedate)
     jobcount_local = 'test/jobcount/shine_jobcount_{fd}.csv'.format(fd=filedate)
     logfile_local = 'test/log/{fd}.log'.format(fd=filedate)
@@ -50,12 +53,14 @@ def test_scrape(filedate):
     os.system('scrapy crawl Shine -o "{mainpage_local}" -a test=True -a jobcountfile="{jobcount_local}" -a logfile="{logfile_local}"'.format(mainpage_local = mainpage_local, jobcount_local = jobcount_local, logfile_local = logfile_local))
     
 
+def start_logging(filepath):
+    logger = scrapelogger.ScrapeLogger('shine-scraper', logfile)
+    sys.excepthook = logger.exceptionhandler
+    return logger
+
 if __name__ == '__main__':
 
     filedate = datetime.today().strftime('%Y%m%d_%H%M%S')
-
-    logfile = 'log/{fd}.log'.format(fd=filedate)
-    logger = scrapelogger.ScrapeLogger('shine-scraper', logfile)
 
     # Initialize parser
     parser = argparse.ArgumentParser()
@@ -64,7 +69,11 @@ if __name__ == '__main__':
 
     # Default behavior is to run a test
     if args.full:
+        logfile = 'log/{fd}.log'.format(fd=filedate)
+        logger = start_logging(logfile)
         run_full_scrape(filedate)    
     else:
+        logfile = 'test/log/{fd}.log'.format(fd=filedate)
+        logger = start_logging(logfile)
         test_scrape(filedate)
     
