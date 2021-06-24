@@ -5,7 +5,7 @@ import argparse
 
 import sys
 sys.path.append('../')
-import util
+import util.export_to_dropbox
 
 import shine_details
 
