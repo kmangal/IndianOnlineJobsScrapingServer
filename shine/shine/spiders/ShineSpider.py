@@ -5,7 +5,6 @@ from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 import datetime
 from scrapy.crawler import CrawlerProcess
-from scrapy import signals
 
 from scrapy.exceptions import CloseSpider
 
@@ -17,6 +16,8 @@ import pytz
 import requests
 import re
 import csv
+import sys
+
 
 TZ = pytz.timezone('Asia/Kolkata')
 
@@ -25,12 +26,10 @@ class ShineSpider(scrapy.Spider):
     name = 'Shine'
     allowed_domains = ['shine.com']
     start_urls = ['https://www.shine.com/job-search/jobs']
-    handle_httpstatus_list = [404, 500, 502]
 
     def __init__(self, test = False, jobcountfile = '', logfile = '', *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.test = test
-        self.failed_urls = []
 
         if not logfile:
             raise Exception("Log file path missing")
@@ -39,21 +38,6 @@ class ShineSpider(scrapy.Spider):
 
         if jobcountfile:
             self._getjobcount(jobcountfile)
-
-    @classmethod
-    def from_crawler(cls, crawler, *args, **kwargs):
-        spider = super(ShineSpider, cls).from_crawler(crawler, *args, **kwargs)
-        crawler.signals.connect(spider.handle_spider_closed, signals.spider_closed)
-        return spider
-
-    def handle_spider_closed(self, reason):
-        self.crawler.stats.set_value('failed_urls', ', '.join(self.failed_urls))
-
-    def process_exception(self, response, exception, spider):
-        ex_class = "%s.%s" % (exception.__class__.__module__, exception.__class__.__name__)
-        self.crawler.stats.inc_value('downloader/exception_count', spider=spider)
-        self.crawler.stats.inc_value('downloader/exception_type_count/%s' % ex_class, spider=spider)
-
 
     def _getjobcount(self, jobcountfile):
         
