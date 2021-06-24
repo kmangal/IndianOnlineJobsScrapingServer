@@ -9,11 +9,13 @@ import util.export_to_dropbox
 
 import shine_details
 
-def run_full_scrape(filedate):
+import util.scrapelogger as scrapelogger
+
+def run_full_scrape(filedate, logfile_local):
     mainpage_local = 'output/mainpage/shine_mainpage_{fd}.csv'.format(fd=filedate)
     jobcount_local = 'output/jobcount/shine_jobcount_{fd}.csv'.format(fd=filedate)
     details_local = 'output/details/shine_details_{fd}.csv'.format(fd=filedate)
-    logfile_local = 'log/{fd}.log'.format(fd=filedate)
+    logfile_local = 'log/{fd}.log'.format(fd=filedate) # reuse the same logfile
 
     os.system('scrapy crawl Shine -o "{mpl}" -a jobcountfile="{jcl}" -a logfile="{lfl}"'.format(
         mpl = mainpage_local, 
@@ -51,6 +53,9 @@ def test_scrape(filedate):
 if __name__ == '__main__':
 
     filedate = datetime.today().strftime('%Y%m%d_%H%M%S')
+
+    logfile = 'log/{fd}.log'.format(fd=filedate)
+    logger = scrapelogger.ScrapeLogger('shine-scraper', logfile)
 
     # Initialize parser
     parser = argparse.ArgumentParser()
