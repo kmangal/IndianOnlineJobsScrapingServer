@@ -5,17 +5,17 @@ import argparse
 
 import sys
 sys.path.append('../')
-import util
+import util.export_to_dropbox
 
 def run_full_scrape(filedate):
     mainpage_local = 'output/mainpage/teamlease_mainpage_{fd}.csv'.format(fd=filedate)
     jobcount_local = 'output/jobcount/teamlease_jobcount_{fd}.csv'.format(fd=filedate)
     logfile_local = 'log/{fd}.log'.format(fd=filedate)
 
-    os.system('scrapy crawl Teamlease -o "{mpl}" -a jobcountfile="{jcl}" -a logfile="{lfl}"'.format(
-        mpl = mainpage_local, 
-        jcl = jobcount_local, 
-        lfl = logfile_local))
+    #os.system('scrapy crawl Teamlease -o "{mpl}" -a jobcountfile="{jcl}" -a logfile="{lfl}"'.format(
+    #    mpl = mainpage_local, 
+    #    jcl = jobcount_local, 
+    #    lfl = logfile_local))
 
     # Send files to Dropbox
     mainpage_dropbox = '/India Labor Market Indicators/scraping/TeamLease/ec2/mainpage/teamlease_mainpage_{fd}.csv'.format(fd=filedate)
@@ -37,7 +37,7 @@ def test_scrape(filedate):
 
 if __name__ == '__main__':
 
-    filedate = datetime.today().strftime('%Y%m%d')
+    filedate = datetime.today().strftime('%Y%m%d_%H%M%S')
 
     # Initialize parser
     parser = argparse.ArgumentParser()

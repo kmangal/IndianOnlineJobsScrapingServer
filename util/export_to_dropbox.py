@@ -3,7 +3,7 @@ import os
 import datetime
 import sys
 
-from dropbox_access import TOKEN
+TOKEN = 'lCdHJDySKOIAAAAAAAAAAQiX2-M6qRcEqnrOUAFDRlE5_J-f5uAx9bokaHYpRUWa'
 
 def move_to_dropbox(localpath, dropboxpath, overwrite = False):
     dbx = dropbox.Dropbox(TOKEN)

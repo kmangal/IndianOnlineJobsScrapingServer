@@ -5,7 +5,7 @@ import datetime
 
 class ScrapeLogger:
     
-    def __init__(self, name, level = logging.DEBUG):
+    def __init__(self, name, path, level = logging.DEBUG):
          
         self.starttime = datetime.datetime.now()
 
@@ -14,9 +14,9 @@ class ScrapeLogger:
             
         log_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p %Z')
     
-        log_consolehandle = logging.StreamHandler(sys.stdout)    
-        log_consolehandle.setFormatter(log_format)
-        self.log.addHandler(log_consolehandle)
+        log_filehandle = logging.FileHandler(path)    
+        log_filehandle.setFormatter(log_format)
+        self.log.addHandler(log_filehandle)
 
         self.log.info('Log running at {}'.format(self.starttime.strftime('%m/%d/%Y %I:%M:%S %p %Z')))
 

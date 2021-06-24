@@ -14,7 +14,41 @@ NEWSPIDER_MODULE = 'teamlease.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36"
+#USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36"
+
+# Rotate User agents
+# Source: https://www.scrapehero.com/how-to-fake-and-rotate-user-agents-using-python-3/
+
+DOWNLOADER_MIDDLEWARES = {
+'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
+'scrapy_useragents.downloadermiddlewares.useragents.UserAgentsMiddleware': 500,
+}
+
+USER_AGENTS = [
+('Mozilla/5.0 (X11; Linux x86_64) '
+'AppleWebKit/537.36 (KHTML, like Gecko) '
+'Chrome/57.0.2987.110 '
+'Safari/537.36'),  # chrome
+('Mozilla/5.0 (X11; Linux x86_64) '
+'AppleWebKit/537.36 (KHTML, like Gecko) '
+'Chrome/61.0.3163.79 '
+'Safari/537.36'),  # chrome
+('Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:55.0) '
+'Gecko/20100101 '
+'Firefox/55.0'),  # firefox
+('Mozilla/5.0 (X11; Linux x86_64) '
+'AppleWebKit/537.36 (KHTML, like Gecko) '
+'Chrome/61.0.3163.91 '
+'Safari/537.36'),  # chrome
+('Mozilla/5.0 (X11; Linux x86_64) '
+'AppleWebKit/537.36 (KHTML, like Gecko) '
+'Chrome/62.0.3202.89 '
+'Safari/537.36'),  # chrome
+('Mozilla/5.0 (X11; Linux x86_64) '
+'AppleWebKit/537.36 (KHTML, like Gecko) '
+'Chrome/63.0.3239.108 '
+'Safari/537.36'),  # chrome
+]
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
@@ -28,7 +62,7 @@ ROBOTSTXT_OBEY = False
 #DOWNLOAD_DELAY = 3
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
-CONCURRENT_REQUESTS_PER_IP = 2
+CONCURRENT_REQUESTS_PER_IP = 1
 
 # Disable cookies (enabled by default)
 #COOKIES_ENABLED = False
@@ -75,7 +109,7 @@ AUTOTHROTTLE_ENABLED = True
 #AUTOTHROTTLE_MAX_DELAY = 60
 # The average number of requests Scrapy should be sending in parallel to
 # each remote server
-#AUTOTHROTTLE_TARGET_CONCURRENCY = 1.0
+AUTOTHROTTLE_TARGET_CONCURRENCY = 1.0
 # Enable showing throttling stats for every response received:
 #AUTOTHROTTLE_DEBUG = False
 
@@ -89,6 +123,8 @@ DOWNLOAD_DELAY = 5.0
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+
+
 
 import scrapy.logformatter
 
