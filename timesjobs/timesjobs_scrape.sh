@@ -9,18 +9,18 @@
 filedate=$1
 starttime=$(date +"%m/%d/%Y %H:%M:%S %Z")
 
-cd /home/ec2-user/timesjobs/
+cd /home/ec2-user/jobs_scraping/timesjobs/
 
 # Run shine scrapy script. After that export files to dropbox. Then send email notification
-{ python3 ~/timesjobs/timesjobs_main.py --mainpage=output/mainpage/timesjobs_mainpage_${filedate}.csv --jobcount=output/jobcount/timesjobs_jobcount_${filedate}.csv &&
-  python3 ~/timesjobs/timesjobs_details.py --input=output/mainpage/timesjobs_mainpage_${filedate}.csv --output=output/details/timesjobs_details_${filedate}.csv &&
-  python3 ~/util/export_to_dropbox.py \
+{ python3 timesjobs_main.py --mainpage=output/mainpage/timesjobs_mainpage_${filedate}.csv --jobcount=output/jobcount/timesjobs_jobcount_${filedate}.csv &&
+  python3 timesjobs_details.py --input=output/mainpage/timesjobs_mainpage_${filedate}.csv --output=output/details/timesjobs_details_${filedate}.csv &&
+  python3 ~/jobs_scraping/util/export_to_dropbox.py \
 		output/mainpage/timesjobs_mainpage_${filedate}.csv \
 		"/India Labor Market Indicators/scraping/TimesJobs/ec2/mainpage/timesjobs_mainpage_${filedate}.csv" ; \
-  python3 ~/util/export_to_dropbox.py \
+  python3 ~/jobs_scraping/util/export_to_dropbox.py \
 		log/${filedate}.log \ 
 		"/India Labor Market Indicators/scraping/TimesJobs/ec2/log/${filedate}.log" ; \
-  python3 ~/util/export_to_dropbox.py \
+  python3 ~/jobs_scraping/util/export_to_dropbox.py \
 		output/jobcount/timesjobs_jobcount_${filedate}.csv \
 		"/India Labor Market Indicators/scraping/TimesJobs/ec2/jobcount/timesjobs_jobcount_${filedate}.csv"; \
  } && 
