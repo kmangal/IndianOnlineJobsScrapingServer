@@ -48,6 +48,7 @@ requests-html==0.10.0
 rq==1.8.1
 Scrapy==2.5.0
 service-identity==21.1.0
+setproctitle==1.2.2
 six==1.16.0
 soupsieve==2.2.1
 stone==3.2.1
