@@ -8,7 +8,7 @@ import util.export_to_dropbox
 
 logger = scrapelogger.ErrorLogger('error-log', 'log/error/errors.log')
 
-def write_error_log(job, exc_type, exc_value, traceback):
+def write_error_log(job, exc_type, exc_value, exc_traceback):
     logger.log.error(
         "Uncaught exception for {func}({args})".format(func = job.func_name, args = str(job.kwargs)),
         exc_info=(exc_type, exc_value, exc_traceback))
