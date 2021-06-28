@@ -6,6 +6,7 @@ bs4==0.0.1
 certifi==2021.5.30
 cffi==1.14.5
 chardet==4.0.0
+click==8.0.1
 constantly==15.1.0
 cryptography==3.4.7
 cssselect==1.1.0
@@ -41,8 +42,10 @@ pyquery==1.4.3
 python-dateutil==2.8.1
 pytz==2021.1
 queuelib==1.6.1
+redis==3.5.3
 requests==2.25.1
 requests-html==0.10.0
+rq==1.8.1
 Scrapy==2.5.0
 service-identity==21.1.0
 six==1.16.0
