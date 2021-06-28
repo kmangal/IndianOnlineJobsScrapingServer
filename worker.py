@@ -19,3 +19,4 @@ def write_error_log(job, exc_type, exc_value, traceback):
 
 # Start a worker with a custom name
 worker = Worker([queue], connection=redis, name='worker1', exception_handlers=[write_error_log])
+worker.work()
