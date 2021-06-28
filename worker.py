@@ -1,5 +1,5 @@
 from redis import Redis
-from rq import Queue, Worker
+from rq import Connection, Queue, Worker
 
 from config import REDIS_ENDPOINT
 
@@ -7,7 +7,7 @@ import util.scrapelogger as scrapelogger
 
 
 redis = Redis(host=REDIS_ENDPOINT, port=6379, username='default')
-queue = Queue('main', connection=redis)
+queue = Queue(connection=redis)
 
 logger = scrapelogger.ScrapeLogger('error-log', 'errors.log')
 
@@ -18,5 +18,6 @@ def write_error_log(job, exc_type, exc_value, traceback):
 
 
 # Start a worker with a custom name
-worker = Worker([queue], connection=redis, name='worker1', exception_handlers=[write_error_log])
-worker.work()
+with Connection(connection=redis):
+    worker = Worker([queue], connection=redis, name='worker1', exception_handlers=[write_error_log])
+    worker.work()
