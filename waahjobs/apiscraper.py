@@ -43,14 +43,18 @@ def write_rows(csvwriter, rows):
         csvwriter.writerow(line_out)
 
 
-def run_scrape(filedate, test = False):
+def run_scrape(test = False):
+
+    filedate = datetime.today().strftime('%Y%m%d_%H%M%S')
 
     if test:
         outpath = os.path.join(WAAHJOBS_PATH, 'test', 'api', 'waahjobs_api_{fd}.csv'.format(fd = filedate))
-        logger = scrapelogger.ScrapeLogger('waahjobs-api', os.path.join(WAAHJOBS_PATH, 'test', 'log', '{fd}.log'.format(fd=filedate)))
+        logpath = os.path.join(WAAHJOBS_PATH, 'test', 'log', '{fd}.log'.format(fd=filedate)
+        logger = scrapelogger.ScrapeLogger('waahjobs-api', logpath))
     else:
         outpath = os.path.join(WAAHJOBS_PATH, 'output', 'api', 'waahjobs_api_{fd}.csv'.format(fd = filedate))
-        logger = scrapelogger.ScrapeLogger('waahjobs-api', os.path.join(WAAHJOBS_PATH, 'log', '{fd}.log'.format(fd=filedate)))
+        logpath = os.path.join(WAAHJOBS_PATH, 'log', '{fd}.log'.format(fd=filedate)
+        logger = scrapelogger.ScrapeLogger('waahjobs-api', logpath))
     
     with open(outpath, 'w', newline='', encoding='utf-8') as f:
         rows, nextlink = get_data(API_START_URL, API_HEADERS)
@@ -71,8 +75,14 @@ def run_scrape(filedate, test = False):
             write_rows(csvwriter, rows)
                     
     logger.finalize()
-    return 1
-            
+    
+    if not test:
+        api_dropbox = '/India Labor Market Indicators/scraping/WaahJobs/ec2/api/waahjobs_api_{fd}.csv'.format(fd=filedate)
+        log_dropbox = '/India Labor Market Indicators/scraping/WaahJobs/ec2/log/{fd}.csv'.format(fd=filedate)
+
+        util.export_to_dropbox.move_to_dropbox(outpath, api_dropbox)
+        util.export_to_dropbox.move_to_dropbox(logpath, log_dropbox)
+           
             
 if __name__ == '__main__':
 
