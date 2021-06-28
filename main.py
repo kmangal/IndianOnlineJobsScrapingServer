@@ -1,7 +1,7 @@
 from redis import Redis
 from rq import Queue
 
-import waahjobs
+import waahjobs.apiscraper
 from tasks import print_numbers
 
 REDIS_ENDPOINT = 'task-queue.3g7al0.0001.aps1.cache.amazonaws.com'
@@ -14,9 +14,9 @@ def test():
 
 
 def main():
-    result = q.enqueue(waahjobs.waahjobs_scrape.run_scrape)
+    result = q.enqueue(waahjobs.apiscraper.run_scrape, test True)
     print(result)
     
 if __name__ == '__main__':
-    test()
+    main()
     

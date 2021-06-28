@@ -12,3 +12,10 @@ do
 	mkdir -p $var/test/jobcount
 	mkdir -p $var/test/log
 done
+
+mkdir -p waahjobs/test
+mkdir -p waahjobs/test/api
+mkdir -p waahjobs/test/log
+mkdir -p waahjobs/output/api
+mkdir -p waahjobs/log
+
