@@ -2,13 +2,13 @@ cd ~/jobs_scraping/
 
 for var in teamlease timesjobs shine monster
 do
-	mkdir $var/log
-	mkdir $var/output
-	mkdir $var/output/mainpage
-	mkdir $var/output/jobcount
-	mkdir $var/output/details
-	mkdir $var/test
-	mkdir $var/test/mainpage
-	mkdir $var/test/jobcount
-	mkdir $var/test/log
+	mkdir -p $var/log
+	mkdir -p $var/output
+	mkdir -p $var/output/mainpage
+	mkdir -p $var/output/jobcount
+	mkdir -p $var/output/details
+	mkdir -p $var/test
+	mkdir -p $var/test/mainpage
+	mkdir -p $var/test/jobcount
+	mkdir -p $var/test/log
 done
