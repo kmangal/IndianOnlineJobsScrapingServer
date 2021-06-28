@@ -1,23 +1,21 @@
 from redis import Redis
 from rq import Connection, Queue, Worker
 
-from config import REDIS_ENDPOINT
+import config
 
 import util.scrapelogger as scrapelogger
 import util.export_to_dropbox
 
-redis = Redis(host=REDIS_ENDPOINT, port=6379, username='default')
-queue = Queue(connection=redis)
+queue = Queue(connection = config.redis)
 
-logger = scrapelogger.ScrapeLogger('error-log', 'log/error/errors.log')
+logger = scrapelogger.ErrorLogger('error-log', 'log/error/errors.log')
 
 def write_error_log(job, exc_type, exc_value, traceback):
     logger.log.error(
         "Uncaught exception for {func}({args})".format(func = job.func_name, args = str(job.kwargs)),
         exc_info=(exc_type, exc_value, exc_traceback))
 
-
 # Start a worker
-with Connection(connection=redis):
-    worker = Worker([queue], connection=redis, name='worker1', exception_handlers=[write_error_log])
+with Connection(connection = config.redis):
+    worker = Worker([queue], connection = config.redis, name='worker1', exception_handlers=[write_error_log])
     worker.work()

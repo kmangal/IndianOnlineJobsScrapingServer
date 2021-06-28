@@ -6,9 +6,9 @@ from tasks import print_numbers
 
 from datetime import datetime
 
-from config import REDIS_ENDPOINT
+import config
 
-q = Queue(connection=Redis(host=REDIS_ENDPOINT, port=6379, username='default'))
+q = Queue(connection = config.redis)
 
 def test():
     result = q.enqueue(print_numbers, 10)
