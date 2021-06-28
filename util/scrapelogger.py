@@ -20,6 +20,8 @@ class BaseLogger:
         self.log.addHandler(log_streamhandler)
 
     def start(self):    
+        # Include unhandled exceptions in the log file
+        sys.excepthook = self.handle_exception
         self.log.info('Log running at {}'.format(self.starttime.strftime('%m/%d/%Y %I:%M:%S %p %Z')))
 
     def finalize(self):
@@ -44,9 +46,6 @@ class ScrapeLogger(BaseLogger):
         log_filehandler.setFormatter(self.log_format)
         self.log.addHandler(log_filehandler)
         
-        # Include unhandled exceptions in the log file
-        sys.excepthook = self.handle_exception
-        
         self.start()
 
     
@@ -60,6 +59,5 @@ class ErrorLogger(BaseLogger):
         log_filehandler.setFormatter(self.log_format)
         self.log.addHandler(log_filehandler)
         
-        sys.excepthook = self.handle_exception
         self.start()
         

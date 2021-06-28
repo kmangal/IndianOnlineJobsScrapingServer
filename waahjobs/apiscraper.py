@@ -61,7 +61,10 @@ def run_scrape(filedate, test = False):
         
         csvwriter.writeheader()
         write_rows(csvwriter, rows)
-                
+        
+        if test:
+            raise Exception("Test")
+            
         while nextlink:
             logger.log.info(nextlink)
             rows, nextlink = get_data(nextlink, API_HEADERS)
