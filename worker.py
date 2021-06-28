@@ -9,7 +9,7 @@ import util.scrapelogger as scrapelogger
 redis = Redis(host=REDIS_ENDPOINT, port=6379, username='default')
 queue = Queue('main', connection=redis)
 
-logger = ScrapeLogger('error-log', 'errors.log')
+logger = scrapelogger.ScrapeLogger('error-log', 'errors.log')
 
 def write_error_log(job, exc_type, exc_value, traceback):
     logger.log.error(
