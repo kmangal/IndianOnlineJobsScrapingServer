@@ -19,11 +19,8 @@ class BaseLogger:
         log_streamhandler.setFormatter(self.log_format)
         self.log.addHandler(log_streamhandler)
 
-    def start(self):
-    
-        # Include unhandled exceptions in the log file
+    def start(self):    
         self.log.info('Log running at {}'.format(self.starttime.strftime('%m/%d/%Y %I:%M:%S %p %Z')))
-        sys.excepthook = self.handle_exception
 
     def finalize(self):
         self.endtime = datetime.datetime.now()
@@ -42,17 +39,13 @@ class ScrapeLogger(BaseLogger):
     def __init__(self, name, path, level = logging.DEBUG):
     
         super().__init__(name, path, level)
-        
-        self.starttime = datetime.datetime.now()
-
-        self.log = logging.getLogger(name)
-        self.log.setLevel(level)
             
-        log_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p %Z')
-    
         log_filehandler = logging.FileHandler(path)    
         log_filehandler.setFormatter(self.log_format)
         self.log.addHandler(log_filehandler)
+        
+        # Include unhandled exceptions in the log file
+        sys.excepthook = self.handle_exception
         
         self.start()
 
@@ -67,5 +60,6 @@ class ErrorLogger(BaseLogger):
         log_filehandler.setFormatter(self.log_format)
         self.log.addHandler(log_filehandler)
         
+        sys.excepthook = self.handle_exception
         self.start()
         
