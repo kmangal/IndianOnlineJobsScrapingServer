@@ -2,7 +2,6 @@
 *.pyc
 .local/*
 *.log
-env/*
 test/misc/*
 
 # Ignore all files and directories that start with a period except gitignore
