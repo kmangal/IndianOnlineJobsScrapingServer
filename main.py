@@ -6,7 +6,7 @@ from tasks import print_numbers
 
 from datetime import datetime
 
-REDIS_ENDPOINT = 'task-queue.3g7al0.0001.aps1.cache.amazonaws.com'
+from config import REDIS_ENDPOINT
 
 q = Queue(connection=Redis(host=REDIS_ENDPOINT, port=6379, username='default'))
 
