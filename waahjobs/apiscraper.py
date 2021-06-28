@@ -49,12 +49,12 @@ def run_scrape(test = False):
 
     if test:
         outpath = os.path.join(WAAHJOBS_PATH, 'test', 'api', 'waahjobs_api_{fd}.csv'.format(fd = filedate))
-        logpath = os.path.join(WAAHJOBS_PATH, 'test', 'log', '{fd}.log'.format(fd=filedate)
-        logger = scrapelogger.ScrapeLogger('waahjobs-api', logpath))
+        logpath = os.path.join(WAAHJOBS_PATH, 'test', 'log', '{fd}.log'.format(fd=filedate))
+        logger = scrapelogger.ScrapeLogger('waahjobs-api', logpath)
     else:
         outpath = os.path.join(WAAHJOBS_PATH, 'output', 'api', 'waahjobs_api_{fd}.csv'.format(fd = filedate))
-        logpath = os.path.join(WAAHJOBS_PATH, 'log', '{fd}.log'.format(fd=filedate)
-        logger = scrapelogger.ScrapeLogger('waahjobs-api', logpath))
+        logpath = os.path.join(WAAHJOBS_PATH, 'log', '{fd}.log'.format(fd=filedate))
+        logger = scrapelogger.ScrapeLogger('waahjobs-api', logpath)
     
     with open(outpath, 'w', newline='', encoding='utf-8') as f:
         rows, nextlink = get_data(API_START_URL, API_HEADERS)
