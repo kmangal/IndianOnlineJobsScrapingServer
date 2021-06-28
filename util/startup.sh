@@ -4,7 +4,7 @@ source env/bin/activate
 
 sudo yum install git -y
 
-git config --global credential.helper cache
+git config --global credential.helper store
 git clone https://github.com/kmangal/jobs_scraping.git
 # Provide username and personal access token
 
