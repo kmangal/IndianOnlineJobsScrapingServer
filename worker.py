@@ -7,7 +7,7 @@ import util.scrapelogger as scrapelogger
 
 
 redis = Redis(host=REDIS_ENDPOINT, port=6379, username='default')
-queue = Queue('main')
+queue = Queue('main', connection=redis)
 
 logger = ScrapeLogger('error-log', 'errors.log')
 
