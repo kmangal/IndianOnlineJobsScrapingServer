@@ -11,7 +11,7 @@ from datetime import datetime
 import config
 
 q = Queue(connection = config.redis)
-scheduler = Scheduler(queue=q)
+scheduler = Scheduler(connection= config.redis)
 
 
 def test():
