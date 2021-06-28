@@ -2,9 +2,7 @@ from redis import Redis
 from rq import Queue
 from rq_scheduler import Scheduler
 
-
 import waahjobs.apiscraper
-from tasks import print_numbers
 
 from datetime import datetime
 
