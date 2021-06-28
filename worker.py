@@ -6,14 +6,13 @@ import config
 import util.scrapelogger as scrapelogger
 import util.export_to_dropbox
 
-logger = scrapelogger.ErrorLogger('error-log', 'log/error/errors.log')
-
 def write_error_log(job, exc_type, exc_value, exc_traceback):
+    logger = scrapelogger.ErrorLogger('error-log', 'log/error/errors.log')
     logger.log.error(
         "Uncaught exception for {func}({args})".format(func = job.func_name, args = str(job.kwargs)),
         exc_info=(exc_type, exc_value, exc_traceback))
 
-queue = Queue(connection = config.redis, exc_handler=write_error_log)
+queue = Queue(connection = config.redis, exc_handler = write_error_log)
 
 # Start a worker
 with Connection(connection = config.redis):
