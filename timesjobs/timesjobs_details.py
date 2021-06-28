@@ -18,7 +18,9 @@ import sys
 
 import mysql.connector
 
-import scrapelogger
+import timesjobs.scrapelogger
+import argparse
+
 
 # Use list of realistic headers and rotate between them so that it looks like multiple different users are accessing the site
 HEADER_LIST = [
@@ -40,20 +42,6 @@ HEADER_LIST = [
 
 # Make this the timestamp reflects India timeszone'
 TZ = pytz.timezone('Asia/Kolkata')
-
-import argparse
-parser = argparse.ArgumentParser()
-parser.add_argument('--input', required = True, help = 'File path for mainpage intput')
-parser.add_argument('--output', required = True, help = 'File path for output')
-parser.add_argument('--all', action='store_true', default=False,
-                    dest='scrape_all',
-                    help='Scrape all listings from main page')
-parser.add_argument('--debug', action = 'store_true', default = False, 
-                    dest = 'debug', 
-                    help = 'Test run / does not write to database')
-
-args = parser.parse_args()
-print("Debug Mode", args.debug)
 
 
 def get_header():
@@ -311,18 +299,31 @@ def main():
     DB.close()
 
 
-logger = scrapelogger.ScrapeLogger('TJ-details')
-
-def handle_exception(exc_type, exc_value, exc_traceback):
-    if issubclass(exc_type, KeyboardInterrupt):
-        sys.__excepthook__(exc_type, exc_value, exc_traceback)
-        return
-
-    logger.log.error("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
-
-# Include unhandled exceptions in the log file
-sys.excepthook = handle_exception
-
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--input', required = True, help = 'File path for mainpage intput')
+    parser.add_argument('--output', required = True, help = 'File path for output')
+    parser.add_argument('--all', action='store_true', default=False,
+                        dest='scrape_all',
+                        help='Scrape all listings from main page')
+    parser.add_argument('--debug', action = 'store_true', default = False, 
+                        dest = 'debug', 
+                        help = 'Test run / does not write to database')
+
+    logger = timesjobs.scrapelogger.ScrapeLogger('TJ-details')
+
+    def handle_exception(exc_type, exc_value, exc_traceback):
+        if issubclass(exc_type, KeyboardInterrupt):
+            sys.__excepthook__(exc_type, exc_value, exc_traceback)
+            return
+
+        logger.log.error("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
+
+    # Include unhandled exceptions in the log file
+    sys.excepthook = handle_exception
+
+    args = parser.parse_args()
+    print("Debug Mode", args.debug)
+
     main()
     logger.finalize()

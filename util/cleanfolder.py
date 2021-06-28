@@ -8,15 +8,12 @@ from tabulate import tabulate
 
 import argparse
 
-from dropbox_access import TOKEN
 import export_to_dropbox
 
 import scrapelogger
 
-logger = scrapelogger.ScrapeLogger('cleanfolder')
-
 LOCAL_SHELFLIFE = 7   # days to keep files on local computer
-logger.log.info("LOCAL_SHELFLIFE set to {}".format(LOCAL_SHELFLIFE))
+
 
 def get_old_local_files(localfolder):
 
@@ -36,7 +33,7 @@ def get_old_local_files(localfolder):
 
 def get_dropbox_files(dropboxfolder):
 
-    dbx = dropbox.Dropbox(TOKEN)
+    dbx = dropbox.Dropbox(export_to_dropbox.TOKEN)
     response = dbx.files_list_folder(path=dropboxfolder)
 
     db_files = dict()
@@ -131,6 +128,10 @@ def clean_folder(localfolder, dropboxfolder, verbose = False, test = False):
 
 
 if __name__ == '__main__':
+
+    logger = scrapelogger.ScrapeLogger('cleanfolder')
+
+    logger.log.info("LOCAL_SHELFLIFE set to {}".format(LOCAL_SHELFLIFE))
 
     parser = argparse.ArgumentParser()
     parser.add_argument("local", help="Local folder to clean")

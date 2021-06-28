@@ -7,39 +7,28 @@ import sys
 sys.path.append('../')
 import util.export_to_dropbox
 
-import shine.shine_details
-
 import util.scrapelogger as scrapelogger
 
 def run_full_scrape(filedate):
 
-    mainpage_local = 'output/mainpage/shine_mainpage_{fd}.csv'.format(fd=filedate)
-    jobcount_local = 'output/jobcount/shine_jobcount_{fd}.csv'.format(fd=filedate)
-    details_local = 'output/details/shine_details_{fd}.csv'.format(fd=filedate)
+    mainpage_local = 'output/mainpage/monster_mainpage_{fd}.csv'.format(fd=filedate)
+    jobcount_local = 'output/jobcount/monster_jobcount_{fd}.csv'.format(fd=filedate)
+    details_local = 'output/details/monster_details_{fd}.csv'.format(fd=filedate)
     logfile_local = 'log/{fd}.log'.format(fd=filedate)
 
-    os.system('scrapy crawl Shine -o "{mpl}" -a jobcountfile="{jcl}" -a logfile="{lfl}"'.format(
+    os.system('scrapy crawl Monster -o "{mpl}" -a jobcountfile="{jcl}" -a logfile="{lfl}"'.format(
         mpl = mainpage_local, 
         jcl = jobcount_local, 
         lfl = logfile_local))
 
     # Send files to Dropbox
-    mainpage_dropbox = '/India Labor Market Indicators/scraping/Shine/ec2/mainpage/shine_mainpage_{fd}.csv'.format(fd=filedate)
-    jobcount_dropbox = '/India Labor Market Indicators/scraping/Shine/ec2/jobcount/shine_jobcount_{fd}.csv'.format(fd=filedate)
-    details_dropbox = '/India Labor Market Indicators/scraping/Shine/ec2/details/shine_details_{fd}.csv'.format(fd=filedate)
-    logfile_dropbox = '/India Labor Market Indicators/scraping/Shine/ec2/log/{fd}.log'.format(fd=filedate)
+    mainpage_dropbox = '/India Labor Market Indicators/scraping/Monster/ec2/mainpage/monster_mainpage_{fd}.csv'.format(fd=filedate)
+    jobcount_dropbox = '/India Labor Market Indicators/scraping/Monster/ec2/jobcount/monster_jobcount_{fd}.csv'.format(fd=filedate)
+    details_dropbox = '/India Labor Market Indicators/scraping/Monster/ec2/details/shine_details_{fd}.csv'.format(fd=filedate)
+    logfile_dropbox = '/India Labor Market Indicators/scraping/Monster/ec2/log/{fd}.log'.format(fd=filedate)
     
     util.export_to_dropbox.move_to_dropbox(mainpage_local, mainpage_dropbox)
     util.export_to_dropbox.move_to_dropbox(jobcount_local, jobcount_dropbox)
-    
-    # Run detail scrape
-    shine_details.run_scrape(
-        inputfile = mainpage_local, 
-        outputfile = details_local,
-        logfile = logfile_local)
-        
-    # Move the log and details files
-    util.export_to_dropbox.move_to_dropbox(details_local, details_dropbox)
     util.export_to_dropbox.move_to_dropbox(logfile_local, logfile_dropbox)
 
 
@@ -60,6 +49,8 @@ def start_logging(filepath):
 
 if __name__ == '__main__':
 
+    filedate = datetime.today().strftime('%Y%m%d_%H%M%S')
+
     # Initialize parser
     parser = argparse.ArgumentParser()
     parser.add_argument("--full", action='store_true', help = "Run full scrape")
@@ -78,8 +69,6 @@ if __name__ == '__main__':
         logger.log.error("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
         
     sys.excepthook = emergency_log
-
-    filedate = datetime.today().strftime('%Y%m%d_%H%M%S')
 
     # Default behavior is to run a test
     if args.full:

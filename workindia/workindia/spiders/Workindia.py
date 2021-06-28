@@ -22,14 +22,17 @@ TZ = pytz.timezone('Asia/Kolkata')
 class WorkindiaSpider(scrapy.Spider):
     name = 'Workindia'
     allowed_domains = ['www.workindia.in']
-    f = open("urls.txt")
-    start_urls = ['https://www.workindia.in/jobs-in-'+url.strip().replace(" ","-").lower() for url in f.readlines()]
-    f.close()
+
 
     logging.getLogger().addHandler(logging.StreamHandler())
     
     def __init__(self, debug = False, jobcountfile = '', *args, **kwargs):
         super().__init__(*args, **kwargs)
+        
+        f = open("urls.txt")
+        start_urls = ['https://www.workindia.in/jobs-in-'+url.strip().replace(" ","-").lower() for url in f.readlines()]
+        f.close()
+    
         self.debug = debug
         if jobcountfile:
             self.jobcountfile = jobcountfile

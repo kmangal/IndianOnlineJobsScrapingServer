@@ -25,30 +25,6 @@ import argparse
 # Make this the timestamp reflects India timeszone
 TZ = pytz.timezone('Asia/Kolkata')
 
-# Parse arguments
-parser = argparse.ArgumentParser()
-parser.add_argument('--mainpage', required = True, help = 'Output file for mainpage scrape')
-parser.add_argument('--jobcount', required = True, help = 'Output file for jobcount scrape')
-parser.add_argument('--debug', action='store_true', default=False,
-                    dest='debug',                                 
-                    help='Will run a limited scrape for testing') 
-args = parser.parse_args()
-print("Debug Mode:", args.debug)
-
-# Set up log file
-logger = scrapelogger.ScrapeLogger('TJ-main')
-
-def handle_exception(exc_type, exc_value, exc_traceback):
-    if issubclass(exc_type, KeyboardInterrupt):
-        sys.__excepthook__(exc_type, exc_value, exc_traceback)
-        return
-
-    logger.log.error("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
-
-# Include unhandled exceptions in the log file
-sys.excepthook = handle_exception
-
-
 # Use list of realistic headers and rotate between them so that it looks like multiple different users are accessing the site
 HEADER_LIST = [
     {
@@ -170,6 +146,30 @@ def main():
     fcount.close()
 
 if __name__ == '__main__':
+
+    # Parse arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--mainpage', required = True, help = 'Output file for mainpage scrape')
+    parser.add_argument('--jobcount', required = True, help = 'Output file for jobcount scrape')
+    parser.add_argument('--debug', action='store_true', default=False,
+                        dest='debug',                                 
+                        help='Will run a limited scrape for testing') 
+    args = parser.parse_args()
+    print("Debug Mode:", args.debug)
+
+    # Set up log file
+    logger = scrapelogger.ScrapeLogger('TJ-main')
+
+    def handle_exception(exc_type, exc_value, exc_traceback):
+        if issubclass(exc_type, KeyboardInterrupt):
+            sys.__excepthook__(exc_type, exc_value, exc_traceback)
+            return
+
+        logger.log.error("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
+
+    # Include unhandled exceptions in the log file
+    sys.excepthook = handle_exception
+
 
     # Check types for input files
     mainpage_filetype = args.mainpage.split('.')[-1]
