@@ -8,5 +8,5 @@ ENDPOINT = 'task-queue.3g7al0.0001.aps1.cache.amazonaws.com'
 logging.basicConfig(level=logging.INFO)
 redis = redis = Redis(host=ENDPOINT, port=6379, decode_responses=True, ssl=True, username='default')
 
-if redis.ping():
-    logging.info("Connected to Redis")
+redis.ping()
+print('Connected to Redis')
