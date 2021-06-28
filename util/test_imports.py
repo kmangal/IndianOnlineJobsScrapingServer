@@ -14,7 +14,7 @@ def is_exception(modulepath):
         return True
     elif 'naukri' in modulepath:
         return True
-    elif 'play' in modulepath:
+    elif 'test.misc' in modulepath:
         return True
     else:
         return False
