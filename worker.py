@@ -4,12 +4,12 @@ from rq import Connection, Queue, Worker
 from config import REDIS_ENDPOINT
 
 import util.scrapelogger as scrapelogger
-
+import util.export_to_dropbox
 
 redis = Redis(host=REDIS_ENDPOINT, port=6379, username='default')
 queue = Queue(connection=redis)
 
-logger = scrapelogger.ScrapeLogger('error-log', 'errors.log')
+logger = scrapelogger.ScrapeLogger('error-log', 'log/error/errors.log')
 
 def write_error_log(job, exc_type, exc_value, traceback):
     logger.log.error(
