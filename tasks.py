@@ -5,7 +5,7 @@ import waahjobs
 
 REDIS_ENDPOINT = 'task-queue.3g7al0.0001.aps1.cache.amazonaws.com'
 
-q = Queue(connection=Redis(host=ENDPOINT, port=6379, username='default'))
+q = Queue(connection=Redis(host=REDIS_ENDPOINT, port=6379, username='default'))
 
 def test():
 
