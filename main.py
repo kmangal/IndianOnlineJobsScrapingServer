@@ -4,6 +4,8 @@ from rq import Queue
 import waahjobs.apiscraper
 from tasks import print_numbers
 
+from datetime import datetime
+
 REDIS_ENDPOINT = 'task-queue.3g7al0.0001.aps1.cache.amazonaws.com'
 
 q = Queue(connection=Redis(host=REDIS_ENDPOINT, port=6379, username='default'))
@@ -14,7 +16,12 @@ def test():
 
 
 def main():
-    result = q.enqueue(waahjobs.apiscraper.run_scrape, test True)
+    
+    result = q.enqueue(
+            waahjobs.apiscraper.run_scrape, 
+            filedate = datetime.today().strftime('%Y%m%d_%H%M%S'),
+            test = True)
+
     print(result)
     
 if __name__ == '__main__':
