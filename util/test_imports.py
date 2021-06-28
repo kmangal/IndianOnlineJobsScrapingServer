@@ -2,10 +2,10 @@ import os
 import importlib
 
 import sys
-sys.path.append('../')
 
+print(__file__)
 jobs_scraping_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-
+print(jobs_scraping_folder)
 
 def is_exception(modulepath):
     ''' Ignore certain files and folders'''
@@ -14,10 +14,11 @@ def is_exception(modulepath):
         return True
     elif 'naukri' in modulepath:
         return True
-    elif 'test' in modulepath:
+    elif 'play' in modulepath:
         return True
     else:
         return False
+
 
 for root, dirs, files in os.walk(jobs_scraping_folder, topdown=False):
     

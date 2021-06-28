@@ -3,7 +3,7 @@
 .local/*
 *.log
 env/*
-test/*
+test/misc/*
 
 # Ignore all files and directories that start with a period except gitignore
 .*
