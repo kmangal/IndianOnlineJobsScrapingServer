@@ -17,6 +17,7 @@ def list_jobs(number_days = 7):
 
     job_instances = scheduler.get_jobs(with_times = True, until=timedelta(days=number_days))
 
+    print("Jobs in next {days} days".format(days = number_days))
     for job, time in job_instances:
         print(job.func_name, time)
     
