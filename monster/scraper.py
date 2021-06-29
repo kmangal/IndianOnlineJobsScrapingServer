@@ -11,7 +11,7 @@ def modify_path():
 modify_path()
 
 import util.export_to_dropbox
-import util.scrapelogger as scrapelogger
+
 
 def run_full_scrape():
 
@@ -45,12 +45,6 @@ def test_scrape():
     logfile_local = 'test/log/{fd}.log'.format(fd=filedate)
 
     os.system('scrapy crawl Monster -o "{mainpage_local}" -a test=True -a jobcountfile="{jobcount_local}" -a logfile="{logfile_local}"'.format(mainpage_local = mainpage_local, jobcount_local = jobcount_local, logfile_local = logfile_local))
-    
-
-def start_logging(filepath):
-    logger = scrapelogger.ScrapeLogger('shine-scraper', logfile)
-    
-    return logger
 
 if __name__ == '__main__':
     # Default behavior is to run a test
