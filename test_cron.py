@@ -4,24 +4,22 @@ from rq_scheduler import Scheduler
 
 from datetime import datetime
 
-import os
-import sys
-currentdir = os.path.dirname(os.path.realpath(__file__))
-parentdir = os.path.dirname(currentdir)
-sys.path.append(parentdir)
+#import os
+#import sys
+#currentdir = os.path.dirname(os.path.realpath(__file__))
+#parentdir = os.path.dirname(currentdir)
+#sys.path.append(parentdir)
 
 import config
-from testtasks import test_print
+import test.testtasks
 
-
-q = Queue(connection = config.redis)
 scheduler = Scheduler(connection= config.redis)
 
 def test():
     
     scheduler.cron(
         '* * * * *',                                        # A cron string (e.g. "0 0 * * 0")
-        func= test_print,                  # Function to be queued
+        func= test.testtasks.test_print,                  # Function to be queued
         args=['Testing...'],
         repeat= 2,                                         # Repeat this number of times (None means repeat forever)
         queue_name= 'default',                                # In which queue the job should be put in
