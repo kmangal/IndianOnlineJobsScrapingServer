@@ -7,8 +7,9 @@ import config
 
 scheduler = Scheduler(connection= config.redis)
 
-# get all jobs for the 24 hours
-list_of_job_instances = scheduler.get_jobs(until=timedelta(hours=24))
+# get all jobs for the 24 hour
+job_instances = scheduler.get_jobs(with_times = True, until=timedelta(hours=24))
 
-for job in list_of_job_instances:
-    print(job.func_name, job.get_status())
+for job, time in job_instances:
+    print(job.func_name, time)
+    

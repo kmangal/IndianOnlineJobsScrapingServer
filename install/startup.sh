@@ -12,5 +12,8 @@ git config --global user.name "EC2 Server"
 git config --global user.email india.labourinsights.server@gmail.com
 
 cd jobs_scraping
-sh util/makefolders.sh
+sh install/makefolders.sh
 
+pip install -r reequirements.txt
+
+sh install/startrqservice.sh
