@@ -17,7 +17,6 @@ import pytz
 import csv
 import random
 
-import scrapelogger
 import sys
 import os
 
