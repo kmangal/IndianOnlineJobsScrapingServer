@@ -3,15 +3,15 @@ import sys
 
 from datetime import datetime
 
-import mainscrape
-import detailscrape
-
 def modify_path():
     currentdir = os.path.dirname(os.path.realpath(__file__))
     parentdir = os.path.dirname(currentdir)
     sys.path.append(parentdir)
 
 modify_path()
+
+import timesjobs.mainscrape
+import timesjobs.detailscrape
 
 import util.export_to_dropbox
 
