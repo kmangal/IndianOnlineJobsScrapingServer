@@ -1,6 +1,6 @@
 
 
-def test_print(*args, **kwargs):
-    print("Testing....")
+def test_print(message):
+    print(message)
 
         
