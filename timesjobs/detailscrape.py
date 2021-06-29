@@ -18,9 +18,15 @@ import sys
 
 import mysql.connector
 
-import timesjobs.scrapelogger
-import argparse
+def modify_path():
+    currentdir = os.path.dirname(os.path.realpath(__file__))
+    parentdir = os.path.dirname(currentdir)
+    sys.path.append(parentdir)
 
+modify_path()
+
+
+from util import scrapelogger
 
 # Use list of realistic headers and rotate between them so that it looks like multiple different users are accessing the site
 HEADER_LIST = [
@@ -256,9 +262,20 @@ def scrape_new_only(DB, table, session, writer, links, TOTALPAGES):
 
 
 
-def main():
+def run(mainpagefile, detailsfile, logfile, test = False):
 
-    if args.debug:
+    # Check types for input files
+    mainpage_filetype = mainpagefile.split('.')[-1]
+    if mainpage_filetype != 'csv':
+        raise Exception('Mainpage file type needs to be csv')
+    details_scrape = detailsfile.split('.')[-1]
+    if details_scrape != 'csv':
+        raise Exception('Details file type needs to be csv')
+        
+    # Set up log file
+    logger = scrapelogger.ScrapeLogger('TJ-details', logfile)
+
+    if test:
         table = 'test' 
     else:
         table = 'history'
@@ -273,10 +290,10 @@ def main():
 
     session = HTMLSession()
 
-    links = get_links(args.input, args.debug)
+    links = get_links(mainpagefile, test)
     TOTALPAGES = len(links)
 
-    fout = open(args.output, 'w', newline = '')
+    fout = open(detailsfile, 'w', newline = '')
 
     fnames = [
         'url', 'status', 'button_text', 'title', 'company', 'experience', 'salary', 'location', 'posted_on',
@@ -289,41 +306,16 @@ def main():
 
     writer = csv.DictWriter(fout, fieldnames = fnames)
     writer.writeheader()
-
-    if args.scrape_all:
-        scrape_all(DB, table, session, writer, links, TOTALPAGES)
-    else:
-        scrape_new_only(DB, table, session, writer, links, TOTALPAGES)
+    
+    # Scrape new only
+    scrape_new_only(DB, table, session, writer, links, TOTALPAGES)
         
     fout.close()
     DB.close()
 
+    logger.finalize()
+
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--input', required = True, help = 'File path for mainpage intput')
-    parser.add_argument('--output', required = True, help = 'File path for output')
-    parser.add_argument('--all', action='store_true', default=False,
-                        dest='scrape_all',
-                        help='Scrape all listings from main page')
-    parser.add_argument('--debug', action = 'store_true', default = False, 
-                        dest = 'debug', 
-                        help = 'Test run / does not write to database')
-
-    logger = timesjobs.scrapelogger.ScrapeLogger('TJ-details')
-
-    def handle_exception(exc_type, exc_value, exc_traceback):
-        if issubclass(exc_type, KeyboardInterrupt):
-            sys.__excepthook__(exc_type, exc_value, exc_traceback)
-            return
-
-        logger.log.error("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
-
-    # Include unhandled exceptions in the log file
-    sys.excepthook = handle_exception
-
-    args = parser.parse_args()
-    print("Debug Mode", args.debug)
-
-    main()
-    logger.finalize()
+    # Default is to test - will implement later
+    pass

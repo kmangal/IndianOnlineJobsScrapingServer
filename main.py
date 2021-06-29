@@ -53,7 +53,16 @@ def main():
             meta={'site': 'shine'},                                  # Arbitrary pickleable data on the job itself
             use_local_timezone= True                              # Interpret hours in the local timezone
         )
-        
+
+    if 'timesjobs' not in scheduled_jobs:
+        scheduler.cron(
+            '30 18 3/4 * *',                                        # A cron string (e.g. "0 0 * * 0")
+            func= tasks.timesjobs_scrape,                               # Function to be queued
+            repeat= None,                                         # Repeat this number of times (None means repeat forever)
+            queue_name= 'default',                                # In which queue the job should be put in
+            meta={'site': 'timesjobs'},                                  # Arbitrary pickleable data on the job itself
+            use_local_timezone= True                              # Interpret hours in the local timezone
+        )        
     
 if __name__ == '__main__':
     main()

@@ -19,8 +19,20 @@ import random
 
 import scrapelogger
 import sys
+import os
 
-import argparse
+import random
+
+def modify_path():
+    currentdir = os.path.dirname(os.path.realpath(__file__))
+    parentdir = os.path.dirname(currentdir)
+    sys.path.append(parentdir)
+
+modify_path()
+
+
+from util import scrapelogger
+
 
 # Make this the timestamp reflects India timeszone
 TZ = pytz.timezone('Asia/Kolkata')
@@ -110,16 +122,28 @@ def scrape_page(session, location, pageno, writer):
     for job in jobs:
         scrape_row(page_details, job, writer)
 
-def main():
+def run(mainpagefile, jobcountfile, logfile, test = False):
+
+    # Check types for input files
+    mainpage_filetype = mainpagefile.split('.')[-1]
+    if mainpage_filetype != 'csv':
+        raise Exception('Mainpage file type needs to be csv')
+    jobcount_filetype = jobcountfile.split('.')[-1]
+    if jobcount_filetype != 'csv':
+        raise Exception('Jobcount file type needs to be csv')
+        
+    # Set up log file
+    logger = scrapelogger.ScrapeLogger('TJ-main', logfile)
+    
     session = HTMLSession()
-    if args.debug:
+    if test:
         locations = ['https://www.timesjobs.com/jobs-in-agra/']
     else:
         locations = get_all_locations(session)
     
    
-    fmain = open(args.mainpage, 'w', newline =  '')
-    fcount = open(args.jobcount, 'w', newline = '')
+    fmain = open(mainpagefile, 'w', newline =  '')
+    fcount = open(jobcountfile, 'w', newline = '')
         
     fmainfields = [
         'text', 'id', 'title', 'company', 'experience', 'salary', 'location', 'link', 'locationurl', 'pageno', 'scrapetime'
@@ -139,46 +163,15 @@ def main():
             
             for page in range(1, pages + 1):
                 logger.log.info("{} - Scraping page {}/{}".format(location, page, pages))
-                time.sleep(3)
+                time.sleep(random.randint(1, 3))
                 scrape_page(session, location, page, mainwriter)
                 
     fmain.close()
     fcount.close()
 
-if __name__ == '__main__':
-
-    # Parse arguments
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--mainpage', required = True, help = 'Output file for mainpage scrape')
-    parser.add_argument('--jobcount', required = True, help = 'Output file for jobcount scrape')
-    parser.add_argument('--debug', action='store_true', default=False,
-                        dest='debug',                                 
-                        help='Will run a limited scrape for testing') 
-    args = parser.parse_args()
-    print("Debug Mode:", args.debug)
-
-    # Set up log file
-    logger = scrapelogger.ScrapeLogger('TJ-main')
-
-    def handle_exception(exc_type, exc_value, exc_traceback):
-        if issubclass(exc_type, KeyboardInterrupt):
-            sys.__excepthook__(exc_type, exc_value, exc_traceback)
-            return
-
-        logger.log.error("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
-
-    # Include unhandled exceptions in the log file
-    sys.excepthook = handle_exception
-
-
-    # Check types for input files
-    mainpage_filetype = args.mainpage.split('.')[-1]
-    if mainpage_filetype != 'csv':
-        raise Exception('Mainpage file type needs to be csv')
-    jobcount_filetype = args.jobcount.split('.')[-1]
-    if jobcount_filetype != 'csv':
-        raise Exception('Jobcount file type needs to be csv')
-
-    main()
     logger.finalize()
+
+if __name__ == '__main__':
+    # Default is to run a test - will implement later
+    pass
 
