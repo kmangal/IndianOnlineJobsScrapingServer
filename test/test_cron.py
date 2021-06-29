@@ -11,7 +11,7 @@ parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
 
 import config
-import testtasks
+from testtasks import test_print
 
 
 q = Queue(connection = config.redis)
@@ -21,7 +21,7 @@ def test():
     
     scheduler.cron(
         '* * * * *',                                        # A cron string (e.g. "0 0 * * 0")
-        func= testtasks.test_print,                  # Function to be queued
+        func= test_print,                  # Function to be queued
         args=['Testing...'],
         repeat= 2,                                         # Repeat this number of times (None means repeat forever)
         queue_name= 'default',                                # In which queue the job should be put in
