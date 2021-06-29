@@ -15,6 +15,7 @@ import glob
 
 import time
 import sys
+import os
 
 import mysql.connector
 
