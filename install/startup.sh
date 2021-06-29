@@ -17,3 +17,5 @@ sh install/makefolders.sh
 pip install -r reequirements.txt
 
 sh install/startrqservice.sh
+
+mv install/.bashrc ~/.bashrc

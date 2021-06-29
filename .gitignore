@@ -4,7 +4,8 @@
 *.log
 test/misc/*
 
-# Ignore all files and directories that start with a period except gitignore
+# Ignore all files and directories that start with a period except gitignore and bashrc
 .*
+!.bashrc
 !.gitignore
 
