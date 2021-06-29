@@ -8,10 +8,12 @@ import tasks
 
 import config
 
-def test():
+
+def test_connection():
     q = Queue(connection = config.redis)
     result = q.enqueue(tasks.test_print, 'hi')
     print(result)
+
 
 def main():
 
@@ -38,6 +40,17 @@ def main():
             repeat= None,                                         # Repeat this number of times (None means repeat forever)
             queue_name= 'default',                                # In which queue the job should be put in
             meta={'site': 'monster'},                                  # Arbitrary pickleable data on the job itself
+            use_local_timezone= True                              # Interpret hours in the local timezone
+        )
+        
+        
+    if 'shine' not in scheduled_jobs:
+        scheduler.cron(
+            '30 18 2/4 * *',                                        # A cron string (e.g. "0 0 * * 0")
+            func= tasks.shine_scrape,                               # Function to be queued
+            repeat= None,                                         # Repeat this number of times (None means repeat forever)
+            queue_name= 'default',                                # In which queue the job should be put in
+            meta={'site': 'shine'},                                  # Arbitrary pickleable data on the job itself
             use_local_timezone= True                              # Interpret hours in the local timezone
         )
         
