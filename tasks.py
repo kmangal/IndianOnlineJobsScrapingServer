@@ -4,7 +4,7 @@ import waahjobs.apiscraper
 import monster.scraper
 import shine.scraper
 import timesjobs.scraper
-
+import teamlease.scraper
 
 def test_print(message):
     test.testtasks.test_print(message)
@@ -21,3 +21,5 @@ def shine_scrape():
 def timesjobs_scrape():
     timesjobs.scraper.run_full_scrape()
     
+def teamlease_scrape():
+    teamlease.scraper.run_full_scrape()

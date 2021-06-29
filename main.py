@@ -72,6 +72,19 @@ def main():
             queue_name= 'default',                                # In which queue the job should be put in
             meta={'site': 'shine'},                                  # Arbitrary pickleable data on the job itself
         )
+
+    if 'shine' not in scheduled_jobs:
+        # Start with three day delay
+        
+        scheduler.schedule(
+            scheduled_time = base_start_time +  + timedelta(days=3),        # Time for first execution, in UTC timezone
+            func= tasks.teamlease_scrape,                                       # Function to be queued
+            interval = 60 * 60 * 24 * 4,                               # Interval in seconds
+            repeat= None,                                         # Repeat this number of times (None means repeat forever)
+            queue_name= 'default',                                # In which queue the job should be put in
+            meta={'site': 'teamlease'},                                  # Arbitrary pickleable data on the job itself
+        )
+
     
 if __name__ == '__main__':
     main()
