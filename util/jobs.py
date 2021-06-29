@@ -1,15 +1,29 @@
 from rq_scheduler import Scheduler
 from datetime import timedelta
 
+import os
 import sys
-sys.path.append('../')
+
+currentdir = os.path.dirname(os.path.realpath(__file__))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+
 import config
 
 scheduler = Scheduler(connection= config.redis)
 
-# get all jobs for the 24 hour
-job_instances = scheduler.get_jobs(with_times = True, until=timedelta(hours=24))
+def list_jobs(number_days = 7):
+    '''get all jobs in the next timeframe - week by default'''
 
-for job, time in job_instances:
-    print(job.func_name, time)
+    job_instances = scheduler.get_jobs(with_times = True, until=timedelta(days=number_days))
+
+    for job, time in job_instances:
+        print(job.func_name, time)
     
+
+if __name__ == '__main__':
+    
+    if len(sys.argv) > 1 and type(sys.argv[1]) == int:
+        list_jobs(sys.argv[1])
+    else:
+        list_jobs()
