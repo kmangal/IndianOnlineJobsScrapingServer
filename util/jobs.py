@@ -24,7 +24,7 @@ def list_jobs(number_days = 7):
 
 if __name__ == '__main__':
     
-    if len(sys.argv) > 1 and type(sys.argv[1]) == int:
-        list_jobs(sys.argv[1])
+    if len(sys.argv) > 1 and sys.argv[1].isnumeric():
+        list_jobs(int(sys.argv[1]))
     else:
         list_jobs()
