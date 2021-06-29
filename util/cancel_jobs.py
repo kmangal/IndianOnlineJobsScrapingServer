@@ -1,8 +1,16 @@
 from rq_scheduler import Scheduler
 from datetime import timedelta
 
+import os
 import sys
-sys.path.append('../')
+
+def modify_path():
+    currentdir = os.path.dirname(os.path.realpath(__file__))
+    parentdir = os.path.dirname(currentdir)
+    sys.path.append(parentdir)
+
+modify_path()
+
 import config
 
 scheduler = Scheduler(connection= config.redis)

@@ -2,9 +2,9 @@ from redis import Redis
 from rq import Queue
 from rq_scheduler import Scheduler
 
-import waahjobs.apiscraper
-
 from datetime import datetime
+
+import tasks
 
 import config
 
@@ -13,7 +13,7 @@ scheduler = Scheduler(connection= config.redis)
 
 
 def test():
-    result = q.enqueue(print_numbers, 10)
+    result = q.enqueue(tasks.test_print, 'hi')
     print(result)
 
 
@@ -21,7 +21,7 @@ def main():
     
     scheduler.cron(
         '30 18 * * *',                                        # A cron string (e.g. "0 0 * * 0")
-        func= waahjobs.apiscraper.run_scrape,                  # Function to be queued
+        func= tasks.waahjobs_scrape,                  # Function to be queued
         kwargs={'test': False},                               # Keyword arguments passed into function when executed
         repeat= None,                                         # Repeat this number of times (None means repeat forever)
         queue_name= 'default',                                # In which queue the job should be put in

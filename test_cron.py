@@ -11,20 +11,21 @@ from datetime import datetime
 #sys.path.append(parentdir)
 
 import config
-import test.testtasks
+
+import tasks
 
 scheduler = Scheduler(connection= config.redis)
 
 def test():
     
-    scheduler.cron(
-        '* * * * *',                                        # A cron string (e.g. "0 0 * * 0")
-        func= test.testtasks.test_print,                  # Function to be queued
+    scheduler.schedule(
+        scheduled_time = datetime.utcnow(),
+        func= tasks.test_print,                  # Function to be queued
         args=['Testing...'],
+        interval = 60,
         repeat= 2,                                         # Repeat this number of times (None means repeat forever)
         queue_name= 'default',                                # In which queue the job should be put in
         meta={'type': 'test'},                                  # Arbitrary pickleable data on the job itself
-        use_local_timezone= True                              # Interpret hours in the local timezone
     )
     
 if __name__ == '__main__':

@@ -1,5 +1,6 @@
 from rq_scheduler import Scheduler
 from datetime import timedelta
+from datetime import datetime
 
 import os
 import sys
@@ -16,6 +17,8 @@ def list_jobs(number_days = 7):
     '''get all jobs in the next timeframe - week by default'''
 
     job_instances = scheduler.get_jobs(with_times = True, until=timedelta(days=number_days))
+
+    print("Current time", datetime.utcnow())
 
     print("Jobs in next {days} days".format(days = number_days))
     for job, time in job_instances:
