@@ -73,7 +73,7 @@ def main():
             meta={'site': 'shine'},                                  # Arbitrary pickleable data on the job itself
         )
 
-    if 'shine' not in scheduled_jobs:
+    if 'teamlease' not in scheduled_jobs:
         # Start with three day delay
         
         scheduler.schedule(
