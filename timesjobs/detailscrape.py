@@ -304,7 +304,7 @@ class DetailScraper:
 
         self.session = HTMLSession()
 
-        self.links = get_links(mainpagefile, test)
+        self.links = self.get_links()
         self.totalpages = len(links)
 
         fout = open(self.detailsfile, 'w', newline = '')
