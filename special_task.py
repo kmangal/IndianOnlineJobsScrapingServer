@@ -16,7 +16,7 @@ def redo_timesjobs_details(infile, outfile, logfile):
        kwargs = {'infile' : infile,
         'outfile' : outfile,
         'log' : logfile},
-        timeout = 60 * 60 * 24 * 2)
+        job_timeout = 60 * 60 * 24 * 2)
 	
 if __name__ == '__main__':
     redo_timesjobs_details(

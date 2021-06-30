@@ -138,8 +138,8 @@ class DetailScraper:
             r = self.session.get(url, headers = DetailScraper.get_header())
         except:
             # In case the connection is reset - not sure how to specify this correctly.
-            self.logger.log.error("While fetching {} connection reset by peer. Taking a break for 10 mins...".format(url))
-            time.sleep(600)
+            self.logger.log.error("While fetching {} connection reset by peer. Taking a break for 1 min...".format(url))
+            time.sleep(60)
             r = self.session.get(url, headers = get_header())
 
         response = r.html 
