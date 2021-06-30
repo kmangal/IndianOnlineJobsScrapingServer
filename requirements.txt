@@ -1,4 +1,5 @@
 appdirs==1.4.4
+arrow==1.1.1
 attrs==21.2.0
 Automat==20.2.0
 beautifulsoup4==4.9.3
@@ -13,8 +14,10 @@ cryptography==3.4.7
 cssselect==1.1.0
 dropbox==11.12.0
 fake-useragent==0.1.11
+Flask==2.0.1
 h2==3.2.0
 hpack==3.0.0
+humanize==3.9.0
 hyperframe==5.2.0
 hyperlink==21.0.0
 idna==2.10
@@ -22,8 +25,11 @@ importlib-metadata==2.1.1
 incremental==21.3.0
 itemadapter==0.2.0
 itemloaders==1.0.4
+itsdangerous==2.0.1
+Jinja2==3.0.1
 jmespath==0.10.0
 lxml==4.6.3
+MarkupSafe==2.0.1
 mysql-connector==2.2.9
 numpy==1.21.0
 pandas==1.2.5
@@ -47,6 +53,7 @@ redis==3.5.3
 requests==2.25.1
 requests-html==0.10.0
 rq==1.8.1
+rq-dashboard==0.6.1
 rq-scheduler==0.11.0
 Scrapy==2.5.0
 service-identity==21.1.0
@@ -57,8 +64,10 @@ stone==3.2.1
 tabulate==0.8.9
 tqdm==4.61.1
 Twisted==21.2.0
+typing-extensions==3.10.0.0
 urllib3==1.26.6
 w3lib==1.22.0
 websockets==8.1
+Werkzeug==2.0.1
 zipp==3.4.1
 zope.interface==5.4.0
