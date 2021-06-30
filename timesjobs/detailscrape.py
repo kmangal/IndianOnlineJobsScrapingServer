@@ -38,10 +38,22 @@ class DetailScraper:
 
     # Use list of realistic headers and rotate between them so that it looks like multiple different users are accessing the site
     HEADER_LIST = [
-        {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36"},
-        {"User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:24.0) Gecko/20100101 Firefox/24.0"}
+            {
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9", 
+            "Accept-Encoding": "gzip, deflate", 
+            "Accept-Language": "en,en-US;q=0.9,en;q=0.8", 
+            "Upgrade-Insecure-Requests": "1", 
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36", 
+            },
+            {
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9", 
+            "Accept-Encoding": "gzip, deflate", 
+            "Accept-Language": "en-GB,en-US;q=0.9,en;q=0.8", 
+            "Upgrade-Insecure-Requests": "1", 
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36", 
+            }
     ]
-
+    
     fnames = [
         'url', 'status', 'button_text', 'title', 'company', 'experience', 'salary', 'location', 'posted_on',
         'job_description', 'job_function', 'industry', 'specialization', 'qualification',
@@ -73,8 +85,8 @@ class DetailScraper:
                 
         
     @classmethod
-    def get_header():
-        return random.choice(DetailScraper.HEADER_LIST)
+    def get_header(cls):
+        return random.choice(cls.HEADER_LIST)
         
     def get_links(self):
         self.logger.log.info("Pulling links from {}".format(self.mainpagefile))
