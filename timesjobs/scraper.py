@@ -23,7 +23,7 @@ def run_full_scrape():
     jobcount_local = 'output/jobcount/timesjobs_jobcount_{fd}.csv'.format(fd=filedate)
     logfile_local = 'log/{fd}.log'.format(fd=filedate)
 
-    mainscrape.run(mainpage_local, jobcount_local, logfile_local)
+    timesjobs.mainscrape.run(mainpage_local, jobcount_local, logfile_local)
 
     # Send files to Dropbox
     mainpage_dropbox = '/India Labor Market Indicators/scraping/TimesJobs/ec2/mainpage/timesjobs_mainpage_{fd}.csv'.format(fd=filedate)
@@ -34,7 +34,7 @@ def run_full_scrape():
 
     details_local = 'output/details/timesjobs_details_{fd}.csv'.format(fd=filedate)
 
-    detailscrape.run(mainpage_local, details_local, logfile_local)
+    timesjobs.detailscrape.run(mainpage_local, details_local, logfile_local)
     
     details_dropbox = '/India Labor Market Indicators/scraping/TimesJobs/ec2/details/timesjobs_details_{fd}.csv'.format(fd=filedate)
     logfile_dropbox = '/India Labor Market Indicators/scraping/TimesJobs/ec2/log/{fd}.log'.format(fd=filedate)
