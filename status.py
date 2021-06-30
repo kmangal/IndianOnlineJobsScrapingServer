@@ -17,8 +17,10 @@ for worker in workers:
     print(" -birth:", format_time(worker.birth_date))
     
     current_job = worker.get_current_job()
-    
-    print(" -current job: {name} - started: {start} ({elapsed})".format(
-        name= current_job.func_name, 
-        start= format_time(current_job.started_at),
-        elapsed= humanize.naturaltime(datetime.utcnow() - current_job.started_at)))
+    if current_job:
+        print(" -current job: {name} - started: {start} ({elapsed})".format(
+            name= current_job.func_name, 
+            start= format_time(current_job.started_at),
+            elapsed= humanize.naturaltime(datetime.utcnow() - current_job.started_at)))
+   else:
+       print("-current job:  No job running")
