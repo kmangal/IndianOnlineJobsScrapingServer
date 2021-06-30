@@ -15,7 +15,8 @@ def redo_timesjobs_details(infile, outfile, logfile):
     result = q.enqueue(tasks.teamlease_detail_scrape, 
        kwargs = {'infile' : infile,
         'outfile' : outfile,
-        'log' : logfile})
+        'log' : logfile},
+        timeout = 60 * 60 * 24 * 2)
 	
 if __name__ == '__main__':
     redo_timesjobs_details(
