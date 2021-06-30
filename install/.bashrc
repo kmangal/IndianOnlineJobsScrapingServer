@@ -19,3 +19,6 @@ cd jobs_scraping
 
 # User specific aliases and functions
 alias jobs="python ~/jobs_scraping/util/jobs.py"
+
+function seelog { tail -n 5 "$(ls -1r $1/*.log | head -n 1)"; }
+export -f seelog
