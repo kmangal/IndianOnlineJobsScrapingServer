@@ -51,7 +51,7 @@ def test_scrape():
     jobcount_local = 'test/jobcount/timesjobs_jobcount_{fd}.csv'.format(fd=filedate)
     logfile_local = 'test/log/{fd}.log'.format(fd=filedate)
     
-    mainscrape.run(mainpage_local, jobcount_local, logfile_local, test = True)
+    timesjobs.mainscrape..run(mainpage_local, jobcount_local, logfile_local, test = True)
 
 
 if __name__ == '__main__':
