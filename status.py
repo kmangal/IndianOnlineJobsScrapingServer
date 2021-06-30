@@ -22,6 +22,6 @@ for worker in workers:
             name= current_job.func_name, 
             start= format_time(current_job.started_at),
             elapsed= humanize.naturaltime(datetime.utcnow() - current_job.started_at)))
-   else:
+    else:
         print("-current job:  No job running")
        
