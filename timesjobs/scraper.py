@@ -19,9 +19,9 @@ def run_full_scrape():
 
     filedate = datetime.today().strftime('%Y%m%d_%H%M%S')
 
-    mainpage_local = os.path.expanduser('~/job_scraping/timesjobs/output/mainpage/timesjobs_mainpage_{fd}.csv'.format(fd=filedate))
-    jobcount_local = os.path.expanduser('~/job_scraping/timesjobs/output/jobcount/timesjobs_jobcount_{fd}.csv'.format(fd=filedate))
-    logfile_local = os.path.expanduser('~/job_scraping/timesjobs/log/{fd}.log'.format(fd=filedate))
+    mainpage_local = os.path.expanduser('~/jobs_scraping/timesjobs/output/mainpage/timesjobs_mainpage_{fd}.csv'.format(fd=filedate))
+    jobcount_local = os.path.expanduser('~/jobs_scraping/timesjobs/output/jobcount/timesjobs_jobcount_{fd}.csv'.format(fd=filedate))
+    logfile_local = os.path.expanduser('~/jobs_scraping/timesjobs/log/{fd}.log'.format(fd=filedate))
 
     timesjobs.mainscrape.run(mainpage_local, jobcount_local, logfile_local)
 
@@ -47,9 +47,9 @@ def test_scrape():
 
     filedate = datetime.today().strftime('%Y%m%d_%H%M%S')
 
-    mainpage_local = os.path.expanduser('~/job_scraping/timesjobs/test/mainpage/timesjobs_mainpage_{fd}.csv'.format(fd=filedate))
-    jobcount_local = os.path.expanduser('~/job_scraping/timesjobs/test/jobcount/timesjobs_jobcount_{fd}.csv'.format(fd=filedate))
-    logfile_local = os.path.expanduser('~/job_scraping/timesjobs/test/log/{fd}.log'.format(fd=filedate))
+    mainpage_local = os.path.expanduser('~/jobs_scraping/timesjobs/test/mainpage/timesjobs_mainpage_{fd}.csv'.format(fd=filedate))
+    jobcount_local = os.path.expanduser('~/jobs_scraping/timesjobs/test/jobcount/timesjobs_jobcount_{fd}.csv'.format(fd=filedate))
+    logfile_local = os.path.expanduser('~/jobs_scraping/timesjobs/test/log/{fd}.log'.format(fd=filedate))
     
     timesjobs.mainscrape.run(mainpage_local, jobcount_local, logfile_local, test = True)
 
