@@ -6,7 +6,7 @@ import shine.scraper
 import timesjobs.scraper
 import teamlease.scraper
 
-import teamlease.detailscrape
+import timesjobs.detailscrape
 
 def test_print(message):
     test.testtasks.test_print(message)
@@ -30,5 +30,5 @@ def teamlease_scrape():
 # Special tasks
 
 def teamlease_detail_scrape(**kwargs):
-    ds = teamlease.detailscrape.DetailScraper(kwargs['infile'], kwargs['outfile'], kwargs['log'])
+    ds = timesjobs.detailscrape.DetailScraper(kwargs['infile'], kwargs['outfile'], kwargs['log'])
     ds.run()
