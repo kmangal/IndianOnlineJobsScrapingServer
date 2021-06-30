@@ -4,7 +4,6 @@ from rq import Connection, Queue, Worker
 import config
 
 import util.scrapelogger as scrapelogger
-import util.export_to_dropbox
 
 def write_error_log(job, exc_type, exc_value, exc_traceback):
     logger = scrapelogger.ErrorLogger('error-log', 'log/error/errors.log')
