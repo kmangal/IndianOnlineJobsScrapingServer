@@ -54,6 +54,15 @@ class DetailScraper:
         }
     ]
 
+    fnames = [
+        'url', 'status', 'button_text', 'title', 'company', 'experience', 'salary', 'location', 'posted_on',
+        'job_description', 'job_function', 'industry', 'specialization', 'qualification',
+        'employment_type', 'role', 'vacancies', 'otherjobinfo', 'skills', 
+        'posted_by', 'posted_by_details', 'desired_candidate', 
+        'hiring_company', 'hiring_website', 'hiring_industry', 'hiring_turnover', 'hiring_size', 'hiring_other',
+        'scrapetime'
+        ]
+            
     def __init__(self, mainpagefile, detailsfile, logfile, test = False):
     
         # Check types for input files
@@ -305,20 +314,11 @@ class DetailScraper:
         self.session = HTMLSession()
 
         self.links = self.get_links()
-        self.totalpages = len(links)
+        self.totalpages = len(self.links)
 
         fout = open(self.detailsfile, 'w', newline = '')
 
-        fnames = [
-            'url', 'status', 'button_text', 'title', 'company', 'experience', 'salary', 'location', 'posted_on',
-            'job_description', 'job_function', 'industry', 'specialization', 'qualification',
-            'employment_type', 'role', 'vacancies', 'otherjobinfo', 'skills', 
-            'posted_by', 'posted_by_details', 'desired_candidate', 
-            'hiring_company', 'hiring_website', 'hiring_industry', 'hiring_turnover', 'hiring_size', 'hiring_other',
-            'scrapetime'
-            ]
-
-        self.writer = csv.DictWriter(fout, fieldnames = fnames)
+        self.writer = csv.DictWriter(fout, fieldnames = DetailScraper.fnames)
         self.writer.writeheader()
         
         # Scrape new only
