@@ -15,7 +15,7 @@ for worker in workers:
     
     current_job = worker.get_current_job()
     
-    print(" -current job: {name}  - started: {start} ({elapsed} elapsed)".format(
+    print(" -current job: {name} - started: {start} ({elapsed})".format(
         name= current_job.func_name, 
         start= current_job.started_at,
         elapsed= humanize.naturaltime(datetime.utcnow() - current_job.started_at)))
