@@ -35,7 +35,7 @@ def main():
             repeat= None,                                         # Repeat this number of times (None means repeat forever)
             queue_name= 'default',                                # In which queue the job should be put in
             meta={'site': 'waahjobs'},                                  # Arbitrary pickleable data on the job itself
-            timeout = '5h'
+            timeout = 60 * 60 * 24
         )
 
     if 'timesjobs' not in scheduled_jobs:
@@ -47,7 +47,7 @@ def main():
             repeat= None,                                         # Repeat this number of times (None means repeat forever)
             queue_name= 'default',                                # In which queue the job should be put in
             meta={'site': 'timesjobs'},                                  # Arbitrary pickleable data on the job itself
-            timeout = '96h'
+            timeout = 60 * 60 * 24 * 4
         )    
         
     if 'monster' not in scheduled_jobs:
@@ -60,7 +60,7 @@ def main():
             repeat= None,                                         # Repeat this number of times (None means repeat forever)
             queue_name= 'default',                                # In which queue the job should be put in
             meta={'site': 'monster'},                                  # Arbitrary pickleable data on the job itself
-            timeout = '96h'
+            timeout = 60 * 60 * 24 * 4
         )
         
         
@@ -74,7 +74,7 @@ def main():
             repeat= None,                                         # Repeat this number of times (None means repeat forever)
             queue_name= 'default',                                # In which queue the job should be put in
             meta={'site': 'shine'},                                  # Arbitrary pickleable data on the job itself
-            timeout = '96h'
+            timeout = 60 * 60 * 24 * 4
         )
 
     if 'teamlease' not in scheduled_jobs:
@@ -87,7 +87,7 @@ def main():
             repeat= None,                                         # Repeat this number of times (None means repeat forever)
             queue_name= 'default',                                # In which queue the job should be put in
             meta={'site': 'teamlease'},                                  # Arbitrary pickleable data on the job itself
-            timeout = '96h'
+            timeout = 60 * 60 * 24 * 4
         )
 
     

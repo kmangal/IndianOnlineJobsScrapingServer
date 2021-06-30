@@ -33,7 +33,7 @@ def reschedule(scheduler, job, site):
             repeat= None,                                         # Repeat this number of times (None means repeat forever)
             queue_name= 'default',                                # In which queue the job should be put in
             meta={'site': site},                                  # Arbitrary pickleable data on the job itself
-            timeout = '5h'
+            timeout = 60 * 60 * 24 * dayskip
         )
     else:
         dayskip = 4
@@ -45,7 +45,7 @@ def reschedule(scheduler, job, site):
             repeat= None,                                         # Repeat this number of times (None means repeat forever)
             queue_name= 'default',                                # In which queue the job should be put in
             meta={'site': site},                                  # Arbitrary pickleable data on the job itself
-            timeout = '96h'
+            timeout = 60 * 60 * 24 * dayskip
         )
 
    
