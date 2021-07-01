@@ -287,7 +287,7 @@ class DetailScraper:
         for link in self.links:
             pagecounter += 1
             if not self.already_scraped(link):
-                time.sleep(random.choice(range(1, 16)))
+                time.sleep(random.choice(range(1, 4)))
                 row = self.scrape_url(link)
                 self.writer.writerow(row)
                 self.update_database(link, row['status'])
