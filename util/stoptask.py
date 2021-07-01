@@ -15,7 +15,7 @@ import config
 
 
 if __name__ == '__main__':
-    worker = Worker.find_by_key('rq:worker:{}'.format(sys.argv[1]))
+    worker = Worker.find_by_key('rq:worker:{}'.format(sys.argv[1]), connection = config.redis)
 
     # This will raise an exception if job is invalid or not currently executing
     send_stop_job_command(config.redis, worker.get_current_job().get_id())
