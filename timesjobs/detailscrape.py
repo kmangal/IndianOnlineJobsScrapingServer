@@ -316,10 +316,13 @@ class DetailScraper:
         self.links = self.get_links()
         self.totalpages = len(self.links)
 
-        fout = open(self.detailsfile, 'w', newline = '')
-
-        self.writer = csv.DictWriter(fout, fieldnames = DetailScraper.fnames)
-        self.writer.writeheader()
+        if os.path.exists(self.detailsfile):
+            fout = open(self.detailsfile, 'a', newline = '')
+            self.writer = csv.DictWriter(fout, fieldnames = DetailScraper.fnames)
+        else:
+            fout = open(self.detailsfile, 'a', newline = '')
+            self.writer = csv.DictWriter(fout, fieldnames = DetailScraper.fnames)
+            self.writer.writeheader()        
         
         # Scrape new only
         self.scrape_new_only()
