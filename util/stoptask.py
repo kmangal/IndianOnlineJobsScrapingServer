@@ -1,4 +1,5 @@
 import sys
+import os
 from rq.command import send_stop_job_command
 
 from rq.worker import Worker
