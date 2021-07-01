@@ -4,7 +4,10 @@ from rq.job import Job
 import config
 
 def format_time(time):
-    return time.strftime('%m/%d/%Y %I:%M:%S %p %Z')
+    if time:
+        return time.strftime('%m/%d/%Y %I:%M:%S %p %Z')
+    else:
+        return "---"
     
     
 def list_jobs(registry):
