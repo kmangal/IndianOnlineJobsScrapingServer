@@ -78,7 +78,7 @@ def run_scrape(test = False):
     
     if not test:
         api_dropbox = '/India Labor Market Indicators/scraping/WaahJobs/ec2/api/waahjobs_api_{fd}.csv'.format(fd=filedate)
-        log_dropbox = '/India Labor Market Indicators/scraping/WaahJobs/ec2/log/{fd}.csv'.format(fd=filedate)
+        log_dropbox = '/India Labor Market Indicators/scraping/WaahJobs/ec2/log/{fd}.log'.format(fd=filedate)
 
         util.export_to_dropbox.move_to_dropbox(outpath, api_dropbox)
         util.export_to_dropbox.move_to_dropbox(logpath, log_dropbox)
