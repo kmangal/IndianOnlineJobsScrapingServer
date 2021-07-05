@@ -6,6 +6,11 @@ from datetime import datetime
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 
+import pathlib
+MONSTER_PATH = pathlib.Path(__file__).parent.resolve()
+print(MONSTER_PATH)
+print(os.environ.get('SCRAPY_PROJECT'))
+
 def modify_path():
     currentdir = os.path.dirname(os.path.realpath(__file__))
     parentdir = os.path.dirname(currentdir)
@@ -22,9 +27,9 @@ def run_full_scrape():
 
     filedate = datetime.today().strftime('%Y%m%d_%H%M%S')
 
-    mainpage_local = 'output/mainpage/monster_mainpage_{fd}.csv'.format(fd=filedate)
-    jobcount_local = 'output/jobcount/monster_jobcount_{fd}.csv'.format(fd=filedate)
-    logfile_local = 'log/{fd}.log'.format(fd=filedate)
+    mainpage_local = os.path.join(MONSTER_PATH, 'output', 'mainpage', 'monster_mainpage_{fd}.csv'.format(fd=filedate))
+    jobcount_local = os.path.join(MONSTER_PATH, 'output', 'jobcount', 'monster_jobcount_{fd}.csv'.format(fd=filedate))
+    logfile_local = os.path.join(MONSTER_PATH, 'log', '{fd}.log'.format(fd=filedate))
 
     settings = get_project_settings()
     settings.set('LOG_FILE', logfile_local)
