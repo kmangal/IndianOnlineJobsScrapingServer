@@ -34,7 +34,7 @@ def run_full_scrape():
 
     settings = get_project_settings()
     settings.set('LOG_FILE', logfile_local)
-    settings.set('LOG_LEVEL', 'INFO')
+    #settings.set('LOG_LEVEL', 'INFO')
     settings.set('FEED_URI', mainpage_local)
     settings.set('FEED_FORMAT', 'csv')
 

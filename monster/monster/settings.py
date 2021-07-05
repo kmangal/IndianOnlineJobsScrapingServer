@@ -9,8 +9,8 @@
 
 BOT_NAME = 'monster'
 
-SPIDER_MODULES = ['monster.spiders']
-NEWSPIDER_MODULE = 'monster.spiders'
+SPIDER_MODULES = ['monster.monster.spiders']
+NEWSPIDER_MODULE = 'monster.monster.spiders'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36'
@@ -97,5 +97,5 @@ class QuietLogFormatter(scrapy.logformatter.LogFormatter):
         )
 
 
-LOG_FORMATTER = "monster.settings.QuietLogFormatter"
+LOG_FORMATTER = "monster.monster.settings.QuietLogFormatter"
 
