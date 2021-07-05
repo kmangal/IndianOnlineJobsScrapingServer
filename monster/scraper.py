@@ -8,8 +8,6 @@ from scrapy.utils.project import get_project_settings
 
 import pathlib
 MONSTER_PATH = pathlib.Path(__file__).parent.resolve()
-print(MONSTER_PATH)
-print(os.environ.get('SCRAPY_PROJECT'))
 
 def modify_path():
     currentdir = os.path.dirname(os.path.realpath(__file__))
