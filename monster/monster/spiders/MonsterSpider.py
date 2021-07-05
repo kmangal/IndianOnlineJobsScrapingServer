@@ -73,9 +73,10 @@ class MonsterSpider(CrawlSpider):
     # To also print to console
     logging.getLogger().addHandler(logging.StreamHandler())
     
-    def __init__(self, debug = False, jobcountfile = '', *args, **kwargs):
+    def __init__(self, jobcountfile = '', test = False, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.debug = debug
+        
+        self.test = test
         self.jobcountfile = jobcountfile
 
         self.pagecounter = 0
@@ -170,7 +171,7 @@ class MonsterSpider(CrawlSpider):
 
         self.pagecounter += 1
 
-        if self.debug and self.pagecounter > 10:
+        if self.test and self.pagecounter > 10:
             raise CloseSpider("Debug Mode - Limited scrape")
     
         buttons = soup.select("div.srp-navigation > a")

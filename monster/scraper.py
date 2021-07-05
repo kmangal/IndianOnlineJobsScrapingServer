@@ -3,6 +3,10 @@ import sys
 
 from datetime import datetime
 
+from scrapy.crawler import CrawlerProcess
+from scrapy.utils.project import get_project_settings
+
+
 def modify_path():
     currentdir = os.path.dirname(os.path.realpath(__file__))
     parentdir = os.path.dirname(currentdir)
@@ -21,10 +25,14 @@ def run_full_scrape():
     jobcount_local = 'output/jobcount/monster_jobcount_{fd}.csv'.format(fd=filedate)
     logfile_local = 'log/{fd}.log'.format(fd=filedate)
 
-    os.system('scrapy crawl Monster -o "{mpl}" -a jobcountfile="{jcl}" -a logfile="{lfl}"'.format(
-        mpl = mainpage_local, 
-        jcl = jobcount_local, 
-        lfl = logfile_local))
+    settings = get_project_settings()
+    settings.set('LOG_FILE', logfile_local)
+    settings.set('FEED_URI', mainpage_local)
+
+    process = CrawlerProcess(settings)
+
+    process.crawl('Monster', jobcountfile = jobcount_local, test = False)
+    process.start() # the script will block here until the crawling is finished
 
     # Send files to Dropbox
     mainpage_dropbox = '/India Labor Market Indicators/scraping/Monster/ec2/mainpage/monster_mainpage_{fd}.csv'.format(fd=filedate)
@@ -44,7 +52,7 @@ def test_scrape():
     jobcount_local = 'test/jobcount/monster_jobcount_{fd}.csv'.format(fd=filedate)
     logfile_local = 'test/log/{fd}.log'.format(fd=filedate)
 
-    os.system('scrapy crawl Monster -o "{mainpage_local}" -a test=True -a jobcountfile="{jobcount_local}" -a logfile="{logfile_local}"'.format(mainpage_local = mainpage_local, jobcount_local = jobcount_local, logfile_local = logfile_local))
+    #os.system('scrapy crawl Monster -o "{mainpage_local}" -a test=True -a jobcountfile="{jobcount_local}" -a logfile="{logfile_local}"'.format(mainpage_local = mainpage_local, jobcount_local = jobcount_local, logfile_local = logfile_local))
 
 if __name__ == '__main__':
     # Default behavior is to run a test
