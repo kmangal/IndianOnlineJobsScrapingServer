@@ -31,7 +31,7 @@ def run_full_scrape():
 
     process = CrawlerProcess(settings)
 
-    process.crawl('Monster', jobcountfile = jobcount_local, test = False)
+    process.crawl('monster', jobcountfile = jobcount_local, test = False)
     process.start() # the script will block here until the crawling is finished
 
     # Send files to Dropbox
