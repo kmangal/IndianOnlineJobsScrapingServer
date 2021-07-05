@@ -11,11 +11,11 @@ def modify_path():
     parentdir = os.path.dirname(currentdir)
     sys.path.append(parentdir)
 
-modify_path()
+#modify_path()
 
-from monster.spiders.MonsterSpider import MonsterSpider
-
-import util.export_to_dropbox
+# Can't run this file directly - needs to be called from parent folder
+from monster.monster.spiders.MonsterSpider import MonsterSpider
+from util.export_to_dropbox import move_to_dropbox
 
 
 def run_full_scrape():
@@ -41,9 +41,9 @@ def run_full_scrape():
     jobcount_dropbox = '/India Labor Market Indicators/scraping/Monster/ec2/jobcount/monster_jobcount_{fd}.csv'.format(fd=filedate)
     logfile_dropbox = '/India Labor Market Indicators/scraping/Monster/ec2/log/{fd}.log'.format(fd=filedate)
     
-    util.export_to_dropbox.move_to_dropbox(mainpage_local, mainpage_dropbox)
-    util.export_to_dropbox.move_to_dropbox(jobcount_local, jobcount_dropbox)
-    util.export_to_dropbox.move_to_dropbox(logfile_local, logfile_dropbox)
+    move_to_dropbox(mainpage_local, mainpage_dropbox)
+    move_to_dropbox(jobcount_local, jobcount_dropbox)
+    move_to_dropbox(logfile_local, logfile_dropbox)
 
 
 def test_scrape():
@@ -66,6 +66,7 @@ def test_scrape():
 
 
 if __name__ == '__main__':
+    pass
     # Default behavior is to run a test
-    test_scrape()
+    #test_scrape()
     
