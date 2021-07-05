@@ -6,6 +6,8 @@ from datetime import datetime
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 
+from monster.spiders.MonsterSpider import MonsterSpider
+
 
 def modify_path():
     currentdir = os.path.dirname(os.path.realpath(__file__))
@@ -28,10 +30,11 @@ def run_full_scrape():
     settings = get_project_settings()
     settings.set('LOG_FILE', logfile_local)
     settings.set('FEED_URI', mainpage_local)
+    settings.set('FEED_FORMAT', 'csv')
 
     process = CrawlerProcess(settings)
 
-    process.crawl('monster', jobcountfile = jobcount_local, test = False)
+    process.crawl(MonsterSpider, jobcountfile = jobcount_local, test = False)
     process.start() # the script will block here until the crawling is finished
 
     # Send files to Dropbox
@@ -52,9 +55,18 @@ def test_scrape():
     jobcount_local = 'test/jobcount/monster_jobcount_{fd}.csv'.format(fd=filedate)
     logfile_local = 'test/log/{fd}.log'.format(fd=filedate)
 
-    #os.system('scrapy crawl Monster -o "{mainpage_local}" -a test=True -a jobcountfile="{jobcount_local}" -a logfile="{logfile_local}"'.format(mainpage_local = mainpage_local, jobcount_local = jobcount_local, logfile_local = logfile_local))
+    settings = get_project_settings()
+    settings.set('LOG_FILE', logfile_local)
+    settings.set('FEED_URI', mainpage_local)
+    settings.set('FEED_FORMAT', 'csv')
+
+    process = CrawlerProcess(settings)
+
+    process.crawl(MonsterSpider, jobcountfile = jobcount_local, test = True)
+    process.start() # the script will block here until the crawling is finished
+
 
 if __name__ == '__main__':
     # Default behavior is to run a test
-    test_scrape(filedate)
+    test_scrape()
     

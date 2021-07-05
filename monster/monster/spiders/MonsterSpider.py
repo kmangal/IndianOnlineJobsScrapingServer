@@ -63,7 +63,7 @@ def process_links(link):
 
 class MonsterSpider(CrawlSpider):
 
-    name = 'Monster'
+    name = 'monster'
     allowed_domains = ['monsterindia.com']
     start_urls = ['https://www.monsterindia.com/search/jobs-by-location']
     rules = (
@@ -151,7 +151,7 @@ class MonsterSpider(CrawlSpider):
             except Exception as e:
                 skill = ""
             try:
-                posted_at = soup.find('span', class_='posted').text.strip()
+                posted_at = soup.find('span', class_='posted').text.strip().replace('Posted: ', '')
             except Exception as e:
                 posted_at = ""
 
