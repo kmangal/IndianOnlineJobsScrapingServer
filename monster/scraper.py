@@ -8,6 +8,7 @@ from scrapy.utils.project import get_project_settings
 
 import pathlib
 MONSTER_PATH = pathlib.Path(__file__).parent.resolve()
+os.environ.setdefault('SCRAPY_SETTINGS_MODULE', 'monster.monster.settings')
 
 def modify_path():
     currentdir = os.path.dirname(os.path.realpath(__file__))
@@ -21,6 +22,8 @@ from monster.monster.spiders.MonsterSpider import MonsterSpider
 from util.export_to_dropbox import move_to_dropbox
 
 
+
+
 def run_full_scrape():
 
     filedate = datetime.today().strftime('%Y%m%d_%H%M%S')
@@ -31,6 +34,7 @@ def run_full_scrape():
 
     settings = get_project_settings()
     settings.set('LOG_FILE', logfile_local)
+    settings.set('LOG_LEVEL', 'INFO')
     settings.set('FEED_URI', mainpage_local)
     settings.set('FEED_FORMAT', 'csv')
 
