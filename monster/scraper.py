@@ -6,15 +6,14 @@ from datetime import datetime
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 
-from monster.spiders.MonsterSpider import MonsterSpider
-
-
 def modify_path():
     currentdir = os.path.dirname(os.path.realpath(__file__))
     parentdir = os.path.dirname(currentdir)
     sys.path.append(parentdir)
 
 modify_path()
+
+from monster.spiders.MonsterSpider import MonsterSpider
 
 import util.export_to_dropbox
 
