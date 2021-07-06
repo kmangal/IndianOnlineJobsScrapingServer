@@ -37,6 +37,9 @@ def timesjobs_detail_scrape(**kwargs):
     
     
 if __name__ == '__main__':
+
     if sys.argv[1] == 'shine':
         shine.scraper.test_scrape()
+    elif sys.argv[1] == 'teamlease':
+        teamlease.scraper.test_scrape()
         

@@ -55,9 +55,10 @@ def test_scrape():
 
     settings = get_project_settings()
     settings.set('LOG_FILE', logfile_local)
-    settings.set('FEED_URI', mainpage_local)
-    settings.set('FEED_FORMAT', 'csv')
-    
+    #settings.set('FEED_URI', mainpage_local)
+    #settings.set('FEED_FORMAT', 'csv')
+    settings.set('FEEDS', {'file:///' + mainpage_local : {'format' : 'csv'}})
+
     process = CrawlerProcess(settings)
     
     process.crawl(TeamLeaseSpider, jobcountfile = jobcount_local, test = True)
