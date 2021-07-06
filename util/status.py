@@ -21,8 +21,9 @@ def worker_name(worker):
 
 # Returns all workers registered in this connection
 workers = Worker.all(connection=config.redis)
+workers.sort(key=worker_name)
 
-for worker in workers.sort(key=worker_name):
+for worker in workers:
     print("Worker:", worker.name)
     print(" -state:", worker.state)
     print(" -birth:", format_time(worker.birth_date))
