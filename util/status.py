@@ -16,10 +16,13 @@ import config
 def format_time(time):
     return time.strftime('%m/%d/%Y %I:%M:%S %p %Z')
 
+def worker_name(worker):
+    return worker.name
+
 # Returns all workers registered in this connection
 workers = Worker.all(connection=config.redis)
 
-for worker in workers:
+for worker in workers.sort(key=worker_name):
     print("Worker:", worker.name)
     print(" -state:", worker.state)
     print(" -birth:", format_time(worker.birth_date))
