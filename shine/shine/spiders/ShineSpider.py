@@ -27,18 +27,15 @@ class ShineSpider(scrapy.Spider):
     allowed_domains = ['shine.com']
     start_urls = ['https://www.shine.com/job-search/jobs']
 
-    def __init__(self, test = False, jobcountfile = '', logfile = '', *args, **kwargs):
+    def __init__(self, jobcountfile = '', test = False, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.test = test
-
-        if not logfile:
-            raise Exception("Log file path missing")
-        else:
-            logging.getLogger().addHandler(logging.FileHandler(logfile))
-
+        
         if jobcountfile:
             self._getjobcount(jobcountfile)
 
+        self.pagecount = 0
+        
     def _getjobcount(self, jobcountfile):
         
         success = False
@@ -116,7 +113,9 @@ class ShineSpider(scrapy.Spider):
                 "url-scraped": response.url
             }
         
-        if self.test:
+        self.pagecount += 1
+        
+        if self.test and self.pagecount > 2:
             raise CloseSpider("Test Mode")
 
         # Go to next page

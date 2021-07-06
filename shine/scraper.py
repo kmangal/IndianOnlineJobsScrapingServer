@@ -6,8 +6,6 @@ from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 
 import pathlib
-SHINE_PATH = pathlib.Path(__file__).parent.resolve()
-os.environ.setdefault('SCRAPY_SETTINGS_MODULE', 'shine.shine.settings')
 
 # Can't run this file directly - needs to be called from parent folder
 from shine.shine.spiders.ShineSpider import ShineSpider
@@ -16,6 +14,9 @@ from util.export_to_dropbox import move_to_dropbox
 import shine.detailscrape
 
 def run_full_scrape():
+
+    SHINE_PATH = pathlib.Path(__file__).parent.resolve()
+    os.environ['SCRAPY_SETTINGS_MODULE'] = 'shine.shine.settings'
 
     filedate = datetime.today().strftime('%Y%m%d_%H%M%S')
 
@@ -55,16 +56,22 @@ def run_full_scrape():
 
 def test_scrape():
 
+    SHINE_PATH = pathlib.Path(__file__).parent.resolve()
+    os.environ['SCRAPY_SETTINGS_MODULE'] = 'shine.shine.settings'
+    
     filedate = datetime.today().strftime('%Y%m%d_%H%M%S')
 
-    mainpage_local = 'test/mainpage/shine_mainpage_{fd}.csv'.format(fd=filedate)
-    jobcount_local = 'test/jobcount/shine_jobcount_{fd}.csv'.format(fd=filedate)
-    logfile_local = 'test/log/{fd}.log'.format(fd=filedate)
+    mainpage_local = os.path.join(SHINE_PATH, 'test', 'mainpage', 'shine_mainpage_{fd}.csv'.format(fd=filedate))
+    jobcount_local = os.path.join(SHINE_PATH, 'test', 'jobcount', 'shine_jobcount_{fd}.csv'.format(fd=filedate))
+    details_local = os.path.join(SHINE_PATH, 'test', 'details', 'shine_details_{fd}.csv'.format(fd=filedate))
+    logfile_local = os.path.join(SHINE_PATH, 'test', 'log', '{fd}.log'.format(fd=filedate))
 
     settings = get_project_settings()
     settings.set('LOG_FILE', logfile_local)
-    settings.set('FEED_URI', mainpage_local)
-    settings.set('FEED_FORMAT', 'csv')
+    #settings.set('FEED_URI', mainpage_local)
+    #settings.set('FEED_FORMAT', 'csv')
+    
+    settings.set('FEEDS', {'file:///' + mainpage_local : {'format' : 'csv'}})
 
     process = CrawlerProcess(settings)
     
