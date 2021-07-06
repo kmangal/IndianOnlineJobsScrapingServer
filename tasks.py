@@ -29,6 +29,6 @@ def teamlease_scrape():
 
 # Special tasks
 
-def teamlease_detail_scrape(**kwargs):
+def timesjobs_detail_scrape(**kwargs):
     ds = timesjobs.detailscrape.DetailScraper(kwargs['infile'], kwargs['outfile'], kwargs['log'])
     ds.run()

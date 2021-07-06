@@ -12,7 +12,7 @@ import config
 
 def redo_timesjobs_details(infile, outfile, logfile):
     q = Queue(connection = config.redis)
-    result = q.enqueue(tasks.teamlease_detail_scrape, 
+    result = q.enqueue(tasks.timesjobs_detail_scrape, 
        kwargs = {'infile' : infile,
         'outfile' : outfile,
         'log' : logfile},
