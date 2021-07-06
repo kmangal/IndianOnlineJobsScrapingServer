@@ -61,4 +61,7 @@ if __name__ == '__main__':
         shine.scraper.test_scrape()
     elif sys.argv[1] == 'teamlease':
         teamlease.scraper.test_scrape()
-        
+    elif sys.argv[1] == 'shine-detail':
+        shine.scraper.test_details()
+    else:
+        print("Argument not recognized")

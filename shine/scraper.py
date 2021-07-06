@@ -1,5 +1,7 @@
 import os
 import sys
+import glob
+
 from datetime import datetime
 
 from scrapy.crawler import CrawlerProcess
@@ -77,7 +79,28 @@ def test_scrape():
     
     process.crawl(ShineSpider, jobcountfile = jobcount_local, test = True)
     process.start() # the script will block here until the crawling is finished
+
+def test_details():
+
+    SHINE_PATH = pathlib.Path(__file__).parent.resolve()
+
+    input_files = glob.glob(os.path.join(SHINE_PATH, 'test', 'mainpage', '*.csv'))
+    if input_files:
+        latest_input = max(input_files, key=os.path.getctime)
+    else:
+        raise Exception("No input files detected")
+
+    print('Input file:', latest_input)
+    file_ending = latest_input.split('mainpage_')[1]
+    mainpage_local = os.path.join(SHINE_PATH, 'test', 'mainpage', latest_input)
+    details_local = os.path.join(SHINE_PATH, 'test', 'details', 'shine_details_' + file_ending)
+    logfile_local = os.path.join(SHINE_PATH, 'test', 'log', 'detail_scrape.log')
     
+    ds = shine.detailscrape.DetailScraper(mainpagefile = mainpage_local,
+                       detailsfile = details_local, 
+                       logfile = logfile_local, 
+                       test = True)
+    ds.run()            
 
 if __name__ == '__main__':
     # File can't be run directly - imports need to be called from parent folder
