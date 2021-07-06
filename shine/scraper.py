@@ -44,7 +44,7 @@ def run_full_scrape():
     move_to_dropbox(mainpage_local, mainpage_dropbox)
     move_to_dropbox(jobcount_local, jobcount_dropbox)
     
-    ds = DetailScraper(mainpagefile = mainpage_local,
+    ds = shine.detailscrape.DetailScraper(mainpagefile = mainpage_local,
                        detailsfile = details_local, 
                        logfile = logfile_local)
     ds.run()    
