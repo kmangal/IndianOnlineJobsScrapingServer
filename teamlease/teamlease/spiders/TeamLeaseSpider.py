@@ -23,15 +23,11 @@ class TeamLeaseSpider(scrapy.Spider):
     start_urls = ['https://www.teamlease.com/jobs/']
     handle_httpstatus_list = [404, 500, 502]
  
-    def __init__(self, test = False, jobcountfile = '', logfile = '', *args, **kwargs):
+    def __init__(self, jobcountfile = '', test = False, *args, **kwargs):
+    
         super().__init__(*args, **kwargs)
         self.test = test
         self.failed_urls = []
-        
-        if not logfile:
-            raise Exception("Log file path missing")
-        else:
-            logging.getLogger().addHandler(logging.FileHandler(logfile))
 
         if jobcountfile:
             self._getjobcount(jobcountfile)
@@ -189,6 +185,7 @@ class TeamLeaseSpider(scrapy.Spider):
         offset = nextpagelink['href']
 
         yield Request('https://www.teamlease.com/jobs{}'.format(offset), callback = self.parse)
+
 
     def _is_last_page(self, soup):
             

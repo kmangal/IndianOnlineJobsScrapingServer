@@ -9,8 +9,8 @@
 
 BOT_NAME = 'teamlease'
 
-SPIDER_MODULES = ['teamlease.spiders']
-NEWSPIDER_MODULE = 'teamlease.spiders'
+SPIDER_MODULES = ['teamlease.teamlease.spiders']
+NEWSPIDER_MODULE = 'teamlease.teamlease.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
@@ -136,5 +136,5 @@ class QuietLogFormatter(scrapy.logformatter.LogFormatter):
             else None
         )
 
-LOG_FORMATTER = "teamlease.settings.QuietLogFormatter"
+LOG_FORMATTER = "teamlease.teamlease.settings.QuietLogFormatter"
 
