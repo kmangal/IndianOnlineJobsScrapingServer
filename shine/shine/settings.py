@@ -9,8 +9,8 @@
 
 BOT_NAME = 'shine'
 
-SPIDER_MODULES = ['shine.spiders']
-NEWSPIDER_MODULE = 'shine.spiders'
+SPIDER_MODULES = ['shine.shine.spiders']
+NEWSPIDER_MODULE = 'shine.shine.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
@@ -99,5 +99,5 @@ class QuietLogFormatter(scrapy.logformatter.LogFormatter):
         )
 
 
-LOG_FORMATTER = "shine.settings.QuietLogFormatter"
+LOG_FORMATTER = "shine.shine.settings.QuietLogFormatter"
 
