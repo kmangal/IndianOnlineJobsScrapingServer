@@ -2,48 +2,55 @@ import os
 import sys
 from datetime import datetime
 
-def modify_path():
-    currentdir = os.path.dirname(os.path.realpath(__file__))
-    parentdir = os.path.dirname(currentdir)
-    sys.path.append(parentdir)
+from scrapy.crawler import CrawlerProcess
+from scrapy.utils.project import get_project_settings
 
-modify_path()
+import pathlib
+SHINE_PATH = pathlib.Path(__file__).parent.resolve()
+os.environ.setdefault('SCRAPY_SETTINGS_MODULE', 'shine.shine.settings')
 
-import util.export_to_dropbox
+# Can't run this file directly - needs to be called from parent folder
+from shine.shine.spiders.ShineSpider import ShineSpider
+from util.export_to_dropbox import move_to_dropbox
 
+import shine.detailscrape
 
 def run_full_scrape():
 
     filedate = datetime.today().strftime('%Y%m%d_%H%M%S')
 
-    mainpage_local = 'output/mainpage/shine_mainpage_{fd}.csv'.format(fd=filedate)
-    jobcount_local = 'output/jobcount/shine_jobcount_{fd}.csv'.format(fd=filedate)
-    #details_local = 'output/details/shine_details_{fd}.csv'.format(fd=filedate)
-    logfile_local = 'log/{fd}.log'.format(fd=filedate)
+    mainpage_local = os.path.join(SHINE_PATH, 'output', 'mainpage', 'shine_mainpage_{fd}.csv'.format(fd=filedate))
+    jobcount_local = os.path.join(SHINE_PATH, 'output', 'jobcount', 'shine_jobcount_{fd}.csv'.format(fd=filedate))
+    details_local = os.path.join(SHINE_PATH, 'output', 'details', 'shine_details_{fd}.csv'.format(fd=filedate))
+    logfile_local = os.path.join(SHINE_PATH, 'log', '{fd}.log'.format(fd=filedate))
 
-    os.system('scrapy crawl Shine -o "{mpl}" -a jobcountfile="{jcl}" -a logfile="{lfl}"'.format(
-        mpl = mainpage_local, 
-        jcl = jobcount_local, 
-        lfl = logfile_local))
+    settings = get_project_settings()
+    settings.set('LOG_FILE', logfile_local)
+    settings.set('FEED_URI', mainpage_local)
+    settings.set('FEED_FORMAT', 'csv')
 
+    process = CrawlerProcess(settings)
+    
+    process.crawl(ShineSpider, jobcountfile = jobcount_local, test = False)
+    process.start() # the script will block here until the crawling is finished
+    
     # Send files to Dropbox
     mainpage_dropbox = '/India Labor Market Indicators/scraping/Shine/ec2/mainpage/shine_mainpage_{fd}.csv'.format(fd=filedate)
     jobcount_dropbox = '/India Labor Market Indicators/scraping/Shine/ec2/jobcount/shine_jobcount_{fd}.csv'.format(fd=filedate)
-    #details_dropbox = '/India Labor Market Indicators/scraping/Shine/ec2/details/shine_details_{fd}.csv'.format(fd=filedate)
+    details_dropbox = '/India Labor Market Indicators/scraping/Shine/ec2/details/shine_details_{fd}.csv'.format(fd=filedate)
     logfile_dropbox = '/India Labor Market Indicators/scraping/Shine/ec2/log/{fd}.log'.format(fd=filedate)
     
-    util.export_to_dropbox.move_to_dropbox(mainpage_local, mainpage_dropbox)
-    util.export_to_dropbox.move_to_dropbox(jobcount_local, jobcount_dropbox)
+    move_to_dropbox(mainpage_local, mainpage_dropbox)
+    move_to_dropbox(jobcount_local, jobcount_dropbox)
     
-    # Run detail scrape
-    #shine_details.run_scrape(
-    #    inputfile = mainpage_local, 
-    #    outputfile = details_local,
-    #    logfile = logfile_local)
+    ds = DetailScraper(mainpagefile = mainpage_local,
+                       detailsfile = details_local, 
+                       logfile = logfile_local)
+    ds.run()    
         
     # Move the log and details files
-    #util.export_to_dropbox.move_to_dropbox(details_local, details_dropbox)
-    util.export_to_dropbox.move_to_dropbox(logfile_local, logfile_dropbox)
+    move_to_dropbox(details_local, details_dropbox)
+    move_to_dropbox(logfile_local, logfile_dropbox)
 
 
 def test_scrape():
@@ -54,10 +61,18 @@ def test_scrape():
     jobcount_local = 'test/jobcount/shine_jobcount_{fd}.csv'.format(fd=filedate)
     logfile_local = 'test/log/{fd}.log'.format(fd=filedate)
 
-    os.system('scrapy crawl Shine -o "{mainpage_local}" -a test=True -a jobcountfile="{jobcount_local}" -a logfile="{logfile_local}"'.format(mainpage_local = mainpage_local, jobcount_local = jobcount_local, logfile_local = logfile_local))
+    settings = get_project_settings()
+    settings.set('LOG_FILE', logfile_local)
+    settings.set('FEED_URI', mainpage_local)
+    settings.set('FEED_FORMAT', 'csv')
+
+    process = CrawlerProcess(settings)
+    
+    process.crawl(ShineSpider, jobcountfile = jobcount_local, test = True)
+    process.start() # the script will block here until the crawling is finished
     
 
 if __name__ == '__main__':
-    # Default behavior is to run a test
-    test_scrape()
+    # File can't be run directly - imports need to be called from parent folder
+    pass
     
