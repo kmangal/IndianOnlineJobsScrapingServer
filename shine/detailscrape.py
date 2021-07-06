@@ -293,9 +293,9 @@ class DetailScraper:
     def run(self):
 
         if self.test:
-            table = 'test' 
+            self.table = 'test' 
         else:
-            table = 'history'
+            self.table = 'history'
 
         # Connect to database
         self.DB = mysql.connector.connect(
