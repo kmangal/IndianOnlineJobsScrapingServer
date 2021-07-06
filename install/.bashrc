@@ -21,5 +21,6 @@ cd jobs_scraping
 alias jobs="python ~/jobs_scraping/util/jobs.py"
 alias status="python ~/jobs_scraping/util/status.py"
 
-function seelog { tail -n 5 "$(ls -1r $1/*.log | head -n 1)"; }
-export -f seelog
+#function seelog { tail -n 5 "$(ls -1r $1/*.log | head -n 1)"; }
+#export -f seelog
+alias seelog="python ~/jobs_scraping/util/seelog.py"
