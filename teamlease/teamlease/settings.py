@@ -125,16 +125,8 @@ DOWNLOAD_DELAY = 5.0
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 
-
-import scrapy.logformatter
-
-class QuietLogFormatter(scrapy.logformatter.LogFormatter):
-    def scraped(self, item, response, spider):
-        return (
-            super().scraped(item, response, spider)
-            if spider.settings.getbool("LOG_SCRAPED_ITEMS")
-            else None
-        )
-
-LOG_FORMATTER = "teamlease.teamlease.settings.QuietLogFormatter"
-
+from util.scrapelogger import BaseLogger
+#LOG_FORMATTER = "teamlease.teamlease.settings.QuietLogFormatter"
+LOG_FORMATTER = BaseLogger.MSGFORMAT
+LOG_DATEFORMAT = BaseLogger.DATEFORMAT
+LOG_LEVEL = 'INFO'

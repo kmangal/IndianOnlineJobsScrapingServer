@@ -24,7 +24,7 @@ class TeamLeaseSpider(scrapy.Spider):
     handle_httpstatus_list = [404, 500, 502]
  
     def __init__(self, jobcountfile = '', test = False, *args, **kwargs):
-    
+                
         super().__init__(*args, **kwargs)
         self.test = test
         self.failed_urls = []
