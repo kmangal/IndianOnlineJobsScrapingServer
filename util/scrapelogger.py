@@ -5,7 +5,7 @@ import datetime
 
 class BaseLogger:
     
-    MSGFORMAT = '%(asctime)s \t %(name)s \t %(levelname)s \t %(message)s'
+    MSGFORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     DATEFORMAT = '%m/%d/%Y %I:%M:%S %p %Z'
     
     def __init__(self, name, path, level = logging.DEBUG):
@@ -63,3 +63,13 @@ class ErrorLogger(BaseLogger):
         
         self.start()
         
+
+import scrapy.logformatter
+
+class ScrapyLogFormatter(scrapy.logformatter.LogFormatter):
+    def scraped(self, item, response, spider):
+        return (
+            super().scraped(item, response, spider)
+            if spider.settings.getbool("LOG_SCRAPED_ITEMS")
+            else None
+        )

@@ -126,7 +126,8 @@ DOWNLOAD_DELAY = 5.0
 
 
 from util.scrapelogger import BaseLogger
-#LOG_FORMATTER = "teamlease.teamlease.settings.QuietLogFormatter"
-LOG_FORMATTER = BaseLogger.MSGFORMAT
+
+LOG_FORMATTER = "util.scrapelogger.ScrapyLogFormatter"
+LOG_FORMAT = BaseLogger.MSGFORMAT
 LOG_DATEFORMAT = BaseLogger.DATEFORMAT
-LOG_LEVEL = 'INFO'
+LOG_LEVEL = 'INFO'   # default is DEBUG
