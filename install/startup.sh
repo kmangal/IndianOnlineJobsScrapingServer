@@ -14,8 +14,16 @@ git config --global user.email india.labourinsights.server@gmail.com
 cd jobs_scraping
 sh install/makefolders.sh
 
-pip install -r reequirements.txt
+pip install -r requirements.txt
 
 sh install/startrqservice.sh
 
-mv install/.bashrc ~/.bashrc
+cp install/.bashrc ~/.bashrc
+
+
+# chromium install
+# source: https://stackoverflow.com/questions/48480143/installing-chromium-on-amazon-linux
+sudo amazon-linux-extras install epel -y
+sudo yum install -y chromium
+
+sh install/startworkers.sh

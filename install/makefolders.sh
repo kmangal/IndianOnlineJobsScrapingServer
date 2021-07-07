@@ -19,3 +19,5 @@ mkdir -p waahjobs/test/log
 mkdir -p waahjobs/output/api
 mkdir -p waahjobs/log
 
+mkdir log
+mkdir log/error
