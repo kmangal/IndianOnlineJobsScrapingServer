@@ -125,9 +125,9 @@ DOWNLOAD_DELAY = 5.0
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 
-from util.scrapelogger import BaseLogger
+import util.scrapelogger
 
 LOG_FORMATTER = "util.scrapelogger.ScrapyLogFormatter"
-LOG_FORMAT = BaseLogger.MSGFORMAT
-LOG_DATEFORMAT = BaseLogger.DATEFORMAT
+LOG_FORMAT = util.scrapelogger.MSGFORMAT
+LOG_DATEFORMAT = util.scrapelogger.DATEFORMAT
 LOG_LEVEL = 'INFO'   # default is DEBUG

@@ -3,10 +3,10 @@ import logging.handlers
 import sys
 import datetime
 
-class BaseLogger:
+MSGFORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+DATEFORMAT = '%m/%d/%Y %I:%M:%S %p %Z'
     
-    MSGFORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    DATEFORMAT = '%m/%d/%Y %I:%M:%S %p %Z'
+class BaseLogger:
     
     def __init__(self, name, path, level = logging.DEBUG):
          
@@ -15,7 +15,7 @@ class BaseLogger:
         self.log = logging.getLogger(name)
         self.log.setLevel(level)
             
-        self.log_format = logging.Formatter(BaseLogger.MSGFORMAT, datefmt= BaseLogger.DATEFORMAT)
+        self.log_format = logging.Formatter(MSGFORMAT, datefmt= DATEFORMAT)
         
         log_streamhandler = logging.StreamHandler()
         log_streamhandler.setFormatter(self.log_format)
