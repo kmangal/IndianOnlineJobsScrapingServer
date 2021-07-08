@@ -91,7 +91,7 @@ def main():
         )    
   
 
-    if 'clean' not in scheduled_jobs
+    if 'clean' not in scheduled_jobs:
         # Run every day
 
         scheduler.schedule(
@@ -100,7 +100,7 @@ def main():
             interval = 60 * 60 * 24,                               # Interval in seconds
             repeat= None,                                         # Repeat this number of times (None means repeat forever)
             queue_name= 'default',                                # In which queue the job should be put in
-            meta={'site': None, 'type' : 'utility', 'name' : 'clean'},                                  # Arbitrary pickleable data on the job itself
+            meta={'site': None, 'type' : 'utility', 'name' : 'clean'},         # Arbitrary pickleable data on the job itself
             timeout = 60 * 60 * 1                               # Run for a max of one hour
         )          
 
