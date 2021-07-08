@@ -16,6 +16,8 @@ import mysql.connector
 import sys
 import os
 
+import logging
+
 def modify_path():
     currentdir = os.path.dirname(os.path.realpath(__file__))
     parentdir = os.path.dirname(currentdir)
@@ -77,7 +79,7 @@ class DetailScraper:
         self.test = test
 
         # Set up log file
-        self.logger = scrapelogger.ScrapeLogger('shine-details', logfile)
+        self.logger = scrapelogger.ScrapeLogger('shine-details', logfile, level = logging.INFO)
 
     @classmethod
     def get_header(cls):
@@ -137,13 +139,15 @@ class DetailScraper:
 
     def scrape_url(self, url):
         
+        session = HTMLSession()
+
         try:
-            r = self.session.get(url, headers = DetailScraper.get_header())
+            r = session.get(url, headers = DetailScraper.get_header())
         except:
             # In case the connection is reset - not sure how to specify this correctly.
             self.logger.log.error("While fetching {} connection reset by peer. Taking a break for 1 min...".format(url))
             time.sleep(60)
-            r = self.session.get(url, headers = DetailScraper.get_header())
+            r = session.get(url, headers = DetailScraper.get_header())
 
         try:
             r.html.render()
@@ -242,6 +246,8 @@ class DetailScraper:
             similarjobslist = response.find('a.cls_searchresult_a')
             similarjobs = '; '.join([item.attrs['data-jobid'] for item in similarjobslist])
 
+            session.close()
+            
             return {
                     'url' : url,
                     'status' : 1,
@@ -273,6 +279,7 @@ class DetailScraper:
 
             
         except:
+            session.close()
             return {'url' : url, 'status' : 0}
         
 
@@ -304,8 +311,6 @@ class DetailScraper:
            password="b9PR]37DsB",
            database = 'shine'
         )
-
-        self.session = HTMLSession()
 
         self.links = self.get_links()
         self.totalpages = len(self.links)
