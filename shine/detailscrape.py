@@ -292,9 +292,9 @@ class DetailScraper:
                 row = self.scrape_url(link)
                 self.writer.writerow(row)
                 self.update_database(link, row['status'])
-                self.logger.log.info("Page {}/{} - {} - New Scrape - STATUS:{}".format(pagecounter, self.totalpages, link, row['status']))
+                self.logger.log.info("Page {}/{} {} New Scrape STATUS:{}".format(pagecounter, self.totalpages, link, row['status']))
             else:
-                self.logger.log.info("Page {}/{} - {} - Already Scraped".format(pagecounter, self.totalpages, link))
+                self.logger.log.info("Page {}/{} {} Already Scraped".format(pagecounter, self.totalpages, link))
 
 
     def run(self):

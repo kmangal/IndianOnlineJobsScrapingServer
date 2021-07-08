@@ -20,10 +20,10 @@ def run_full_scrape():
 
     mainpage_local = os.path.join(TL_PATH, 'output', 'mainpage', 'teamlease_mainpage_{fd}.csv'.format(fd=filedate))
     jobcount_local = os.path.join(TL_PATH, 'output', 'jobcount', 'teamlease_jobcount_{fd}.csv'.format(fd=filedate))
-    logfile_local = os.path.join(TL_PATH, 'log', '{fd}.log'.format(fd=filedate))
+    mainlogfile_local = os.path.join(TL_PATH, 'log', 'mainpage', '{fd}.log'.format(fd=filedate))
 
     settings = get_project_settings()
-    settings.set('LOG_FILE', logfile_local)
+    settings.set('LOG_FILE', mainlogfile_local)
     settings.set('FEED_URI', mainpage_local)
     settings.set('FEED_FORMAT', 'csv')
 
@@ -35,11 +35,11 @@ def run_full_scrape():
     # Send files to Dropbox
     mainpage_dropbox = '/India Labor Market Indicators/scraping/TeamLease/ec2/mainpage/teamlease_mainpage_{fd}.csv'.format(fd=filedate)
     jobcount_dropbox = '/India Labor Market Indicators/scraping/TeamLease/ec2/jobcount/teamlease_jobcount_{fd}.csv'.format(fd=filedate)
-    logfile_dropbox = '/India Labor Market Indicators/scraping/TeamLease/ec2/log/{fd}.log'.format(fd=filedate)
+    mainlogfile_dropbox = '/India Labor Market Indicators/scraping/TeamLease/ec2/log/mainpage/{fd}.log'.format(fd=filedate)
     
     move_to_dropbox(mainpage_local, mainpage_dropbox)
     move_to_dropbox(jobcount_local, jobcount_dropbox)
-    move_to_dropbox(logfile_local, logfile_dropbox)
+    move_to_dropbox(mainlogfile_local, mainlogfile_dropbox)
 
 
 def test_scrape():

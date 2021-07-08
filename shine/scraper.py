@@ -25,10 +25,10 @@ def run_full_scrape():
     mainpage_local = os.path.join(SHINE_PATH, 'output', 'mainpage', 'shine_mainpage_{fd}.csv'.format(fd=filedate))
     jobcount_local = os.path.join(SHINE_PATH, 'output', 'jobcount', 'shine_jobcount_{fd}.csv'.format(fd=filedate))
     details_local = os.path.join(SHINE_PATH, 'output', 'details', 'shine_details_{fd}.csv'.format(fd=filedate))
-    logfile_local = os.path.join(SHINE_PATH, 'log', '{fd}.log'.format(fd=filedate))
+    mainlogfile_local = os.path.join(SHINE_PATH, 'log', 'mainpage', '{fd}.log'.format(fd=filedate))
 
     settings = get_project_settings()
-    settings.set('LOG_FILE', logfile_local)
+    settings.set('LOG_FILE', mainlogfile_local)
     settings.set('FEED_URI', mainpage_local)
     settings.set('FEED_FORMAT', 'csv')
 
@@ -41,19 +41,23 @@ def run_full_scrape():
     mainpage_dropbox = '/India Labor Market Indicators/scraping/Shine/ec2/mainpage/shine_mainpage_{fd}.csv'.format(fd=filedate)
     jobcount_dropbox = '/India Labor Market Indicators/scraping/Shine/ec2/jobcount/shine_jobcount_{fd}.csv'.format(fd=filedate)
     details_dropbox = '/India Labor Market Indicators/scraping/Shine/ec2/details/shine_details_{fd}.csv'.format(fd=filedate)
-    logfile_dropbox = '/India Labor Market Indicators/scraping/Shine/ec2/log/{fd}.log'.format(fd=filedate)
+    mainlogfile_dropbox = '/India Labor Market Indicators/scraping/Shine/ec2/log/mainpage/{fd}.log'.format(fd=filedate)
+    detaillogfile_dropbox = '/India Labor Market Indicators/scraping/Shine/ec2/log/details/{fd}.log'.format(fd=filedate)
     
     move_to_dropbox(mainpage_local, mainpage_dropbox)
     move_to_dropbox(jobcount_local, jobcount_dropbox)
+    move_to_dropbox(mainlogfile_local, mainlogfile_dropbox)
     
+    detaillogfile_local = os.path.join(SHINE_PATH, 'log', 'details', '{fd}.log'.format(fd=filedate))
+
     ds = shine.detailscrape.DetailScraper(mainpagefile = mainpage_local,
                        detailsfile = details_local, 
-                       logfile = logfile_local)
+                       logfile = detaillogfile_local)
     ds.run()    
         
     # Move the log and details files
     move_to_dropbox(details_local, details_dropbox)
-    move_to_dropbox(logfile_local, logfile_dropbox)
+    move_to_dropbox(detaillogfile_local, detaillogfile_dropbox)
 
 
 def test_scrape():
