@@ -8,6 +8,7 @@ certifi==2021.5.30
 cffi==1.14.5
 chardet==4.0.0
 click==8.0.1
+colorama==0.4.4
 constantly==15.1.0
 croniter==1.0.15
 cryptography==3.4.7
@@ -49,6 +50,7 @@ pyquery==1.4.3
 python-dateutil==2.8.1
 pytz==2021.1
 queuelib==1.6.1
+random-user-agent==1.0.1
 redis==3.5.3
 requests==2.25.1
 requests-html==0.10.0
@@ -65,6 +67,7 @@ stone==3.2.1
 tabulate==0.8.9
 tqdm==4.61.1
 Twisted==21.2.0
+twisted-iocpsupport==1.0.1
 typing-extensions==3.10.0.0
 ua-parser==0.10.0
 urllib3==1.26.6
@@ -72,5 +75,6 @@ user-agents==2.2.0
 w3lib==1.22.0
 websockets==8.1
 Werkzeug==2.0.1
+wincertstore==0.2
 zipp==3.4.1
 zope.interface==5.4.0
