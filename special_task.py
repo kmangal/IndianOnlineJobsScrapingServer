@@ -33,7 +33,7 @@ if __name__ == '__main__':
     #    )
 
     redo_shine_details(
-        infile= 'shine_mainpage_20210706_091627.csv',
-        outfile = 'shine_details_20210706_091627.csv',
-        logfile= '20210706_091627.log'
+        infile= 'shine_mainpage_20210707_134204.csv',
+        outfile = 'shine_details_20210707_134204.csv',
+        logfile= '20210707_134204_v2.log'
         )
