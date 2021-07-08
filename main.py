@@ -60,7 +60,7 @@ def main():
             interval = 60 * 60 * 24 * 4,                               # Interval in seconds
             repeat= None,                                         # Repeat this number of times (None means repeat forever)
             queue_name= 'default',                                # In which queue the job should be put in
-            meta={'site': 'shine', , 'type' : 'scrape', 'name' : 'shine'},          # Arbitrary pickleable data on the job itself
+            meta={'site': 'shine', 'type' : 'scrape', 'name' : 'shine'},          # Arbitrary pickleable data on the job itself
             timeout = 60 * 60 * 24 * 4
         )
 
