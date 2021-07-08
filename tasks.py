@@ -13,7 +13,7 @@ import timesjobs.detailscrape
 import shine.detailscrape
 
 from util.export_to_dropbox import move_to_dropbox
-from util.cleanfolders import clean_folder
+from util.cleanfolder import clean_folder
 
 
 
