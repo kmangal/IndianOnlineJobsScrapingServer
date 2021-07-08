@@ -1,6 +1,7 @@
 
 from requests_html import HTMLSession
 
+import asyncio
 
 
 def get_element(response, css):
@@ -31,3 +32,6 @@ top_rhs = response.find('.jobDate')
 
 print(title)
 print(top_rhs)
+
+session.close()
+
