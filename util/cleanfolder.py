@@ -12,8 +12,9 @@ import export_to_dropbox
 
 import scrapelogger
 
-LOCAL_SHELFLIFE = 7   # days to keep files on local computer
+LOCAL_SHELFLIFE = 24   # hours to keep files on local computer
 
+logger = scrapelogger.RotatingLogger('cleaning-log', os.path.expanduser('~/jobs_scraping/log/cleaning/cleaning.log'))
 
 def get_old_local_files(localfolder):
 
@@ -25,7 +26,7 @@ def get_old_local_files(localfolder):
     for f in filelist:
         ts = os.path.getmtime(os.path.join(localfolder, f))
         last_updated =  datetime.datetime.fromtimestamp(ts)
-        if (current_time - last_updated) > datetime.timedelta(days=LOCAL_SHELFLIFE):
+        if (current_time - last_updated) > datetime.timedelta(hours=LOCAL_SHELFLIFE):
             local_files[f] = last_updated
 
     return local_files
@@ -88,7 +89,7 @@ def summarize_files(missing_files, not_updated_files, ok_files):
     print(tabulate(ok_data, headers = ['File', 'Last Updated']))
 
 
-def clean_folder(localfolder, dropboxfolder, verbose = False, test = False):
+def clean_subfolder(localfolder, dropboxfolder, verbose = False, test = False):
     
     oldlocalfiles = get_old_local_files(localfolder)
 
@@ -105,17 +106,17 @@ def clean_folder(localfolder, dropboxfolder, verbose = False, test = False):
     if not test:
 
         for f in missing_files:
-            logger.log.info("Copying {}".format(f))
+            logger.log.info("Copying {}".format(dropboxfolder + f))
             export_to_dropbox.move_to_dropbox(
                 os.path.join(localfolder, f), 
-                os.path.join(dropboxfolder, f)
+                dropboxfolder + f
             )
 
         for f in not_updated_files:
-            logger.log.info("Updating {}".format(f))
+            logger.log.info("Updating {}".format(dropboxfolder + f))
             export_to_dropbox.move_to_dropbox(
                 os.path.join(localfolder, f), 
-                os.path.join(dropboxfolder, f), 
+                dropboxfolder + f, 
                 overwrite = True
             )
 
@@ -127,38 +128,48 @@ def clean_folder(localfolder, dropboxfolder, verbose = False, test = False):
             os.remove(os.path.join(localfolder, f))
 
 
+        
+def clean_folder(localfolder, dropboxfolder):
+    # Extract the subfolder names
+    # Assumption = dropbox has same folder structure
+
+    #alldirs = [x[0] for x in os.walk(localfolder)]
+    #subfolders = [x.split(localfolder)[1] for x in alldirs]
+
+    #logger.log.info("Subfolders: {}".format(subfolders))
+    
+    for root, dirs, files in os.walk(localfolder):
+        if ('log' in root or 'output' in root) and 'test' not in root:
+            sf = root.replace(localfolder + os.sep, '')
+            for filepath in files:
+                local_subfolder = os.path.join(localfolder, sf)
+                dbx_subfolder = dropboxfolder + '/' + '/'.join(sf.split(os.sep)) + '/'
+                clean_subfolder(local_subfolder, dbx_subfolder)
+
+    logger.finalize()
+
+                
 if __name__ == '__main__':
+    
+    pass
+    
+    #logger = scrapelogger.ScrapeLogger('cleanfolder')
+    #logger.log.info("LOCAL_SHELFLIFE set to {}".format(LOCAL_SHELFLIFE))
 
-    logger = scrapelogger.ScrapeLogger('cleanfolder')
+    #parser = argparse.ArgumentParser()
+    #parser.add_argument("local", help="Local folder to clean")
+    #parser.add_argument("dbx", help="Dropbox folder to save files to")
+    #parser.add_argument("--verbose", action="store_true", default = False, help="Print details about file status")
+    #parser.add_argument("--test", action="store_true", default = False, help="Check files without making changes")
+    #args = parser.parse_args()
 
-    logger.log.info("LOCAL_SHELFLIFE set to {}".format(LOCAL_SHELFLIFE))
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument("local", help="Local folder to clean")
-    parser.add_argument("dbx", help="Dropbox folder to save files to")
-    parser.add_argument("--verbose", action="store_true", default = False, help="Print details about file status")
-    parser.add_argument("--test", action="store_true", default = False, help="Check files without making changes")
-    args = parser.parse_args()
-
-    logger.log.info("Local folder: {}".format(args.local))
-    logger.log.info("Dropbox folder: {}".format(args.dbx))
+    #logger.log.info("Local folder: {}".format(args.local))
+    #logger.log.info("Dropbox folder: {}".format(args.dbx))
 
     #clean_folder(localfolder, dropboxfolder, verbose = args.verbose, test = args.test)
 
-    # Extract the subfolder names
-    # Assumption = dropbox has same folder structure
-    alldirs = [x[0] for x in os.walk(args.local)]
-    subfolders = [x.split(args.local)[1] for x in alldirs]
 
-    logger.log.info("Subfolders: {}".format(subfolders))
-    
-    if subfolders:
-        for sf in subfolders:
-        
-            clean_folder(
-                os.path.join(args.local, sf), 
-                os.path.join(args.dbx, sf), 
-                verbose = args.verbose,
-                test = args.test
-            )
-
+    clean_folder(
+        os.path.join(os.path.expanduser("~"), 'jobs_scraping', 'shine', 'test'), 
+        '/'.join(['/India Labor Market Indicators', 'scraping', 'Shine', 'ec2', 'test'])
+        )

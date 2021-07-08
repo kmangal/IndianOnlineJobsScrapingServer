@@ -51,7 +51,7 @@ class ScrapeLogger(BaseLogger):
         self.start()
 
     
-class ErrorLogger(BaseLogger):
+class RotatingLogger(BaseLogger):
     
     def __init__(self, name, path, level = logging.DEBUG):
          

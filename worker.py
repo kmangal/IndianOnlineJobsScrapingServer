@@ -6,7 +6,7 @@ import config
 import util.scrapelogger as scrapelogger
 
 def write_error_log(job, exc_type, exc_value, exc_traceback):
-    logger = scrapelogger.ErrorLogger('error-log', 'log/error/errors.log')
+    logger = scrapelogger.RotatingLogger('error-log', 'log/error/errors.log')
     logger.log.error(
         "Uncaught exception for {func}({args})".format(func = job.func_name, args = str(job.kwargs)),
         exc_info=(exc_type, exc_value, exc_traceback))
