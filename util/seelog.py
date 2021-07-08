@@ -2,14 +2,17 @@ import os
 import sys
 import glob
 
+import argparse
+
 
 if __name__ == '__main__':
     
-    if len(sys.argv) != 2:
-        raise Exception("syntax: seelog.py [site]")
-    
-    site = sys.argv[1]
-    if site not in ['shine', 'monster', 'timesjobs', 'teamlease', 'waahjobs']:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("site")
+    parser.add_argument("-n", help="number of lines to display", default = 10, type = int, required = False)
+    args = parser.parse_args()
+
+    if args.site not in ['shine', 'monster', 'timesjobs', 'teamlease', 'waahjobs']:
         raise Exception("site not correctly specified")
         
     userdir = os.path.expanduser('~')
@@ -20,6 +23,6 @@ if __name__ == '__main__':
         latest_log = max(logs, key=os.path.getctime)
         print('Latest log', latest_log)
         print('--------------------------------------')
-        os.system('tail -n 10 {}'.format(latest_log))
+        os.system('tail -n {lines} {log}'.format(lines = args.n, log = latest_log))
     else:
         print("No logs found")
