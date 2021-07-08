@@ -8,145 +8,147 @@ from tabulate import tabulate
 
 import argparse
 
-import export_to_dropbox
+from util import export_to_dropbox
+from util import scrapelogger
 
-import scrapelogger
+class Cleaner:
 
-LOCAL_SHELFLIFE = 24   # hours to keep files on local computer
+    LOCAL_SHELFLIFE = 24   # hours to keep files on local computer
 
-logger = scrapelogger.RotatingLogger('cleaning-log', os.path.expanduser('~/jobs_scraping/log/cleaning/cleaning.log'))
-
-def get_old_local_files(localfolder):
-
-    current_time = datetime.datetime.now()    
-    local_files = dict()
-
-    filelist = [f for f in os.listdir(localfolder) if os.path.isfile(os.path.join(localfolder, f))]
-
-    for f in filelist:
-        ts = os.path.getmtime(os.path.join(localfolder, f))
-        last_updated =  datetime.datetime.fromtimestamp(ts)
-        if (current_time - last_updated) > datetime.timedelta(hours=LOCAL_SHELFLIFE):
-            local_files[f] = last_updated
-
-    return local_files
-
-
-def get_dropbox_files(dropboxfolder):
-
-    dbx = dropbox.Dropbox(export_to_dropbox.TOKEN)
-    response = dbx.files_list_folder(path=dropboxfolder)
-
-    db_files = dict()
-    for f in response.entries:
-        if type(f) == dropbox.files.FileMetadata:
-            db_files[f.name] = f.server_modified
-
-    return db_files
-
-
-def compare_files(oldlocalfiles, dropboxfiles):
-    missing_files = dict()
-    not_updated_files = dict()
-    ok_files  = dict()
-
-    # Loop through the local files, check if they were updated more recently than the dropbox files
-    for f, updated in oldlocalfiles.items():
-        if f not in dropboxfiles:
-            missing_files[f] = updated
-        elif updated > dropboxfiles[f]:
-            not_updated_files[f] = {'local_ts': updated, 'db_ts' : dropboxfiles[f]}
-        else:
-            ok_files[f] = updated
-
-    return (missing_files, not_updated_files, ok_files)
-
-
-def summarize_files(missing_files, not_updated_files, ok_files):
-    # Print summary statistics
-    print("")
-    print("Missing in Dropbox")
-    print("===========================================")
-    missing_data = []
-    for f, updated in missing_files.items():
-        missing_data.append([f, updated.strftime("%m/%d/%Y, %H:%M:%S")])
-    print(tabulate(missing_data, headers = ['File', 'Last Updated']))
-
-    print("")
-    print("Not up to date in Dropbox")
-    print("==========================================")
-    not_updated_data = []
-    for f, ts in not_updated_files.items():
-        not_updated_data.append([f, ts['local_ts'].strftime("%m/%d/%Y, %H:%M:%S"), ts['db_ts'].strftime("%m/%d/%Y, %H:%M:%S")])
-    print(tabulate(not_updated_data, headers = ['File', 'Local Folder Timestamp','Dropbox Timestamp']))
-
-    print("")
-    print("OK")
-    print("=========================================")
-    ok_data = []
-    for f, updated in ok_files.items():
-        ok_data.append([f, updated.strftime("%m/%d/%Y, %H:%M:%S")])
-    print(tabulate(ok_data, headers = ['File', 'Last Updated']))
-
-
-def clean_subfolder(localfolder, dropboxfolder, verbose = False, test = False):
+    def __init__(self, verbose = False, test = False):
     
-    oldlocalfiles = get_old_local_files(localfolder)
+        self.logger = scrapelogger.RotatingLogger('cleaning-log', os.path.expanduser('~/jobs_scraping/log/cleaning/cleaning.log'))
+        self.verbose = verbose
+        self.test = test
+        
+    def get_old_local_files(self, localfolder):
 
-    if not oldlocalfiles:
-        logger.log.info("{} - No files older than shelf life".format(localfolder))
-        return
+        current_time = datetime.datetime.now()    
+        local_files = dict()
 
-    dropboxfiles = get_dropbox_files(dropboxfolder)
-    missing_files, not_updated_files, ok_files = compare_files(oldlocalfiles, dropboxfiles)
-    
-    if verbose:
-        summarize_files(missing_files, not_updated_files, ok_files)
+        filelist = [f for f in os.listdir(localfolder) if os.path.isfile(os.path.join(localfolder, f))]
 
-    if not test:
+        for f in filelist:
+            ts = os.path.getmtime(os.path.join(localfolder, f))
+            last_updated =  datetime.datetime.fromtimestamp(ts)
+            if (current_time - last_updated) > datetime.timedelta(hours= Cleaner.LOCAL_SHELFLIFE):
+                local_files[f] = last_updated
 
-        for f in missing_files:
-            logger.log.info("Copying {}".format(dropboxfolder + f))
-            export_to_dropbox.move_to_dropbox(
-                os.path.join(localfolder, f), 
-                dropboxfolder + f
-            )
+        return local_files
 
-        for f in not_updated_files:
-            logger.log.info("Updating {}".format(dropboxfolder + f))
-            export_to_dropbox.move_to_dropbox(
-                os.path.join(localfolder, f), 
-                dropboxfolder + f, 
-                overwrite = True
-            )
 
-        # Do not overwrite files that are more recent in dropbox
+    def get_dropbox_files(self, dropboxfolder):
 
-        # Delete old local files
-        for f in oldlocalfiles:
-            logger.log.info("Deleting on server: {}".format(os.path.join(localfolder, f)))
-            os.remove(os.path.join(localfolder, f))
+        dbx = dropbox.Dropbox(export_to_dropbox.TOKEN)
+        response = dbx.files_list_folder(path=dropboxfolder)
+
+        db_files = dict()
+        for f in response.entries:
+            if type(f) == dropbox.files.FileMetadata:
+                db_files[f.name] = f.server_modified
+
+        return db_files
+
+
+    def compare_files(self, oldlocalfiles, dropboxfiles):
+        missing_files = dict()
+        not_updated_files = dict()
+        ok_files  = dict()
+
+        # Loop through the local files, check if they were updated more recently than the dropbox files
+        for f, updated in oldlocalfiles.items():
+            if f not in dropboxfiles:
+                missing_files[f] = updated
+            elif updated > dropboxfiles[f]:
+                not_updated_files[f] = {'local_ts': updated, 'db_ts' : dropboxfiles[f]}
+            else:
+                ok_files[f] = updated
+
+        return (missing_files, not_updated_files, ok_files)
+
+
+    def summarize_files(self, missing_files, not_updated_files, ok_files):
+        # Print summary statistics
+        print("")
+        print("Missing in Dropbox")
+        print("===========================================")
+        missing_data = []
+        for f, updated in missing_files.items():
+            missing_data.append([f, updated.strftime("%m/%d/%Y, %H:%M:%S")])
+        print(tabulate(missing_data, headers = ['File', 'Last Updated']))
+
+        print("")
+        print("Not up to date in Dropbox")
+        print("==========================================")
+        not_updated_data = []
+        for f, ts in not_updated_files.items():
+            not_updated_data.append([f, ts['local_ts'].strftime("%m/%d/%Y, %H:%M:%S"), ts['db_ts'].strftime("%m/%d/%Y, %H:%M:%S")])
+        print(tabulate(not_updated_data, headers = ['File', 'Local Folder Timestamp','Dropbox Timestamp']))
+
+        print("")
+        print("OK")
+        print("=========================================")
+        ok_data = []
+        for f, updated in ok_files.items():
+            ok_data.append([f, updated.strftime("%m/%d/%Y, %H:%M:%S")])
+        print(tabulate(ok_data, headers = ['File', 'Last Updated']))
+
+
+    def clean_subfolder(self, localfolder, dropboxfolder):
+        
+        oldlocalfiles = self.get_old_local_files(localfolder)
+
+        if not oldlocalfiles:
+            self.logger.log.info("{} - No files older than shelf life".format(localfolder))
+            return
+
+        dropboxfiles = self.get_dropbox_files(dropboxfolder)
+        missing_files, not_updated_files, ok_files = self.compare_files(oldlocalfiles, dropboxfiles)
+        
+        if self.verbose:
+            self.summarize_files(missing_files, not_updated_files, ok_files)
+
+        if not self.test:
+
+            for f in missing_files:
+                self.logger.log.info("Copying {}".format(dropboxfolder + f))
+                export_to_dropbox.move_to_dropbox(
+                    os.path.join(localfolder, f), 
+                    dropboxfolder + f
+                )
+
+            for f in not_updated_files:
+                self.logger.log.info("Updating {}".format(dropboxfolder + f))
+                export_to_dropbox.move_to_dropbox(
+                    os.path.join(localfolder, f), 
+                    dropboxfolder + f, 
+                    overwrite = True
+                )
+
+            # Do not overwrite files that are more recent in dropbox
+
+            # Delete old local files
+            for f in oldlocalfiles:
+                self.logger.log.info("Deleting on server: {}".format(os.path.join(localfolder, f)))
+                os.remove(os.path.join(localfolder, f))
 
 
         
-def clean_folder(localfolder, dropboxfolder):
-    # Extract the subfolder names
-    # Assumption = dropbox has same folder structure
+    def clean_folder(self, localfolder, dropboxfolder):
+        # Extract the subfolder names
+        # Assumption = dropbox has same folder structure
+        
+        for root, dirs, files in os.walk(localfolder):
+            if ('log' in root or 'output' in root) and 'test' not in root:
+                sf = root.replace(localfolder + os.sep, '')
+                for filepath in files:
+                    local_subfolder = os.path.join(localfolder, sf)
+                    dbx_subfolder = dropboxfolder + '/' + '/'.join(sf.split(os.sep)) + '/'
+                    self.clean_subfolder(local_subfolder, dbx_subfolder)
 
-    #alldirs = [x[0] for x in os.walk(localfolder)]
-    #subfolders = [x.split(localfolder)[1] for x in alldirs]
 
-    #logger.log.info("Subfolders: {}".format(subfolders))
-    
-    for root, dirs, files in os.walk(localfolder):
-        if ('log' in root or 'output' in root) and 'test' not in root:
-            sf = root.replace(localfolder + os.sep, '')
-            for filepath in files:
-                local_subfolder = os.path.join(localfolder, sf)
-                dbx_subfolder = dropboxfolder + '/' + '/'.join(sf.split(os.sep)) + '/'
-                clean_subfolder(local_subfolder, dbx_subfolder)
-
-    logger.finalize()
+    def close(self):
+        self.logger.finalize()
 
                 
 if __name__ == '__main__':

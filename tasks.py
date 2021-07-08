@@ -13,7 +13,7 @@ import timesjobs.detailscrape
 import shine.detailscrape
 
 from util.export_to_dropbox import move_to_dropbox
-from util.cleanfolder import clean_folder
+from util.cleanfolder import Cleaner
 
 
 
@@ -37,36 +37,41 @@ def teamlease_scrape():
     
 
 def clean():
+
+    cleaner = Cleaner()
+    
     # Shine
-    clean_folder(
+    cleaner.clean_folder(
         os.path.expanduser('~/jobs_scraping/shine'),
         '/India Labor Market Indicators/scraping/Shine/ec2'
     )
     
     # Monster
-    clean_folder(
+    cleaner.clean_folder(
         os.path.expanduser('~/jobs_scraping/monster'),
         '/India Labor Market Indicators/scraping/Monster/ec2'
     )
 
     # Timesjobs
-    clean_folder(
+    cleaner.clean_folder(
         os.path.expanduser('~/jobs_scraping/timesjobs'),
         '/India Labor Market Indicators/scraping/TimesJobs/ec2'
     )    
 
     # TeamLease
-    clean_folder(
+    cleaner.clean_folder(
         os.path.expanduser('~/jobs_scraping/teamlease'),
         '/India Labor Market Indicators/scraping/TeamLease/ec2'
     )   
 
     # WaahJobs
-    clean_folder(
+    cleaner.clean_folder(
         os.path.expanduser('~/jobs_scraping/waahjobs'),
         '/India Labor Market Indicators/scraping/WaahJobs/ec2'
     )  
 
+    cleaner.close()
+    
 
 # ---------------------------------------------------------------------------
 # Special tasks
