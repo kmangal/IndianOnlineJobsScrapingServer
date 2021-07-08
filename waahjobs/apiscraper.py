@@ -8,8 +8,11 @@ import os
 import sys
 sys.path.append('../')
 
-import util.export_to_dropbox
+from util.export_to_dropbox import move_to_dropbox
+from util.dashboard import update_dashboard_mainpage
 from util import scrapelogger
+
+
 
 import pathlib
 WAAHJOBS_PATH = pathlib.Path(__file__).parent.resolve()
@@ -80,8 +83,9 @@ def run_scrape(test = False):
         api_dropbox = '/India Labor Market Indicators/scraping/WaahJobs/ec2/api/waahjobs_api_{fd}.csv'.format(fd=filedate)
         log_dropbox = '/India Labor Market Indicators/scraping/WaahJobs/ec2/log/{fd}.log'.format(fd=filedate)
 
-        util.export_to_dropbox.move_to_dropbox(outpath, api_dropbox)
-        util.export_to_dropbox.move_to_dropbox(logpath, log_dropbox)
+        move_to_dropbox(outpath, api_dropbox)
+        move_to_dropbox(logpath, log_dropbox)
+        update_dashboard_mainpage('waahjobs', outpath, logpath)
            
             
 if __name__ == '__main__':

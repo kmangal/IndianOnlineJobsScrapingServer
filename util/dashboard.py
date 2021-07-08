@@ -14,7 +14,7 @@ def read_mainpage(site, data, log):
     if 'site' not in ['timesjobs', 'waahjobs']:
         mainpagelogdata = read_scrapy_log(log)
     else:
-        mainpagelogdata = {}
+        mainpagelogdata = read_scrapelogger_mainpage(log)
         
     return {**mainpagedata, **mainpagelogdata}
 
@@ -129,6 +129,24 @@ def read_details_log(logfile):
     }
 
 
+def read_scrapelogger_mainpage(logfile):
+
+    success = False
+    retries = 0
+    
+    with open(logfile, 'r') as f:
+    
+        for line in f:
+            if 'Log finished at' in line:
+                success = True
+                
+            if 'Taking a break for' in line:
+                retries += 1
+        
+    return {
+        'retries' : retries,
+        'success' : success
+    }
 
 def read_scrapy_log(logfile):
 
