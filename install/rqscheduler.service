@@ -3,8 +3,8 @@ Description=RQScheduler
 After=network.target
 
 [Service]
-ExecStart=/home/ec2-user/env/bin/python \
-    /home/ec2-user/env/lib/python3.7/site-packages/rq_scheduler/scripts/rqscheduler.py -H task-queue.3g7al0.0001.aps1.cache.amazonaws.com
+ExecStart=/home/ubuntu/env/bin/python \
+    /home/ubuntu/env/lib/python3.8/site-packages/rq_scheduler/scripts/rqscheduler.py -H task-queue.3g7al0.0001.aps1.cache.amazonaws.com
 
 [Install]
 WantedBy=multi-user.target
