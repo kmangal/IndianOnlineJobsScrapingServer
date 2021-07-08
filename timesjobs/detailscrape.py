@@ -33,6 +33,9 @@ import argparse
 # Make this the timestamp reflects India timeszone'
 TZ = pytz.timezone('Asia/Kolkata')
 
+from random_user_agent.user_agent import UserAgent
+from random_user_agent.params import SoftwareName, OperatingSystem
+
 
 class DetailScraper:
 
@@ -83,6 +86,12 @@ class DetailScraper:
         # Set up log file
         self.logger = scrapelogger.ScrapeLogger('TJ-details', logfile)
                 
+        self.user_agent_rotator = UserAgent(software_names=[SoftwareName.CHROME.value, SoftwareName.FIREFOX.value], 
+                                operating_systems=[OperatingSystem.WINDOWS.value, OperatingSystem.LINUX.value])
+
+     
+    def get_user_agent(self):
+        return self.user_agent_rotator.get_random_user_agent()
         
     @classmethod
     def get_header(cls):
@@ -135,12 +144,12 @@ class DetailScraper:
     def scrape_url(self, url):
         
         try:
-            r = self.session.get(url, headers = DetailScraper.get_header())
+            r = self.session.get(url, headers = {'User-Agent' : self.get_user_agent()})
         except:
             # In case the connection is reset - not sure how to specify this correctly.
             self.logger.log.error("While fetching {} connection reset by peer. Taking a break for 1 min...".format(url))
             time.sleep(60)
-            r = self.session.get(url, headers = DetailScraper.get_header())
+            r = self.session.get(url, headers = {'User-Agent' : self.get_user_agent()})
 
         response = r.html 
         
