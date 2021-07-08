@@ -10,6 +10,8 @@ import pathlib
 # Can't run this file directly - needs to be called from parent folder
 from teamlease.teamlease.spiders.TeamLeaseSpider import TeamLeaseSpider
 from util.export_to_dropbox import move_to_dropbox
+from util.dashboard import update_dashboard_mainpage, update_dashboard_details
+
 
 def run_full_scrape():
 
@@ -41,6 +43,7 @@ def run_full_scrape():
     move_to_dropbox(jobcount_local, jobcount_dropbox)
     move_to_dropbox(mainlogfile_local, mainlogfile_dropbox)
 
+    update_dashboard_mainpage('teamlease', mainpage_local, mainlogfile_local)
 
 def test_scrape():
     

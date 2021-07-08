@@ -105,4 +105,6 @@ class QuietLogFormatter(scrapy.logformatter.LogFormatter):
 
 
 LOG_FORMATTER = "shine.shine.settings.QuietLogFormatter"
-
+LOG_FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+LOG_DATEFORMAT = '%m/%d/%Y %I:%M:%S %p %Z'
+LOG_LEVEL = 'INFO'   # default is DEBUG

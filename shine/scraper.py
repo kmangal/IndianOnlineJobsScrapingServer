@@ -12,6 +12,7 @@ import pathlib
 # Can't run this file directly - needs to be called from parent folder
 from shine.shine.spiders.ShineSpider import ShineSpider
 from util.export_to_dropbox import move_to_dropbox
+from util.dashboard import update_dashboard_mainpage, update_dashboard_details
 
 import shine.detailscrape
 
@@ -43,11 +44,13 @@ def run_full_scrape():
     details_dropbox = '/India Labor Market Indicators/scraping/Shine/ec2/details/shine_details_{fd}.csv'.format(fd=filedate)
     mainlogfile_dropbox = '/India Labor Market Indicators/scraping/Shine/ec2/log/mainpage/{fd}.log'.format(fd=filedate)
     detaillogfile_dropbox = '/India Labor Market Indicators/scraping/Shine/ec2/log/details/{fd}.log'.format(fd=filedate)
-    
+        
     move_to_dropbox(mainpage_local, mainpage_dropbox)
     move_to_dropbox(jobcount_local, jobcount_dropbox)
     move_to_dropbox(mainlogfile_local, mainlogfile_dropbox)
     
+    update_dashboard_mainpage('shine', mainpage_local, mainlogfile_local)
+
     detaillogfile_local = os.path.join(SHINE_PATH, 'log', 'details', '{fd}.log'.format(fd=filedate))
 
     ds = shine.detailscrape.DetailScraper(mainpagefile = mainpage_local,
@@ -58,6 +61,8 @@ def run_full_scrape():
     # Move the log and details files
     move_to_dropbox(details_local, details_dropbox)
     move_to_dropbox(detaillogfile_local, detaillogfile_dropbox)
+
+    update_dashboard_details('shine', details_local, detaillogfile_local)
 
 
 def test_scrape():
