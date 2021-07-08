@@ -16,7 +16,7 @@ if __name__ == '__main__':
         raise Exception("site not correctly specified")
         
     userdir = os.path.expanduser('~')
-    logdir = os.path.join(userdir, 'jobs_scraping', site, 'log')
+    logdir = os.path.join(userdir, 'jobs_scraping', args.site, 'log')
 
     logs = glob.glob(logdir + '/*.log')
     if logs:
