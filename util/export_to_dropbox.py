@@ -47,7 +47,7 @@ def upload_to_dropbox(localpath, dropboxpath):
                 dropboxpath,
                 # When writing the file it won't overwrite an existing file, just add
                 # another file like "filename (2).txt"
-                WriteMode('add'),
+                dropbox.files.WriteMode('add'),
             ),
         )
 
