@@ -30,7 +30,7 @@ def upload_to_dropbox(localpath, dropboxpath):
                 break
             dbx.files_upload_session_append_v2(
                 chunk,
-                dropbox.UploadSessionCursor(
+                dropbox.files.UploadSessionCursor(
                     upload_session.session_id,
                     offset,
                 ),
