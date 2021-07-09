@@ -1,7 +1,6 @@
 CREATE TABLE dashboard.mainpage (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    site VARCHAR(45),
-    filesuffix VARCHAR(45),
+    site VARCHAR(45) NOT NULL,
+    filesuffix VARCHAR(45) NOT NULL,
     datastart DATETIME,
     dataend DATETIME,
     nrows INT,
@@ -9,13 +8,14 @@ CREATE TABLE dashboard.mainpage (
     fractionblank FLOAT,
     retries INT,
     success BOOL,
-    logmissing BOOL
+    logmissing BOOL,
+	PRIMARY KEY (site, filesuffix) 
 );
 
+
 CREATE TABLE dashboard.details (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    site VARCHAR(45),
-    filesuffix VARCHAR(45),
+    site VARCHAR(45) NOT NULL,
+    filesuffix VARCHAR(45) NOT NULL,
     datastart DATETIME,
     dataend DATETIME,
     nrows INT,
@@ -26,14 +26,13 @@ CREATE TABLE dashboard.details (
     status1 INT,
     retries INT,
     success BOOL,
-    logmissing BOOL
+    logmissing BOOL,
+	PRIMARY KEY (site, filesuffix) 
 );
 
-
 CREATE TABLE dashboard.mainpage_test (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    site VARCHAR(45),
-    filesuffix VARCHAR(45),
+    site VARCHAR(45) NOT NULL,
+    filesuffix VARCHAR(45) NOT NULL,
     datastart DATETIME,
     dataend DATETIME,
     nrows INT,
@@ -41,14 +40,14 @@ CREATE TABLE dashboard.mainpage_test (
     fractionblank FLOAT,
     retries INT,
     success BOOL,
-    logmissing BOOL
+    logmissing BOOL,
+	PRIMARY KEY (site, filesuffix) 
 );
 
 
 CREATE TABLE dashboard.details_test (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    site VARCHAR(45),
-    filesuffix VARCHAR(45),
+    site VARCHAR(45) NOT NULL,
+    filesuffix VARCHAR(45) NOT NULL,
     datastart DATETIME,
     dataend DATETIME,
     nrows INT,
@@ -59,5 +58,6 @@ CREATE TABLE dashboard.details_test (
     status1 INT,
     retries INT,
     success BOOL,
-    logmissing BOOL
+    logmissing BOOL,
+	PRIMARY KEY (site, filesuffix) 
 );

@@ -1,17 +1,27 @@
 import os
 from datetime import datetime
 import pandas as pd
+import numpy as np
 import re
 import mysql.connector
 
 FILESUFFIXRE = re.compile(r'\d{8}_\d{6}')
 
+def get_file_suffix(path):
+    m = FILESUFFIXRE.search(path)
+    
+    if m:
+        filesuffix = m.group()
+    else:
+        filesuffix = "NULL"
+
+    return filesuffix
 
 def read_mainpage(site, data, log):
     
     mainpagedata = read_data(data)
     
-    if 'site' not in ['timesjobs', 'waahjobs']:
+    if site not in ['timesjobs', 'waahjobs']:
         mainpagelogdata = read_scrapy_log(log)
     else:
         mainpagelogdata = read_scrapelogger_mainpage(log)
@@ -32,23 +42,6 @@ def read_data(path):
     if not path:
         return {}
 
-    if 'timesjobs' in path:
-        site = 'timesjobs'
-    elif 'monster' in path:
-        site = 'monster'
-    elif 'shine' in path:
-        site = 'shine'
-    elif 'teamlease' in path:
-        site = 'teamlease'
-    
-
-    m = FILESUFFIXRE.search(path)
-    
-    if m:
-        filesuffix = m.group()
-    else:
-        filesuffix = None
-    
     df = pd.read_csv(path)
     
     N = df.shape[0]
@@ -56,33 +49,39 @@ def read_data(path):
     if N == 0:
         return {
         'nrows' : N,
-        'filesuffix' : filesuffix,
         'unique_links' : 0,
-        'fractionblank' : None,
-        'start' : None,
-        'end' : None
+        'fractionblank' : "NULL",
+        'start' :"NULL",
+        'end' : "NULL"
         } 
     
-    if site == "timesjobs":
+    if 'link' in df.columns:
         unique_links = df['link'].unique().size
-    else:
+    elif 'url' in df.columns:
         unique_links = df['url'].unique().size
-    
-    if site == "timesjobs":
-        time = pd.to_datetime(df['scrapetime'], format = "%d/%m/%Y %H:%M:%S")
-    elif site == "shine":
-        time = pd.to_datetime(df['scraped_at'], format = "%d/%m/%Y %H:%M:%S")
     else:
-        time = pd.to_datetime(df['scraped_on'], format = "%d/%m/%Y %H:%M:%S")
-
-    start = min(time)
-    end = max(time)
-
-    fractionblank = (df.values == '').sum() / (df.shape[0] * df.shape[1])
+        unique_links = "NULL"
+    
+    if 'scrapetime' in df.columns:
+        time = pd.to_datetime(df.loc[df['scrapetime'] != '', 'scrapetime'], format = "%d/%m/%Y %H:%M:%S")
+    elif 'scraped_at' in df.columns:
+        time = pd.to_datetime(df.loc[df['scraped_at'] != '', 'scraped_at'], format = "%d/%m/%Y %H:%M:%S")
+    elif 'scraped_on' in df.columns:
+        time = pd.to_datetime(df.loc[df['scraped_on'] != '', 'scraped_on'], format = "%d/%m/%Y %H:%M:%S")
+    else:
+        time = np.array([])
+    
+    if time.size > 0:    
+        start = min(time)
+        end = max(time)
+    else:
+        start = "NULL"
+        end = "NULL"
+        
+    fractionblank = (np.sum(df.isnull().sum()) + (df.values == 'MISSING').sum()) / (df.shape[0] * df.shape[1])
 
     return {
         'nrows' : N,
-        'filesuffix' : filesuffix,
         'unique_links' : unique_links,
         'fractionblank' : fractionblank,
         'start' : start,
@@ -93,8 +92,8 @@ def read_data(path):
 def read_details_log(logfile):
    # Assumes a scrapelogger format
     
-    if not os.path.isfile(logfile) or os.path.getsize(logfile) == 0:
-        return {'already_scraped' : None, 'status0' : None, 'status1' : None, 'retries' : None, 'success': None, 'logmissing' : True}
+    if logfile is None or not os.path.isfile(logfile) or os.path.getsize(logfile) == 0:
+        return {'already_scraped' : "NULL", 'status0' : "NULL", 'status1' : "NULL", 'retries' : "NULL", 'success': "NULL", 'logmissing' : True}
         
     already_scraped = 0
     status0 = 0
@@ -132,8 +131,8 @@ def read_details_log(logfile):
 
 def read_scrapelogger_mainpage(logfile):
 
-    if not os.path.isfile(logfile) or os.path.getsize(logfile) == 0:
-        return {'retries' : None, 'success': None, 'logmissing' : True}
+    if logfile is None or not os.path.isfile(logfile) or os.path.getsize(logfile) == 0:
+        return {'retries' : "NULL", 'success': "NULL", 'logmissing' : True}
         
     success = False
     retries = 0
@@ -155,8 +154,8 @@ def read_scrapelogger_mainpage(logfile):
 
 def read_scrapy_log(logfile):
 
-    if not os.path.isfile(logfile) or os.path.getsize(logfile) == 0:
-        return {'retries' : None, 'success': None, 'logmissing' : True}
+    if logfile is None or not os.path.isfile(logfile) or os.path.getsize(logfile) == 0:
+        return {'retries' : "NULL", 'success': "NULL", 'logmissing' : True}
     
     error = False
     retries = 0
@@ -182,27 +181,65 @@ def read_scrapy_log(logfile):
     }
 
 
-def update_dashboard_mainpage(site, page, log):
+def record_exists(DB, table, site, filesuffix):
+    cursor = DB.cursor()
+    cursor.execute("SELECT 1 FROM {} where site = '{}' and filesuffix = '{}'".format(table, site, filesuffix))
+    result = cursor.fetchall()
+    cursor.close()
+
+    if result:
+        return True
+    else:
+        return False
+
+def update_dashboard_mainpage(site, page, log, test = False, overwrite = False):
     # use the local version of all of these files
-    
-    data = read_mainpage(site, page, log)
-    
-    if not data:
-        raise Exception("Data not parsed correctly")
-        
+
     DB = mysql.connector.connect(
        host="india-labor.citktbvrkzg6.ap-south-1.rds.amazonaws.com",
        user="admin",
        password="b9PR]37DsB",
        database = 'dashboard'
     )
+
+    filesuffix = get_file_suffix(page)
+
+    if test:
+        table = 'mainpage_test'
+    else:
+        table = 'mainpage'
+        
+    if not overwrite:
+        if record_exists(DB, table, site, filesuffix):
+            DB.close()
+            return
+
+    data = read_mainpage(site, page, log)
     
+    if not data:
+        raise Exception("Data not parsed correctly")
+    
+    if test:
+        print(data)
+                    
     cursor = DB.cursor()
-    sql = "INSERT INTO mainpage_test (site, filesuffix, datastart, dataend, nrows, uniquelinks, fractionblank, retries, success, logmissing) VALUES ('{}', '{}', '{}', '{}', {}, {}, {}, {}, {}, {})".format(
+    sql = '''INSERT INTO {} 
+    (site, filesuffix, datastart, dataend, nrows, uniquelinks, fractionblank, retries, success, logmissing) 
+    VALUES ('{}', '{}', '{}', '{}', {}, {}, {}, {}, {}, {})
+    ON DUPLICATE KEY UPDATE
+    `datastart` = VALUES(`datastart`),
+    `dataend` = VALUES(`dataend`),
+    `nrows` = VALUES(`nrows`),
+    `uniquelinks` = VALUES(`uniquelinks`),
+    `fractionblank` = VALUES(`fractionblank`),
+    `retries` = VALUES(`retries`),
+    `success` = VALUES(`success`),
+    `logmissing` = VALUES(`logmissing`)'''.format(
+        table,
         site,
-        data['filesuffix'],
-        data['start'].strftime('%Y-%m-%d %H:%M:%S'),
-        data['end'].strftime('%Y-%m-%d %H:%M:%S'),
+        filesuffix,
+        data['start'],
+        data['end'],
         data['nrows'],
         data['unique_links'],
         data['fractionblank'],
@@ -216,27 +253,57 @@ def update_dashboard_mainpage(site, page, log):
     
     DB.close()
     
-def update_dashboard_details(site, page, log):
+def update_dashboard_details(site, page, log, test = False, overwrite= False):
     # use the local version of all of these files
-    
-    data = read_details(site, page, log)
-    
-    if not data:
-        raise Exception("Data not parsed correctly")
-        
+
     DB = mysql.connector.connect(
        host="india-labor.citktbvrkzg6.ap-south-1.rds.amazonaws.com",
        user="admin",
        password="b9PR]37DsB",
        database = 'dashboard'
     )
+        
+    filesuffix = get_file_suffix(page)
+
+    if test:
+        table = 'details_test'
+    else:
+        table = 'details'
+        
+    if not overwrite:
+        if record_exists(DB, table, site, filesuffix):
+            DB.close()
+            return
     
+    data = read_details(site, page, log)
+    
+    if not data:
+        raise Exception("Data not parsed correctly")
+    
+    if test:
+        print(data)
+            
     cursor = DB.cursor()
-    sql = "INSERT INTO details_test (site, filesuffix, datastart, dataend, nrows, uniquelinks, fractionblank, already_scraped, status0, status1, retries, success, logmissing) VALUES ('{}', '{}', '{}', '{}', {}, {}, {}, {}, {}, {}, {}, {}, {})".format(
+    sql = '''INSERT INTO {} 
+            (site, filesuffix, datastart, dataend, nrows, uniquelinks, fractionblank, alreadyscraped, status0, status1, retries, success, logmissing) 
+            VALUES ('{}', '{}', '{}', '{}', {}, {}, {}, {}, {}, {}, {}, {}, {})
+            ON DUPLICATE KEY UPDATE
+            `datastart` = VALUES(`datastart`),
+            `dataend` = VALUES(`dataend`),
+            `nrows` = VALUES(`nrows`),
+            `uniquelinks` = VALUES(`uniquelinks`),
+            `fractionblank` = VALUES(`fractionblank`),
+            `alreadyscraped` = VALUES(`alreadyscraped`),
+            `status0` = VALUES(`status0`),
+            `status1` = VALUES(`status1`),
+            `retries` = VALUES(`retries`),
+            `success` = VALUES(`success`),
+            `logmissing` = VALUES(`logmissing`)'''.format(
+        table,
         site,
-        data['filesuffix'],
-        data['start'].strftime('%Y-%m-%d %H:%M:%S'),
-        data['end'].strftime('%Y-%m-%d %H:%M:%S'),
+        filesuffix,
+        data['start'],
+        data['end'],
         data['nrows'],
         data['unique_links'],
         data['fractionblank'],
