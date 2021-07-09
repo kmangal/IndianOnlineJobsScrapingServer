@@ -24,7 +24,13 @@ def redo_timesjobs_details(infile, outfile, logfile):
         'outfile' : outfile,
         'log' : logfile},
         job_timeout = 60 * 60 * 24 * 4)
-	
+
+
+def redo_monster_details():
+    q = Queue(connection = config.redis)
+    result = q.enqueue(tasks.monster_detail_scrape,
+        job_timeout = 60 * 60 * 24 * 4)    
+
 if __name__ == '__main__':
     #redo_timesjobs_details(
     #    infile= os.path.expanduser('~/jobs_scraping/timesjobs/output/mainpage/timesjobs_mainpage_20210630_032644.csv'),
@@ -32,8 +38,10 @@ if __name__ == '__main__':
     #    logfile= os.path.expanduser('~/jobs_scraping/timesjobs/log/20210630_032644.log')
     #    )
 
-    redo_shine_details(
-        infile= 'shine_mainpage_20210707_134204.csv',
-        outfile = 'shine_details_20210707_134204.csv',
-        logfile= '20210707_134204_v2.log'
-        )
+    #redo_shine_details(
+    #    infile= 'shine_mainpage_20210707_134204.csv',
+    #    outfile = 'shine_details_20210707_134204.csv',
+    #    logfile= '20210707_134204_v2.log'
+    #    )
+
+    redo_monster_details()

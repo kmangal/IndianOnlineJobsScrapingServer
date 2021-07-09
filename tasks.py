@@ -1,5 +1,7 @@
 import os
 import sys
+import glob
+import re
 
 import test.testtasks
 
@@ -15,7 +17,26 @@ import shine.detailscrape
 from util.export_to_dropbox import move_to_dropbox
 from util.cleanfolder import Cleaner
 
+# ---------------------------------------------------
+# Helper
 
+FILESUFFIXRE = re.compile(r'\d{8}_\d{6}')
+
+def get_latest_suffix(folder):
+
+    list_of_files = glob.glob(os.path.join(folder, "*.csv"))
+    latest_file = max(list_of_files, key=os.path.getctime)
+
+    m = FILESUFFIXRE.search(latest_file)
+    
+    if m:
+        filesuffix = m.group()
+    else:
+        raise Exception("File name not in expected format")
+        
+    return filesuffix
+
+# ----------------------------------------------------
 
 def test_print(message):
     test.testtasks.test_print(message)
@@ -84,13 +105,32 @@ def shine_detail_scrape(**kwargs):
     SHINE_PATH = os.path.expanduser('~/jobs_scraping/shine')
     mainpage_local = os.path.join(SHINE_PATH, 'output', 'mainpage', kwargs['infile'])
     details_local = os.path.join(SHINE_PATH, 'output', 'details', kwargs['outfile'])
-    logfile_local = os.path.join(SHINE_PATH, 'log', kwargs['log'])
+    logfile_local = os.path.join(SHINE_PATH, 'log', 'details', kwargs['log'])
     
     ds = shine.detailscrape.DetailScraper(mainpage_local, details_local, logfile_local)
     ds.run()
     
-    details_dropbox = '/India Labor Market Indicators/scraping/Shine/ec2/details/{f}'.format(f=kwargs['outfile'])
-    logfile_dropbox = '/India Labor Market Indicators/scraping/Shine/ec2/log/{f}'.format(f=kwargs['log'])
+    details_dropbox = '/India Labor Market Indicators/scraping/Shine/ec2/output/details/{f}'.format(f=kwargs['outfile'])
+    logfile_dropbox = '/India Labor Market Indicators/scraping/Shine/ec2/log/details/{f}'.format(f=kwargs['log'])
+    
+    move_to_dropbox(details_local, details_dropbox)
+    move_to_dropbox(logfile_local, logfile_dropbox)
+    
+    
+def monster_detail_scrape():
+    
+    filesuffix = get_latest_suffix(os.path.expanduser('~/jobs_scraping/monster/output/mainpage'))
+    
+    MONSTER_PATH = os.path.expanduser('~/jobs_scraping/monster')
+    mainpage_local = os.path.join(MONSTER_PATH, 'output', 'mainpage', 'monster_mainpage_{}.csv'.format(filesuffix))
+    details_local = os.path.join(MONSTER_PATH, 'output', 'details', 'monster_details_{}.csv'.format(filesuffix))
+    logfile_local = os.path.join(MONSTER_PATH, 'log', 'details', '{}.log'.format(filesuffix))
+    
+    ds = shine.detailscrape.DetailScraper(mainpage_local, details_local, logfile_local)
+    ds.run()
+    
+    details_dropbox = '/India Labor Market Indicators/scraping/Shine/ec2/output/details/monster_details_{f}.csv'.format(filesuffix)
+    logfile_dropbox = '/India Labor Market Indicators/scraping/Shine/ec2/log/details/{}.log'.format(filesuffix)
     
     move_to_dropbox(details_local, details_dropbox)
     move_to_dropbox(logfile_local, logfile_dropbox)
