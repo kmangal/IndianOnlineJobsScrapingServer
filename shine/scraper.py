@@ -50,19 +50,19 @@ def run_full_scrape():
     move_to_dropbox(mainlogfile_local, mainlogfile_dropbox)
     
     update_dashboard_mainpage('shine', mainpage_local, mainlogfile_local)
+    
+    #detaillogfile_local = os.path.join(SHINE_PATH, 'log', 'details', '{fd}.log'.format(fd=filedate))
 
-    detaillogfile_local = os.path.join(SHINE_PATH, 'log', 'details', '{fd}.log'.format(fd=filedate))
-
-    ds = shine.detailscrape.DetailScraper(mainpagefile = mainpage_local,
-                       detailsfile = details_local, 
-                       logfile = detaillogfile_local)
-    ds.run()    
+    #ds = shine.detailscrape.DetailScraper(mainpagefile = mainpage_local,
+    #                   detailsfile = details_local, 
+    #                   logfile = detaillogfile_local)
+    #ds.run()    
         
     # Move the log and details files
-    move_to_dropbox(details_local, details_dropbox)
-    move_to_dropbox(detaillogfile_local, detaillogfile_dropbox)
+    #move_to_dropbox(details_local, details_dropbox)
+    #move_to_dropbox(detaillogfile_local, detaillogfile_dropbox)
 
-    update_dashboard_details('shine', details_local, detaillogfile_local)
+    #update_dashboard_details('shine', details_local, detaillogfile_local)
 
 
 def test_scrape():
