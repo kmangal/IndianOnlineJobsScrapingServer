@@ -13,6 +13,7 @@ import teamlease.scraper
 
 import timesjobs.detailscrape
 import shine.detailscrape
+import monster.detailscrape
 
 from util.export_to_dropbox import move_to_dropbox
 from util.cleanfolder import Cleaner
@@ -126,7 +127,7 @@ def monster_detail_scrape():
     details_local = os.path.join(MONSTER_PATH, 'output', 'details', 'monster_details_{}.csv'.format(filesuffix))
     logfile_local = os.path.join(MONSTER_PATH, 'log', 'details', '{}.log'.format(filesuffix))
     
-    ds = shine.detailscrape.DetailScraper(mainpage_local, details_local, logfile_local)
+    ds = monster.detailscrape.DetailScraper(mainpage_local, details_local, logfile_local)
     ds.run()
     
     details_dropbox = '/India Labor Market Indicators/scraping/Shine/ec2/output/details/monster_details_{f}.csv'.format(filesuffix)
