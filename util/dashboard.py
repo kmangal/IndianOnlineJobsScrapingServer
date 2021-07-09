@@ -94,7 +94,7 @@ def read_details_log(logfile):
    # Assumes a scrapelogger format
     
     if not os.path.isfile(logfile) or os.path.getsize(logfile) == 0:
-        return {'already_scraped' : None, 'status0' : None, 'status1' : None, 'retries' : None, 'success', None, 'logmissing' : True}
+        return {'already_scraped' : None, 'status0' : None, 'status1' : None, 'retries' : None, 'success': None, 'logmissing' : True}
         
     already_scraped = 0
     status0 = 0
@@ -133,7 +133,7 @@ def read_details_log(logfile):
 def read_scrapelogger_mainpage(logfile):
 
     if not os.path.isfile(logfile) or os.path.getsize(logfile) == 0:
-        return {'retries' : None, 'success', None, 'logmissing' : True}
+        return {'retries' : None, 'success': None, 'logmissing' : True}
         
     success = False
     retries = 0
@@ -156,7 +156,7 @@ def read_scrapelogger_mainpage(logfile):
 def read_scrapy_log(logfile):
 
     if not os.path.isfile(logfile) or os.path.getsize(logfile) == 0:
-        return {'retries' : None, 'success', None, 'logmissing' : True}
+        return {'retries' : None, 'success': None, 'logmissing' : True}
     
     error = False
     retries = 0
