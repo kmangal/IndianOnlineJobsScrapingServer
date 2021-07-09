@@ -103,5 +103,7 @@ if __name__ == '__main__':
         teamlease.scraper.test_scrape()
     elif sys.argv[1] == 'shine-detail':
         shine.scraper.test_details()
+    elif sys.argv[1] == 'clean':
+        clean()
     else:
         print("Argument not recognized")
