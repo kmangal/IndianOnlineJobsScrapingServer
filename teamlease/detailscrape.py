@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Monster - Detail Page Scrape    
+# Teamlease - Detail Page Scrape    
 
 from requests_html import HTMLSession
 from datetime import datetime, timedelta
@@ -52,11 +52,23 @@ class DetailScraper:
         }
     ]
 
+    
+    fnames = ['url', 'status', 'headertitle', 'jobtype',
+                'jobtitle',
+                'company',
+                'location',
+                'exp',
+                'salary',
+                'edu',
+                'applybuttontext',
+                'posted_on',
+                'job_description',
+                'role',
+                'timing',
+                'process',
+                'scrapetime'
+                ]
 
-    fnames = [
-        'url', 'status', 'jobid', 'jobtitle', 'company', 'location', 'exp', 'package', 'jobtype', 'posted_on', 'totalviews', 
-        'totalapplications', 'job_description', 'employment_type', 'industry', 'function', 'roles', 'last_updated', 'scrapetime'
-        ]
             
     def __init__(self, mainpagefile, detailsfile, logfile, test = False):
 
@@ -76,7 +88,7 @@ class DetailScraper:
         self.test = test
 
         # Set up log file
-        self.logger = scrapelogger.ScrapeLogger('monster-details', logfile, level = logging.INFO)
+        self.logger = scrapelogger.ScrapeLogger('teamlease-details', logfile, level = logging.INFO)
 
         self.user_agent_rotator = UserAgent(software_names=[SoftwareName.CHROME.value, SoftwareName.FIREFOX.value], 
                                 operating_systems=[OperatingSystem.WINDOWS.value, OperatingSystem.LINUX.value])
@@ -97,13 +109,13 @@ class DetailScraper:
         if self.test:
             counter = 0
             for line in csvreader:
-                links.update([line['url']])
+                links.update(['https://www.teamlease.com' + line['url']])
                 counter += 1
                 if counter > 25:
                     break
         else:
             for line in csvreader:
-                links.update([line['url']])
+                links.update(['https://www.teamlease.com' + line['url']])
             
         f.close()
         
@@ -156,84 +168,73 @@ class DetailScraper:
             r = session.get(url, headers = {'User-Agent' : self.get_user_agent()})
 
         try:
-            r.html.render()
-            response = r.html 
+            response = r.html
             
-            jobtitle = DetailScraper.get_element(response, 'div.detail-job-tittle > h1')            
-            company = DetailScraper.get_element(response, 'div.detail-job-tittle > span')            
-            location = DetailScraper.get_element(response, 'div.detail-job-tittle span.loc')             
-            exp = DetailScraper.get_element(response, 'div.job-tittle-box div.exp')             
-            package = DetailScraper.get_element(response, 'span.package')            
-            jobtype = DetailScraper.get_element(response, 'div.posted-update > span.color-grey-light')
+            headertitle = DetailScraper.get_element(response, 'h1.header_title')
+            
+            jobtypeelement = response.find('div.job-type img')
+            if jobtypeelement:
+                jobtype = jobtypeelement[0].attrs.get('alt', '')
+            else:
+                jobtype = 'MISSING'
+                            
+            jobtitle = DetailScraper.get_element(response, 'div.job-display-block h2')            
+            company = DetailScraper.get_element(response, 'span.company_name')            
+            location = DetailScraper.get_element(response, 'div.location-text')
 
-            posted_stats = response.find('span.posted')
-            
-            posted_on = ''
-            totalviews= ''
-            totalapplications = ''
-            jobid = ''
-            
-            for element in posted_stats:
+            topbox = response.find('span.job-display-text')
+            exp = ''
+            salary = ''
+            for element in topbox:
                 text = element.text
-                if 'Posted On:' in text:
-                    posted_on = text.replace('Posted On:', '').strip()
-                elif 'Total Views:' in text:
-                    # Needs javascript
-                    totalviews = text.replace('Total Views:', '').strip()
-                elif 'Total Applications :' in text:
-                    totalapplications = text.replace('Total Applications :', '').strip()
-                elif 'Job Id:' in text:
-                    jobid = text.replace('Job Id:', '').strip()
-                else:
-                   pass
-   
-
-            jd = DetailScraper.get_element(response, 'div.jd-text')
-            
-            detail_list = response.find('div.job-detail-list')
-            
-            employment_type = ''
-            industry = ''
-            function = ''
-            roles = ''
-            
-            for row in detail_list:
-                text = row.text
-                if 'Employment Types:' in text:
-                    employment_type = text.replace('Employment Types:', '').strip()
-                elif 'Industry:' in text:
-                    industry = text.replace('Industry:', '').strip()
-                elif 'Function:' in text:
-                    function = text.replace('Function:', '').strip()
-                elif 'Roles:' in text:
-                    roles = text.replace('Roles:', '').strip()
+                if 'Experience' in text:
+                    exp = text.replace('Experience', '').replace(':', '').strip()
+                elif 'Rs.' in text:
+                    salary = text.strip()
                 else:
                     pass
-            
-            # Needs javascript
-            last_updated = DetailScraper.get_element(response, 'div.last-updated')
+                                
+            edu = DetailScraper.get_element(response, 'div.course-text')
+            applybuttontext = DetailScraper.get_element(response, 'div.top-menu div.apply-button-block')
+            posted_on = DetailScraper.get_element(response, 'div.posted').replace('Posted:', '').strip()            
+            jd = DetailScraper.get_element(response, 'div.detail-content')
 
+            jobparticularsbox = response.find('div.job-particulars')
+            
+            role = ''
+            timing = ''
+            process = ''
+            
+            if jobparticularsbox:
+                for text in jobparticularsbox[0].text.split('\n'):
+                    if 'Role' in text:
+                        role = text.replace('Role', '').strip()
+                    elif 'Job Type' in text:
+                        timing = text.replace('Job Type', '').strip()
+                    elif 'Hiring Process' in text:
+                        process = text.replace('Hiring Process', '').strip()
+                    else:
+                        pass
+                
             session.close()
             
             return {
                 'url' : url,
                 'status' : 1,
-                'jobid' : jobid,
+                'headertitle' : headertitle,
+                'jobtype' : jobtype,
                 'jobtitle' : jobtitle,
                 'company' : company,
                 'location' : location,
                 'exp' : exp,
-                'package' : package,
-                'jobtype' : jobtype,
+                'salary' : salary,
+                'edu' : edu,
+                'applybuttontext' : applybuttontext,
                 'posted_on' : posted_on,
-                'totalviews' : totalviews,
-                'totalapplications' : totalapplications,
                 'job_description' : jd,
-                'employment_type' : employment_type,
-                'industry' : industry,
-                'function' : function,
-                'roles' : roles,
-                'last_updated' : last_updated,
+                'role' : role,
+                'timing' : timing,
+                'process' : process,
                 'scrapetime' : datetime.now().strftime("%d/%m/%Y %H:%M:%S")
                 }
 
@@ -268,7 +269,7 @@ class DetailScraper:
            host="india-labor.citktbvrkzg6.ap-south-1.rds.amazonaws.com",
            user="admin",
            password="b9PR]37DsB",
-           database = 'monster'
+           database = 'teamlease'
         )
 
         self.links = self.get_links()
@@ -295,7 +296,7 @@ class DetailScraper:
 
 if __name__ == '__main__':
 
-    parser = argparse.ArgumentParser(description='Monster Detail Scrape')
+    parser = argparse.ArgumentParser(description='Teamlease Detail Scrape')
     parser.add_argument('--in', help='Infile', required=True)
     parser.add_argument('--out', help='Outfile', required=True)
     parser.add_argument('--log', help='Logfile', required=True)

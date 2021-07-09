@@ -12,6 +12,8 @@ from teamlease.teamlease.spiders.TeamLeaseSpider import TeamLeaseSpider
 from util.export_to_dropbox import move_to_dropbox
 from util.dashboard import update_dashboard_mainpage, update_dashboard_details
 
+import teamlease.detailscrape
+
 
 def run_full_scrape():
 
@@ -44,6 +46,25 @@ def run_full_scrape():
     move_to_dropbox(mainlogfile_local, mainlogfile_dropbox)
 
     update_dashboard_mainpage('teamlease', mainpage_local, mainlogfile_local)
+
+    details_local = os.path.join(TL_PATH, 'output', 'details', 'teamlease_details_{fd}.csv'.format(fd=filedate))
+    detaillogfile_local = os.path.join(TL_PATH, 'log', 'details', '{fd}.log'.format(fd=filedate))
+
+    ds = teamlease.detailscrape.DetailScraper(mainpagefile = mainpage_local,
+                       detailsfile = details_local, 
+                       logfile = detaillogfile_local)
+    ds.run()    
+    
+    details_dropbox = '/India Labor Market Indicators/scraping/TeamLease/ec2/output/details/teamlease_details_{fd}.csv'.format(fd=filedate)
+    detaillogfile_dropbox = '/India Labor Market Indicators/scraping/TeamLease/ec2/log/details/{fd}.log'.format(fd=filedate)
+
+    # Move the log and details files
+    move_to_dropbox(details_local, details_dropbox)
+    move_to_dropbox(detaillogfile_local, detaillogfile_dropbox)
+
+    update_dashboard_details('teamlease', details_local, detaillogfile_local)
+
+
 
 def test_scrape():
     
