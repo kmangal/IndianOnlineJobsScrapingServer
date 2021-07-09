@@ -80,7 +80,7 @@ def run_scrape(test = False):
     logger.finalize()
     
     if not test:
-        api_dropbox = '/India Labor Market Indicators/scraping/WaahJobs/ec2/api/waahjobs_api_{fd}.csv'.format(fd=filedate)
+        api_dropbox = '/India Labor Market Indicators/scraping/WaahJobs/ec2/output/api/waahjobs_api_{fd}.csv'.format(fd=filedate)
         log_dropbox = '/India Labor Market Indicators/scraping/WaahJobs/ec2/log/{fd}.log'.format(fd=filedate)
 
         move_to_dropbox(outpath, api_dropbox)
