@@ -112,17 +112,16 @@ class Cleaner:
 
             for f in missing_files:
                 self.logger.log.info("Copying {}".format(dropboxfolder + f))
-                export_to_dropbox.move_to_dropbox(
+                export_to_dropbox.upload_to_dropbox(
                     os.path.join(localfolder, f), 
                     dropboxfolder + f
                 )
 
             for f in not_updated_files:
                 self.logger.log.info("Updating {}".format(dropboxfolder + f))
-                export_to_dropbox.move_to_dropbox(
+                export_to_dropbox.upload_to_dropbox(
                     os.path.join(localfolder, f), 
-                    dropboxfolder + f, 
-                    overwrite = True
+                    dropboxfolder + f
                 )
 
             # Do not overwrite files that are more recent in dropbox
