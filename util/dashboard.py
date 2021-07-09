@@ -150,16 +150,22 @@ def read_scrapelogger_mainpage(logfile):
 
 def read_scrapy_log(logfile):
 
-    success = True
+    error = False
     retries = 0
+    spiderclose = False
     
     with open(logfile, 'r') as f:
         for line in f:        
             if 'ERROR' in line:
-                success = False
+                error = True
             
             if 'Retrying' in line:
                 retries += 1
+            
+            if 'Spider closed' in line:
+                spiderclose = True
+                
+    success = spiderclose and not error
                 
     return {
         'success' : success,
