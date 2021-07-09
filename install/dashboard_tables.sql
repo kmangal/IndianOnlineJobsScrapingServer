@@ -8,7 +8,8 @@ CREATE TABLE dashboard.mainpage (
     uniquelinks INT,
     fractionblank FLOAT,
     retries INT,
-    success BOOL
+    success BOOL,
+    logmissing BOOL
 );
 
 CREATE TABLE dashboard.details (
@@ -24,7 +25,8 @@ CREATE TABLE dashboard.details (
     status0 INT,
     status1 INT,
     retries INT,
-    success BOOL
+    success BOOL,
+    logmissing BOOL
 );
 
 
@@ -38,7 +40,8 @@ CREATE TABLE dashboard.mainpage_test (
     uniquelinks INT,
     fractionblank FLOAT,
     retries INT,
-    success BOOL
+    success BOOL,
+    logmissing BOOL
 );
 
 
@@ -55,5 +58,6 @@ CREATE TABLE dashboard.details_test (
     status0 INT,
     status1 INT,
     retries INT,
-    success BOOL
+    success BOOL,
+    logmissing BOOL
 );

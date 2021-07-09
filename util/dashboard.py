@@ -93,8 +93,8 @@ def read_data(path):
 def read_details_log(logfile):
    # Assumes a scrapelogger format
     
-    if not logfile:
-        return {}
+    if not os.path.isfile(logfile) or os.path.getsize(logfile) == 0:
+        return {'already_scraped' : None, 'status0' : None, 'status1' : None, 'retries' : None, 'success', None, 'logmissing' : True}
         
     already_scraped = 0
     status0 = 0
@@ -125,12 +125,16 @@ def read_details_log(logfile):
         'status0' : status0,
         'status1' : status1,
         'retries' : retries,
-        'success' : success
+        'success' : success,
+        'logmissing' : False
     }
 
 
 def read_scrapelogger_mainpage(logfile):
 
+    if not os.path.isfile(logfile) or os.path.getsize(logfile) == 0:
+        return {'retries' : None, 'success', None, 'logmissing' : True}
+        
     success = False
     retries = 0
     
@@ -145,11 +149,15 @@ def read_scrapelogger_mainpage(logfile):
         
     return {
         'retries' : retries,
-        'success' : success
+        'success' : success,
+        'logmissing' : False
     }
 
 def read_scrapy_log(logfile):
 
+    if not os.path.isfile(logfile) or os.path.getsize(logfile) == 0:
+        return {'retries' : None, 'success', None, 'logmissing' : True}
+    
     error = False
     retries = 0
     spiderclose = False
@@ -169,7 +177,8 @@ def read_scrapy_log(logfile):
                 
     return {
         'success' : success,
-        'retries' : retries
+        'retries' : retries,
+        'logmissing' : False
     }
 
 
@@ -189,7 +198,7 @@ def update_dashboard_mainpage(site, page, log):
     )
     
     cursor = DB.cursor()
-    sql = "INSERT INTO mainpage_test (site, filesuffix, datastart, dataend, nrows, uniquelinks, fractionblank, retries, success) VALUES ('{}', '{}', '{}', '{}', {}, {}, {}, {}, {})".format(
+    sql = "INSERT INTO mainpage_test (site, filesuffix, datastart, dataend, nrows, uniquelinks, fractionblank, retries, success, logmissing) VALUES ('{}', '{}', '{}', '{}', {}, {}, {}, {}, {}, {})".format(
         site,
         data['filesuffix'],
         data['start'].strftime('%Y-%m-%d %H:%M:%S'),
@@ -198,7 +207,8 @@ def update_dashboard_mainpage(site, page, log):
         data['unique_links'],
         data['fractionblank'],
         data['retries'],
-        data['success'])
+        data['success'],
+        data['logmissing'])
     
     cursor.execute(sql)
     cursor.close()
@@ -222,7 +232,7 @@ def update_dashboard_details(site, page, log):
     )
     
     cursor = DB.cursor()
-    sql = "INSERT INTO details_test (site, filesuffix, datastart, dataend, nrows, uniquelinks, fractionblank, status0, status1, retries, success) VALUES ('{}', '{}', '{}', '{}', {}, {}, {}, {}, {}, {}, {})".format(
+    sql = "INSERT INTO details_test (site, filesuffix, datastart, dataend, nrows, uniquelinks, fractionblank, already_scraped, status0, status1, retries, success, logmissing) VALUES ('{}', '{}', '{}', '{}', {}, {}, {}, {}, {}, {}, {}, {}, {})".format(
         site,
         data['filesuffix'],
         data['start'].strftime('%Y-%m-%d %H:%M:%S'),
@@ -230,10 +240,12 @@ def update_dashboard_details(site, page, log):
         data['nrows'],
         data['unique_links'],
         data['fractionblank'],
+        data['already_scraped'],
         data['status0'],
         data['status1'],
         data['retries'],
-        data['success'])
+        data['success'],
+        data['logmissing'])
     
     cursor.execute(sql)
     cursor.close()
