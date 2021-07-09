@@ -156,7 +156,7 @@ class DetailScraper:
             r = session.get(url, headers = {'User-Agent' : self.get_user_agent()})
 
         try:
-            r.html.render()
+            #r.html.render()
             response = r.html 
             
             jobtitle = DetailScraper.get_element(response, 'div.detail-job-tittle > h1')            
