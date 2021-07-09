@@ -39,11 +39,11 @@ def upload_to_dropbox(localpath, dropboxpath):
 
         file_metadata = dbx.files_upload_session_finish(
             b'',
-            dropbox.UploadSessionCursor(
+            dropbox.files.UploadSessionCursor(
                 upload_session.session_id,
                 offset=offset,
             ),
-            dropbox.CommitInfo(
+            dropbox.files.CommitInfo(
                 dropboxpath,
                 # When writing the file it won't overwrite an existing file, just add
                 # another file like "filename (2).txt"
