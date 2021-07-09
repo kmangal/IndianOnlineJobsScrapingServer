@@ -97,13 +97,13 @@ class DetailScraper:
         if self.test:
             counter = 0
             for line in csvreader:
-                links.update([line['url']])
+                links.update([line['url'].split('?')[0]])
                 counter += 1
                 if counter > 25:
                     break
         else:
             for line in csvreader:
-                links.update([line['url']])
+                links.update([line['url'].split('?')[0]])
             
         f.close()
         
