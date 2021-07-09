@@ -102,7 +102,12 @@ class Cleaner:
             self.logger.log.info("{} - No files older than shelf life".format(localfolder))
             return
 
-        dropboxfiles = self.get_dropbox_files(dropboxfolder)
+        try:
+            dropboxfiles = self.get_dropbox_files(dropboxfolder)
+        except dropbox.exceptions.ApiError:
+            self.logger.log.error("Problem accessing folder {}".format(dropboxfolder))
+            return
+            
         missing_files, not_updated_files, ok_files = self.compare_files(oldlocalfiles, dropboxfiles)
         
         if self.verbose:
