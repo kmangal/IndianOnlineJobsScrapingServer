@@ -23,3 +23,4 @@ mkdir -p waahjobs/log
 
 mkdir -p log
 mkdir -p log/error
+mkdir -p log/cleaning

@@ -44,8 +44,8 @@ def run_full_scrape():
     process.start() # the script will block here until the crawling is finished
 
     # Send files to Dropbox
-    mainpage_dropbox = '/India Labor Market Indicators/scraping/Monster/ec2/mainpage/monster_mainpage_{fd}.csv'.format(fd=filedate)
-    jobcount_dropbox = '/India Labor Market Indicators/scraping/Monster/ec2/jobcount/monster_jobcount_{fd}.csv'.format(fd=filedate)
+    mainpage_dropbox = '/India Labor Market Indicators/scraping/Monster/ec2/output/mainpage/monster_mainpage_{fd}.csv'.format(fd=filedate)
+    jobcount_dropbox = '/India Labor Market Indicators/scraping/Monster/ec2/output/jobcount/monster_jobcount_{fd}.csv'.format(fd=filedate)
     mainlogfile_dropbox = '/India Labor Market Indicators/scraping/Monster/ec2/log/mainpage/{fd}.log'.format(fd=filedate)
     
     move_to_dropbox(mainpage_local, mainpage_dropbox)
