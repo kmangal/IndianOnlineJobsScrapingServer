@@ -154,7 +154,7 @@ class DetailScraper:
             r = session.get(url, headers = {'User-Agent' : self.get_user_agent()})
         except:
             # In case the connection is reset - not sure how to specify this correctly.
-            self.logger.log.error("While fetching {} connection reset by peer. Taking a break for 1 min...".format(url))
+            self.logger.log.warning("While fetching {} connection reset by peer. Taking a break for 1 min...".format(url))
             time.sleep(60)
             r = session.get(url, headers = {'User-Agent' : self.get_user_agent()})
 
