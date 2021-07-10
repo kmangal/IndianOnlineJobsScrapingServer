@@ -174,8 +174,3 @@ if __name__ == '__main__':
 
     #clean_folder(localfolder, dropboxfolder, verbose = args.verbose, test = args.test)
 
-
-    clean_folder(
-        os.path.join(os.path.expanduser("~"), 'jobs_scraping', 'shine', 'test'), 
-        '/'.join(['/India Labor Market Indicators', 'scraping', 'Shine', 'ec2', 'test'])
-        )

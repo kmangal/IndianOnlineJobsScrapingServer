@@ -15,7 +15,7 @@ def redo_shine_details(infile, outfile, logfile):
        kwargs = {'infile' : infile,
         'outfile' : outfile,
         'log' : logfile},
-        job_timeout = 60 * 60 * 24 * 4)
+        job_timeout = 60 * 60 * 24 * 7)
         
 def redo_timesjobs_details(infile, outfile, logfile):
     q = Queue(connection = config.redis)
@@ -23,13 +23,13 @@ def redo_timesjobs_details(infile, outfile, logfile):
        kwargs = {'infile' : infile,
         'outfile' : outfile,
         'log' : logfile},
-        job_timeout = 60 * 60 * 24 * 4)
+        job_timeout = 60 * 60 * 24 * 7)
 
 
 def redo_monster_details():
     q = Queue(connection = config.redis)
     result = q.enqueue(tasks.monster_detail_scrape,
-        job_timeout = 60 * 60 * 24 * 4)    
+        job_timeout = 60 * 60 * 24 * 7)    
 
 if __name__ == '__main__':
     #redo_timesjobs_details(

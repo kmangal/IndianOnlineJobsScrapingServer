@@ -47,7 +47,7 @@ def main():
             repeat= None,                                         # Repeat this number of times (None means repeat forever)
             queue_name= 'default',                                # In which queue the job should be put in
             meta={'site': 'monster', 'type' : 'scrape', 'name' : 'monster'},            # Arbitrary pickleable data on the job itself
-            timeout = 60 * 60 * 24 * 4
+            timeout = 60 * 60 * 24 * 7
         )
         
         
@@ -61,7 +61,7 @@ def main():
             repeat= None,                                         # Repeat this number of times (None means repeat forever)
             queue_name= 'default',                                # In which queue the job should be put in
             meta={'site': 'shine', 'type' : 'scrape', 'name' : 'shine'},          # Arbitrary pickleable data on the job itself
-            timeout = 60 * 60 * 24 * 4
+            timeout = 60 * 60 * 24 * 7
         )
 
     if 'teamlease' not in scheduled_jobs:
@@ -74,7 +74,7 @@ def main():
             repeat= None,                                         # Repeat this number of times (None means repeat forever)
             queue_name= 'default',                                # In which queue the job should be put in
             meta={'site': 'teamlease', 'type' : 'scrape', 'name' : 'teamlease'},                  # Arbitrary pickleable data on the job itself
-            timeout = 60 * 60 * 24 * 4
+            timeout = 60 * 60 * 24 * 7
         )
 
     if 'timesjobs' not in scheduled_jobs:
@@ -87,21 +87,21 @@ def main():
             repeat= None,                                         # Repeat this number of times (None means repeat forever)
             queue_name= 'default',                                # In which queue the job should be put in
             meta={'site': 'timesjobs', 'type' : 'scrape', 'name' : 'timesjobs'},                                  # Arbitrary pickleable data on the job itself
-            timeout = 60 * 60 * 24 * 4
+            timeout = 60 * 60 * 24 * 7
         )    
   
 
     if 'clean' not in scheduled_jobs:
-        # Run every day
+        # Run every four days
 
         scheduler.schedule(
             scheduled_time = base_start_time + timedelta(hours=12),                            # Time for first execution, in UTC timezone
             func= tasks.clean,                  # Function to be queued
-            interval = 60 * 60 * 24,                               # Interval in seconds
+            interval = 60 * 60 * 24 * 4,                               # Interval in seconds
             repeat= None,                                         # Repeat this number of times (None means repeat forever)
             queue_name= 'default',                                # In which queue the job should be put in
             meta={'site': None, 'type' : 'utility', 'name' : 'clean'},         # Arbitrary pickleable data on the job itself
-            timeout = 60 * 60 * 1                               # Run for a max of one hour
+            timeout = 60 * 60                               # Run for a max of one hour
         )          
 
   

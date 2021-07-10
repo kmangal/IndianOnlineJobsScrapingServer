@@ -1,5 +1,4 @@
 from rq_scheduler import Scheduler
-from datetime import timedelta
 
 import os
 import sys
