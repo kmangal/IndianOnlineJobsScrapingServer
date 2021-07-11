@@ -149,7 +149,7 @@ def teamlease_detail_scrape():
     details_local = os.path.join(TL_PATH, 'output', 'details', 'teamlease_details_{}.csv'.format(filesuffix))
     logfile_local = os.path.join(TL_PATH, 'log', 'details', '{}.log'.format(filesuffix))
     
-    ds = monster.detailscrape.DetailScraper(mainpage_local, details_local, logfile_local)
+    ds = teamlease.detailscrape.DetailScraper(mainpage_local, details_local, logfile_local)
     ds.run()
     
     details_dropbox = '/India Labor Market Indicators/scraping/Shine/ec2/output/details/teamlease_details_{f}.csv'.format(filesuffix)
