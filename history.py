@@ -14,7 +14,7 @@ def list_jobs(registry):
     jobs = Job.fetch_many(registry.get_job_ids(), connection=config.redis)
 
     for job in jobs:
-        print("{f: <20} - started: {s}  ended: {e}".format(
+        print("{f: <35} - started: {s}  ended: {e}".format(
                 f = job.func_name,
                 s = format_time(job.started_at),
                 e = format_time(job.ended_at)))
