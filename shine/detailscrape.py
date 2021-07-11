@@ -3,10 +3,8 @@
 
 from requests_html import HTMLSession
 from datetime import datetime, timedelta
-import pytz
 import csv
 import random
-import glob
 
 import time
 import sys
@@ -29,8 +27,6 @@ from util import scrapelogger
 
 import argparse
 
-# Make this the timestamp reflects India timeszone'
-TZ = pytz.timezone('Asia/Kolkata')
 
 from random_user_agent.user_agent import UserAgent
 from random_user_agent.params import SoftwareName, OperatingSystem
@@ -125,15 +121,15 @@ class DetailScraper:
             return False
         
         for row in result:
-            timestamp = row[0].replace(tzinfo = TZ)
-            if datetime.now().astimezone(TZ) - timestamp  < timedelta(days = 30):
+            timestamp = row[0]
+            if datetime.now() - timestamp  < timedelta(days = 30):
                 return True
             
         return False
 
     def update_database(self, url, status):
         cursor = self.DB.cursor()
-        sql = "INSERT INTO {} (url, datescraped, status) VALUES ('{}', '{}', {})".format(self.table, url, datetime.now().astimezone(TZ).strftime('%Y-%m-%d %H:%M:%S'), status)
+        sql = "INSERT INTO {} (url, datescraped, status) VALUES ('{}', '{}', {})".format(self.table, url, datetime.now().strftime('%Y-%m-%d %H:%M:%S'), status)
         cursor.execute(sql)
         cursor.close()
         self.DB.commit()
@@ -283,7 +279,7 @@ class DetailScraper:
                     'appinsight_label3' : appinsight_label3,
                     'appinsight_percentage3' : appinsight_percentage3,
                     'similarjobs' : similarjobs,
-                    'scrapetime' : datetime.now().astimezone(TZ).strftime("%d/%m/%Y %H:%M:%S")
+                    'scrapetime' : datetime.now().strftime("%d/%m/%Y %H:%M:%S")
                }
 
             
