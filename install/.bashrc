@@ -20,6 +20,7 @@ cd jobs_scraping
 # User specific aliases and functions
 alias jobs="python ~/jobs_scraping/util/jobs.py"
 alias status="python ~/jobs_scraping/util/status.py"
+alias history="python ~/jobs_scraping/util/history.py"
 
 #function seelog { tail -n 5 "$(ls -1r $1/*.log | head -n 1)"; }
 #export -f seelog
