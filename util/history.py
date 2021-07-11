@@ -1,6 +1,16 @@
 from rq import Queue
 from rq.job import Job
 
+import sys
+import os
+
+def modify_path():
+    currentdir = os.path.dirname(os.path.realpath(__file__))
+    parentdir = os.path.dirname(currentdir)
+    sys.path.append(parentdir)
+
+modify_path()
+
 import config
 
 def format_time(time):
