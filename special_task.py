@@ -3,8 +3,6 @@ import os
 
 from rq import Queue
 
-from datetime import datetime, timedelta
-
 import tasks
 
 import config
@@ -31,6 +29,12 @@ def redo_monster_details():
     result = q.enqueue(tasks.monster_detail_scrape,
         job_timeout = 60 * 60 * 24 * 7)    
 
+def redo_teamlease_details():
+    q = Queue(connection = config.redis)
+    result = q.enqueue(tasks.teamlease_detail_scrape,
+        job_timeout = 60 * 60 * 24 * 7)    
+
+
 if __name__ == '__main__':
     #redo_timesjobs_details(
     #    infile= os.path.expanduser('~/jobs_scraping/timesjobs/output/mainpage/timesjobs_mainpage_20210630_032644.csv'),
@@ -44,4 +48,7 @@ if __name__ == '__main__':
     #    logfile= '20210707_134204_v2.log'
     #    )
 
-    redo_monster_details()
+    if sys.argv[1] == 'teamlease-details':
+        redo_teamlease_details()
+    elif sys.argv[1] == 'monster-details':
+        redo_monster_details()
