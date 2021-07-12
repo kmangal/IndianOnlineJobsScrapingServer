@@ -143,7 +143,7 @@ def read_scrapelogger_mainpage(logfile):
             if 'Log finished at' in line:
                 success = True
                 
-            if 'Taking a break for' in line:
+            if 'Taking a break for' in line or 'Connection reset' in line:
                 retries += 1
         
     return {

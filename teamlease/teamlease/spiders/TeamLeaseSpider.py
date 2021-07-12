@@ -8,13 +8,11 @@ from scrapy.exceptions import CloseSpider
 from scrapy import signals
 
 import datetime
-import pytz
 import logging
 import re
 import csv
 import requests
 
-TZ = pytz.timezone('Asia/Kolkata')
 
 class TeamLeaseSpider(scrapy.Spider):
 
@@ -170,7 +168,7 @@ class TeamLeaseSpider(scrapy.Spider):
                 "tag": tag,
                 "posted_on_text": posted_on,
                 "posted_on_timestamp": datetime.datetime.fromtimestamp(posted_timestamp).strftime("%d/%m/%Y %H:%M:%S"),
-                "scraped_on": datetime.datetime.now().astimezone(TZ).strftime("%d/%m/%Y %H:%M:%S"),
+                "scraped_on": datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
                 "url-scraped": response.url
             }
 

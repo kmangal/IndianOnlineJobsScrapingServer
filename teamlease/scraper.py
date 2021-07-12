@@ -32,12 +32,8 @@ def mainpage_scrape(filedate):
     process = CrawlerProcess(settings)
     
     process.crawl(TeamLeaseSpider, jobcountfile = jobcount_local, test = False)
-    
-    try:
-        process.start() # the script will block here until the crawling is finished
-    except:
-        pass
-    
+    process.start() # the script will block here until the crawling is finished
+
     # Send files to Dropbox
     mainpage_dropbox = '/India Labor Market Indicators/scraping/TeamLease/ec2/output/mainpage/teamlease_mainpage_{fd}.csv'.format(fd=filedate)
     jobcount_dropbox = '/India Labor Market Indicators/scraping/TeamLease/ec2/output/jobcount/teamlease_jobcount_{fd}.csv'.format(fd=filedate)
@@ -66,12 +62,11 @@ def details_scrape(filedate):
     ds = teamlease.detailscrape.DetailScraper(mainpagefile = mainpage_local,
                        detailsfile = details_local, 
                        logfile = detaillogfile_local)
-    
     try:
         ds.run()    
-    except:
-        pass
-    
+    except Exception as e:
+        ds.logger.log.error('{}'.format(e))
+        
     details_dropbox = '/India Labor Market Indicators/scraping/TeamLease/ec2/output/details/teamlease_details_{fd}.csv'.format(fd=filedate)
     detaillogfile_dropbox = '/India Labor Market Indicators/scraping/TeamLease/ec2/log/details/{fd}.log'.format(fd=filedate)
 

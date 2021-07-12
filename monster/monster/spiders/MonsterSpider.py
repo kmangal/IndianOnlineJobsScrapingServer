@@ -11,9 +11,6 @@ import logging
 import csv
 import re
 
-import pytz
-TZ = pytz.timezone('Asia/Kolkata')
-
 # 3 india restrictions are because in they show up in the top locations
 # in aggregate form and are repeated in finer subunits in the state section
 
@@ -95,7 +92,7 @@ class MonsterSpider(CrawlSpider):
             location = location.strip()
             location = location.split(" ")[2]
             line = [
-                datetime.datetime.now().astimezone(TZ).strftime("%d/%m/%Y %H:%M:%S"),
+                datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
                 location,
                 response.url,
                 count
@@ -165,7 +162,7 @@ class MonsterSpider(CrawlSpider):
                 'description': desc,
                 'skills': skill,
                 'posted_at': posted_at,
-                'scraped_on': datetime.datetime.now().astimezone(TZ).strftime("%d/%m/%Y %H:%M:%S"),
+                'scraped_on': datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
                 'url_scraped': response.url
             }
 

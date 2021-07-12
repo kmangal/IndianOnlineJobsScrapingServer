@@ -23,8 +23,16 @@ def run_full_scrape():
 
     mainpage_local = os.path.expanduser('~/jobs_scraping/timesjobs/output/mainpage/timesjobs_mainpage_{fd}.csv'.format(fd=filedate))
     jobcount_local = os.path.expanduser('~/jobs_scraping/timesjobs/output/jobcount/timesjobs_jobcount_{fd}.csv'.format(fd=filedate))
-    mainlogfile_local = os.path.expanduser('~/jobs_scraping/timesjobs/log/{fd}.log'.format(fd=filedate))
-
+    mainlogfile_local = os.path.expanduser('~/jobs_scraping/timesjobs/log/mainpage/{fd}.log'.format(fd=filedate))
+    
+    ms = timesjobs.mainscrape.MainpageScraper(mainpagefile = mainpage_local,
+                       jobcountfile = jobcount_local, 
+                       logfile = mainlogfile_local)
+    try:
+        ms.run()    
+    except Exception as e:
+        ms.logger.log.error('{}'.format(e))
+        
     timesjobs.mainscrape.run(mainpage_local, jobcount_local, mainlogfile_local)
 
     # Send files to Dropbox
@@ -41,8 +49,14 @@ def run_full_scrape():
     details_local = os.path.expanduser('~/job_scraping/timesjobs/output/details/timesjobs_details_{fd}.csv'.format(fd=filedate))
     detailslog_local = os.path.expanduser('~/job_scraping/timesjobs/log/details/{fd}.csv'.format(fd=filedate))
 
-    timesjobs.detailscrape.run(mainpage_local, details_local, detailslog_local)
-    
+    ds = timesjobs.detailscrape.DetailScraper(mainpagefile = mainpage_local,
+                       detailsfile = details_local, 
+                       logfile = detailslog_local)
+    try:
+        ds.run()    
+    except Exception as e:
+        ds.logger.log.error('{}'.format(e))
+            
     details_dropbox = '/India Labor Market Indicators/scraping/TimesJobs/ec2/output/details/timesjobs_details_{fd}.csv'.format(fd=filedate)
     detailslog_dropbox = '/India Labor Market Indicators/scraping/TimesJobs/ec2/log/details/{fd}.log'.format(fd=filedate)
     
