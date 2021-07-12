@@ -70,6 +70,8 @@ class DetailScraper:
                 ]
 
             
+    MAX_CONSECUTIVE_ERRORS = 20
+    
     def __init__(self, mainpagefile, detailsfile, logfile, test = False):
 
         # Check types for input files
@@ -93,6 +95,9 @@ class DetailScraper:
         self.user_agent_rotator = UserAgent(software_names=[SoftwareName.CHROME.value, SoftwareName.FIREFOX.value], 
                                 operating_systems=[OperatingSystem.WINDOWS.value, OperatingSystem.LINUX.value])
 
+
+        self.consecutiveerrors = 0
+        
     def get_user_agent(self):
         return self.user_agent_rotator.get_random_user_agent()
         
@@ -159,14 +164,22 @@ class DetailScraper:
         
         session = HTMLSession()
 
-        try:
-            r = session.get(url, headers = {'User-Agent' : self.get_user_agent()})
-        except:
-            # In case the connection is reset - not sure how to specify this correctly.
-            self.logger.log.warning("While fetching {} connection reset by peer. Taking a break for 1 min...".format(url))
-            time.sleep(60)
-            r = session.get(url, headers = {'User-Agent' : self.get_user_agent()})
-
+        tries = 0
+        r = None
+        
+        while not r and tries < 2:          
+            try:
+                tries += 1
+                r = session.get(url, headers = {'User-Agent' : self.get_user_agent()})
+            except:
+                # In case the connection is reset - not sure how to specify this correctly.
+                self.logger.log.warning("Error while fetching {}. Taking a break for 1 min...".format(url))
+                time.sleep(60)
+        
+        if not r:
+            session.close()
+            return {'url' : url, 'status' : 0}            
+            
         try:
             response = r.html
             
@@ -253,8 +266,19 @@ class DetailScraper:
                 self.writer.writerow(row)
                 self.update_database(link, row['status'])
                 self.logger.log.info("Page {}/{} {} New Scrape STATUS:{}".format(pagecounter, self.totalpages, link, row['status']))
+                if row['status'] == 0 : 
+                    self.consecutiveerrors += 1
+                else:
+                    self.consecutiveerrors = 0
+                    
+                if self.consecutiveerrors >= DetailScraper.MAX_CONSECUTIVE_ERRORS:
+                    self.logger.log.error('Exceeded maximum consecutive errors ({})'.format(self.consecutiveerrors))
+                    self.shutdown()
+                    return 0
             else:
                 self.logger.log.info("Page {}/{} {} Already Scraped".format(pagecounter, self.totalpages, link))
+
+        return 1
 
 
     def run(self):
@@ -276,23 +300,23 @@ class DetailScraper:
         self.totalpages = len(self.links)
 
         if os.path.exists(self.detailsfile):
-            fout = open(self.detailsfile, 'a', newline = '')
-            self.writer = csv.DictWriter(fout, fieldnames = DetailScraper.fnames)
+            self.fout = open(self.detailsfile, 'a', newline = '')
+            self.writer = csv.DictWriter(self.fout, fieldnames = DetailScraper.fnames)
         else:
-            fout = open(self.detailsfile, 'a', newline = '')
-            self.writer = csv.DictWriter(fout, fieldnames = DetailScraper.fnames)
+            self.fout = open(self.detailsfile, 'a', newline = '')
+            self.writer = csv.DictWriter(self.fout, fieldnames = DetailScraper.fnames)
             self.writer.writeheader()  
             
-            
         # Scrape new only
-        self.scrape_new_only()
-            
-        fout.close()
-        self.DB.close()
+        success = self.scrape_new_only()
         
-        self.logger.finalize()
+        if success:           
+            self.logger.finalize()
 
 
+    def shutdown(self):
+        self.fout.close()
+        self.DB.close()        
 
 if __name__ == '__main__':
 

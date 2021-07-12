@@ -141,25 +141,9 @@ def monster_detail_scrape():
     update_dashboard_details('monster', details_local, logfile_local)
 
 def teamlease_detail_scrape():
-    
     filesuffix = get_latest_suffix(os.path.expanduser('~/jobs_scraping/teamlease/output/mainpage'))
+    teamlease.scraper.details_scrape(filesuffix)
     
-    TL_PATH = os.path.expanduser('~/jobs_scraping/teamlease')
-    mainpage_local = os.path.join(TL_PATH, 'output', 'mainpage', 'teamlease_mainpage_{}.csv'.format(filesuffix))
-    details_local = os.path.join(TL_PATH, 'output', 'details', 'teamlease_details_{}.csv'.format(filesuffix))
-    logfile_local = os.path.join(TL_PATH, 'log', 'details', '{}.log'.format(filesuffix))
-    
-    ds = teamlease.detailscrape.DetailScraper(mainpage_local, details_local, logfile_local)
-    ds.run()
-    
-    details_dropbox = '/India Labor Market Indicators/scraping/Shine/ec2/output/details/teamlease_details_{f}.csv'.format(filesuffix)
-    logfile_dropbox = '/India Labor Market Indicators/scraping/Shine/ec2/log/details/{}.log'.format(filesuffix)
-    
-    move_to_dropbox(details_local, details_dropbox)
-    move_to_dropbox(logfile_local, logfile_dropbox)
-    
-    update_dashboard_details('teamlease', details_local, logfile_local)
-
 
 if __name__ == '__main__':
 
