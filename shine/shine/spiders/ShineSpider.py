@@ -33,6 +33,8 @@ class ShineSpider(scrapy.Spider):
 
         self.pagecount = 0
         
+        self.nextpagenumber = 0
+        
     def _getjobcount(self, jobcountfile):
         
         success = False
@@ -68,7 +70,7 @@ class ShineSpider(scrapy.Spider):
         
         if not jobs_area:
             # just skip for now
-            yield self.get_next_page(soup)
+            return Request('https://www.shine.com/job-search/jobs-{}'.format(self.nextpagenumber + 1), callback=self.parse)      
             
         jobs = jobs_area.find_all('li', class_='result-display__profile')
         
@@ -120,10 +122,6 @@ class ShineSpider(scrapy.Spider):
         if self.test and self.pagecount > 2:
             raise CloseSpider("Test Mode")
 
-        yield self.get_next_page(soup)
-
-    def get_next_page(self, soup):
-        
         # Go to next page
         pagelinks = soup.select("a.submit.submit1.pagination_button.cls_pagination")
         pagelinktext = [a.text for a in pagelinks]
@@ -132,7 +130,9 @@ class ShineSpider(scrapy.Spider):
             # Shine seems to have an anti scraping measure in place where they put the wrong url in the raw html
             # (but it shows up okay on their website). Strategy: just extract the number.
             m = re.search('[0-9]+', lastpagehref)
-            nextpagenumber = m.group(0)
-            return Request('https://www.shine.com/job-search/jobs-{}'.format(nextpagenumber), callback=self.parse)      
+            self.nextpagenumber = m.group(0)
+            return Request('https://www.shine.com/job-search/jobs-{}'.format(self.nextpagenumber), callback=self.parse)      
         else:
             raise CloseSpider("Reached last page")
+
+        
