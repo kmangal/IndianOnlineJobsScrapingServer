@@ -148,7 +148,7 @@ def teamlease_detail_scrape():
 if __name__ == '__main__':
 
     if sys.argv[1] == 'shine':
-        shine.scraper.test_scrape()
+        shine_scrape()
     elif sys.argv[1] == 'teamlease':
         teamlease.scraper.test_scrape()
     elif sys.argv[1] == 'shine-detail':

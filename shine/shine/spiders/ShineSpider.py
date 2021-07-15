@@ -68,7 +68,7 @@ class ShineSpider(scrapy.Spider):
         
         if not jobs_area:
             # just skip for now
-            self.get_next_page(soup)
+            yield self.get_next_page(soup)
             
         jobs = jobs_area.find_all('li', class_='result-display__profile')
         
@@ -120,6 +120,8 @@ class ShineSpider(scrapy.Spider):
         if self.test and self.pagecount > 2:
             raise CloseSpider("Test Mode")
 
+        yield self.get_next_page(soup)
+
     def get_next_page(self, soup):
         
         # Go to next page
@@ -131,6 +133,6 @@ class ShineSpider(scrapy.Spider):
             # (but it shows up okay on their website). Strategy: just extract the number.
             m = re.search('[0-9]+', lastpagehref)
             nextpagenumber = m.group(0)
-            yield Request('https://www.shine.com/job-search/jobs-{}'.format(nextpagenumber), callback=self.parse)      
+            return Request('https://www.shine.com/job-search/jobs-{}'.format(nextpagenumber), callback=self.parse)      
         else:
             raise CloseSpider("Reached last page")
