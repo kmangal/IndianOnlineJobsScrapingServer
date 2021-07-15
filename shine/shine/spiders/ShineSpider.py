@@ -11,15 +11,12 @@ from scrapy.exceptions import CloseSpider
 import logging
 import os
 
-import pytz
 
 import requests
 import re
 import csv
 import sys
 
-
-TZ = pytz.timezone('Asia/Kolkata')
 
 class ShineSpider(scrapy.Spider):
 
@@ -68,6 +65,11 @@ class ShineSpider(scrapy.Spider):
 
         soup  = bs(response.text, 'html.parser')
         jobs_area = soup.find('div', class_ = 'force-overflow base_color pl-10 pt-10 pr-10')
+        
+        if not jobs_area:
+            # just skip for now
+            self.get_next_page(soup)
+            
         jobs = jobs_area.find_all('li', class_='result-display__profile')
         
         for job in jobs:
@@ -109,7 +111,7 @@ class ShineSpider(scrapy.Spider):
                 "experience": exp,
                 "location": loc,
                 "posted_at": posted_at,
-                "scraped_at": datetime.datetime.now().astimezone(TZ).strftime("%d/%m/%Y %H:%M:%S"),
+                "scraped_at": datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
                 "url-scraped": response.url
             }
         
@@ -118,6 +120,8 @@ class ShineSpider(scrapy.Spider):
         if self.test and self.pagecount > 2:
             raise CloseSpider("Test Mode")
 
+    def get_next_page(self, soup):
+        
         # Go to next page
         pagelinks = soup.select("a.submit.submit1.pagination_button.cls_pagination")
         pagelinktext = [a.text for a in pagelinks]

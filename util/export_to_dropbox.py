@@ -4,7 +4,7 @@ import datetime
 import sys
 
 TOKEN = 'lCdHJDySKOIAAAAAAAAAAQiX2-M6qRcEqnrOUAFDRlE5_J-f5uAx9bokaHYpRUWa'
-CHUNK_SIZE = 2 ** 20
+CHUNK_SIZE = 2 ** 20 # 1 MB at a time
 
 
 def move_to_dropbox(localpath, dropboxpath, overwrite = False):
