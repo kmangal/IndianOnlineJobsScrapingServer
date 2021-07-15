@@ -70,7 +70,7 @@ class ShineSpider(scrapy.Spider):
         
         if not jobs_area:
             # just skip for now
-            return Request('https://www.shine.com/job-search/jobs-{}'.format(self.nextpagenumber + 1), callback=self.parse)      
+            yield Request('https://www.shine.com/job-search/jobs-{}'.format(self.nextpagenumber + 1), callback=self.parse)      
             
         jobs = jobs_area.find_all('li', class_='result-display__profile')
         
@@ -131,7 +131,7 @@ class ShineSpider(scrapy.Spider):
             # (but it shows up okay on their website). Strategy: just extract the number.
             m = re.search('[0-9]+', lastpagehref)
             self.nextpagenumber = m.group(0)
-            return Request('https://www.shine.com/job-search/jobs-{}'.format(self.nextpagenumber), callback=self.parse)      
+            yield Request('https://www.shine.com/job-search/jobs-{}'.format(self.nextpagenumber), callback=self.parse)      
         else:
             raise CloseSpider("Reached last page")
 
