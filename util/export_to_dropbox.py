@@ -54,10 +54,12 @@ def upload_to_dropbox(localpath, dropboxpath):
 if __name__ == '__main__':
 
     if len(sys.argv) != 3:
-        print("Usage: python3 export_to_dropbox [localfile] [dropboxfile]")
+        print("Usage: python export_to_dropbox [localfile] [dropboxfile]")
         raise Exception
 
     localpath = sys.argv[1]
     dropboxpath = sys.argv[2]
-    move_to_dropbox(localpath, dropboxpath)
+    print('Local path', localpath)
+    print('Dropbox path', dropboxpath)
+    upload_to_dropbox(localpath, dropboxpath)
 
