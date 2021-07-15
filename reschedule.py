@@ -1,10 +1,8 @@
 import sys
 
-from redis import Redis
-from rq import Queue
 from rq_scheduler import Scheduler
 
-from datetime import datetime, timedelta
+from datetime import datetime
 
 import tasks
 
@@ -32,11 +30,11 @@ def reschedule(scheduler, job, site):
             interval = 60 * 60 * 24 * dayskip,                               # Interval in seconds
             repeat= None,                                         # Repeat this number of times (None means repeat forever)
             queue_name= 'default',                                # In which queue the job should be put in
-            meta={'site': site},                                  # Arbitrary pickleable data on the job itself
+            meta= {'site': site, 'type' : 'scrape', 'name' : site},                                  # Arbitrary pickleable data on the job itself
             timeout = 60 * 60 * 24 * dayskip
         )
     else:
-        dayskip = 4
+        dayskip = 7
     
         scheduler.schedule(
             scheduled_time=  datetime.utcnow(),                            # Time for first execution, in UTC timezone
@@ -44,7 +42,7 @@ def reschedule(scheduler, job, site):
             interval = 60 * 60 * 24 * dayskip,                               # Interval in seconds
             repeat= None,                                         # Repeat this number of times (None means repeat forever)
             queue_name= 'default',                                # In which queue the job should be put in
-            meta={'site': site},                                  # Arbitrary pickleable data on the job itself
+            meta= {'site': site, 'type' : 'scrape', 'name' : site},                                  # Arbitrary pickleable data on the job itself
             timeout = 60 * 60 * 24 * dayskip
         )
 
