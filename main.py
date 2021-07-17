@@ -44,7 +44,7 @@ def main():
         scheduler.schedule(
             scheduled_time = base_start_time,        # Time for first execution, in UTC timezone
             func= tasks.shine_scrape,                                       # Function to be queued
-            interval = 60 * 60 * 24 * 4,                               # Interval in seconds
+            interval = 60 * 60 * 24 * 6,                               # Interval in seconds
             repeat= None,                                         # Repeat this number of times (None means repeat forever)
             queue_name= 'default',                                # In which queue the job should be put in
             meta={'site': 'shine', 'type' : 'scrape', 'name' : 'shine'},          # Arbitrary pickleable data on the job itself
@@ -57,7 +57,7 @@ def main():
         scheduler.schedule(
             scheduled_time = base_start_time +  timedelta(days=1),        # Time for first execution, in UTC timezone
             func= tasks.teamlease_scrape,                                       # Function to be queued
-            interval = 60 * 60 * 24 * 4,                               # Interval in seconds
+            interval = 60 * 60 * 24 * 6,                               # Interval in seconds
             repeat= None,                                         # Repeat this number of times (None means repeat forever)
             queue_name= 'default',                                # In which queue the job should be put in
             meta={'site': 'teamlease', 'type' : 'scrape', 'name' : 'teamlease'},                  # Arbitrary pickleable data on the job itself
@@ -70,7 +70,7 @@ def main():
         scheduler.schedule(
             scheduled_time = base_start_time + timedelta(days=2),                            # Time for first execution, in UTC timezone
             func= tasks.timesjobs_scrape,                  # Function to be queued
-            interval = 60 * 60 * 24 * 4,                               # Interval in seconds
+            interval = 60 * 60 * 24 * 6,                               # Interval in seconds
             repeat= None,                                         # Repeat this number of times (None means repeat forever)
             queue_name= 'default',                                # In which queue the job should be put in
             meta={'site': 'timesjobs', 'type' : 'scrape', 'name' : 'timesjobs'},                                  # Arbitrary pickleable data on the job itself
@@ -83,7 +83,7 @@ def main():
         scheduler.schedule(
             scheduled_time = base_start_time + timedelta(days=3),                            # Time for first execution, in UTC timezone
             func= tasks.monster_scrape,                  # Function to be queued
-            interval = 60 * 60 * 24 * 4,                               # Interval in seconds
+            interval = 60 * 60 * 24 * 6,                               # Interval in seconds
             repeat= None,                                         # Repeat this number of times (None means repeat forever)
             queue_name= 'default',                                # In which queue the job should be put in
             meta={'site': 'monster', 'type' : 'scrape', 'name' : 'monster'},            # Arbitrary pickleable data on the job itself
