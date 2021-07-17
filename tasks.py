@@ -151,6 +151,8 @@ if __name__ == '__main__':
         shine_scrape()
     elif sys.argv[1] == 'teamlease':
         teamlease.scraper.test_scrape()
+    elif sys.argv[1] == 'timesjobs':
+        timesjobs_scrape()
     elif sys.argv[1] == 'shine-detail':
         shine.scraper.test_details()
     elif sys.argv[1] == 'monster-detail':

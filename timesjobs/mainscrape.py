@@ -137,17 +137,21 @@ class MainpageScraper:
         
         row['scrapetime'] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
         
-        self.writer.writerow(row)
+        self.mainwriter.writerow(row)
     
     def scrape_page(self, location, pageno):
-                
-        try:
-            r = self.session.get(location + '/&sequence={}&startPage=1'.format(pageno), headers = {'User-Agent' : self.get_user_agent()})
-        except:
-            self.logger.log.warning("Error establishing connection. Taking a break for 5 mins")
-            time.sleep(60*5)
-            r = self.session.get(location + '/&sequence={}&startPage=1'.format(pageno), headers = {'User-Agent' : self.get_user_agent()})
-    
+            
+        tries = 0
+        r = None
+        
+        while r is None and tries < 2:
+            try:
+                r = self.session.get(location + '/&sequence={}&startPage=1'.format(pageno), headers = {'User-Agent' : self.get_user_agent()})
+            except:
+                self.logger.log.warning("Error establishing connection. Taking a break for 5 mins")
+                time.sleep(60*5)
+                tries += 1
+            
         jobs = r.html.find('.joblistli')
         
         page_details = {'locationurl' : location, 'pageno' : pageno}
@@ -166,13 +170,13 @@ class MainpageScraper:
         
         existingmainfile = os.path.exists(self.mainpagefile)
             
-        self.fmain = open(self.mainpagefile, 'a', newline = '')
+        self.fmain = open(self.mainpagefile, 'a', newline = '', encoding='utf-8')
         self.mainwriter = csv.DictWriter(self.fmain, fieldnames = MainpageScraper.fmainfields)
         if not existingmainfile: self.mainwriter.writeheader()  
 
         existingcountfile = os.path.exists(self.jobcountfile)
         
-        self.fcount = open(self.jobcountfile, 'a', newline = '')
+        self.fcount = open(self.jobcountfile, 'a', newline = '', encoding='utf-8')
         self.countwriter = csv.DictWriter(self.fcount, MainpageScraper.fcountfields)
         if not existingcountfile : self.countwriter.writeheader()
         
