@@ -13,7 +13,7 @@ modify_path()
 import timesjobs.mainscrape
 import timesjobs.detailscrape
 
-from util.export_to_dropbox import move_to_dropbox
+from util.export_to_dropbox import upload_to_dropbox
 from util.dashboard import update_dashboard_mainpage, update_dashboard_details
 
 
@@ -36,9 +36,9 @@ def mainpage_scrape(filedate):
     jobcount_dropbox = '/India Labor Market Indicators/scraping/TimesJobs/ec2/output/jobcount/timesjobs_jobcount_{fd}.csv'.format(fd=filedate)
     mainlogfile_dropbox = '/India Labor Market Indicators/scraping/TimesJobs/ec2/log/mainpage/{fd}.log'.format(fd=filedate)
 
-    move_to_dropbox(mainpage_local, mainpage_dropbox)
-    move_to_dropbox(jobcount_local, jobcount_dropbox)
-    move_to_dropbox(mainlogfile_local, mainlogfile_dropbox)
+    upload_to_dropbox(mainpage_local, mainpage_dropbox)
+    upload_to_dropbox(jobcount_local, jobcount_dropbox)
+    upload_to_dropbox(mainlogfile_local, mainlogfile_dropbox)
     
     update_dashboard_mainpage('timesjobs', mainpage_local, mainlogfile_local)
     
@@ -46,8 +46,8 @@ def mainpage_scrape(filedate):
 def details_scrape(filedate):
 
     mainpage_local = os.path.expanduser('~/jobs_scraping/timesjobs/output/mainpage/timesjobs_mainpage_{fd}.csv'.format(fd=filedate))
-    details_local = os.path.expanduser('~/job_scraping/timesjobs/output/details/timesjobs_details_{fd}.csv'.format(fd=filedate))
-    detailslog_local = os.path.expanduser('~/job_scraping/timesjobs/log/details/{fd}.csv'.format(fd=filedate))
+    details_local = os.path.expanduser('~/jobs_scraping/timesjobs/output/details/timesjobs_details_{fd}.csv'.format(fd=filedate))
+    detailslog_local = os.path.expanduser('~/jobs_scraping/timesjobs/log/details/{fd}.log'.format(fd=filedate))
 
     ds = timesjobs.detailscrape.DetailScraper(mainpagefile = mainpage_local,
                        detailsfile = details_local, 
@@ -60,8 +60,8 @@ def details_scrape(filedate):
     details_dropbox = '/India Labor Market Indicators/scraping/TimesJobs/ec2/output/details/timesjobs_details_{fd}.csv'.format(fd=filedate)
     detailslog_dropbox = '/India Labor Market Indicators/scraping/TimesJobs/ec2/log/details/{fd}.log'.format(fd=filedate)
     
-    move_to_dropbox(details_local, details_dropbox)
-    move_to_dropbox(detailslog_local, detailslog_dropbox)
+    upload_to_dropbox(details_local, details_dropbox)
+    upload_to_dropbox(detailslog_local, detailslog_dropbox)
 
     update_dashboard_details('timesjobs', details_local, detailslog_local)
 
