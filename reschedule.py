@@ -39,7 +39,7 @@ def reschedule(scheduler, job, site):
         scheduler.schedule(
             scheduled_time=  datetime.utcnow(),                            # Time for first execution, in UTC timezone
             func= TASK_DICT[site],                  # Function to be queued
-            interval = 60 * 60 * 24 * dayskip,                               # Interval in seconds
+            interval = 60 * 60 * 24 * (dayskip-1),                               # Interval in seconds
             repeat= None,                                         # Repeat this number of times (None means repeat forever)
             queue_name= 'default',                                # In which queue the job should be put in
             meta= {'site': site, 'type' : 'scrape', 'name' : site},                                  # Arbitrary pickleable data on the job itself
