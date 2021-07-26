@@ -31,7 +31,7 @@ def list_jobs(registry):
         print("{f: <28} - started: {s}  duration: {d}".format(
                 f = job.func_name,
                 s = format_time(job.started_at),
-                d = humanize.naturaltime(job.ended_at - job.started_at)))
+                d = humanize.naturaldelta(job.ended_at - job.started_at)))
 
 
 if __name__ == '__main__':
