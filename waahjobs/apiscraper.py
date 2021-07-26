@@ -36,14 +36,27 @@ def get_data(url, headers):
     return rows, nextlink
 
 
-def write_rows(csvwriter, rows):
+def write_rows(csvwriter, rows, logger):
 
     for line in rows:
         line_out = dict((k, line[k]) for k in ('_index', '_type', '_id', '_score'))
         for key, value in line['_source'].items():
-            line_out[key] = value
-
+            if key in csvwriter.fieldnames: # hack - for some reason, the same values are not included in every row
+                line_out[key] = value
+            else:
+                logger.log.warning('{} not found in fieldnames'.format(key))
         csvwriter.writerow(line_out)
+
+
+def get_header_row(rows):
+    headerset = set()
+    for row in rows:
+        rowlist = list(row.keys())
+        rowlist.remove('_source')
+        rowlist = rowlist + list(row['_source'].keys())
+        headerset.update(rowlist)
+    
+    return list(headerset)
 
 
 def run_scrape(test = False):
@@ -61,21 +74,18 @@ def run_scrape(test = False):
     
     with open(outpath, 'w', newline='', encoding='utf-8') as f:
         rows, nextlink = get_data(API_START_URL, API_HEADERS)
-        headerrow = list(rows[0].keys())
-        headerrow.remove('_source')
-        headerrow = headerrow + list(rows[0]['_source'].keys())
+        headerrow = get_header_row(rows)
         csvwriter = csv.DictWriter(f, headerrow)
-        
         csvwriter.writeheader()
-        write_rows(csvwriter, rows)
+        write_rows(csvwriter, rows, logger)
         
-        if test:
-            raise Exception("Test")
+        #if test:
+        #    raise Exception("Test")
             
         while nextlink:
             logger.log.info(nextlink)
             rows, nextlink = get_data(nextlink, API_HEADERS)
-            write_rows(csvwriter, rows)
+            write_rows(csvwriter, rows, logger)
                     
     logger.finalize()
     
@@ -91,4 +101,4 @@ def run_scrape(test = False):
 if __name__ == '__main__':
 
     filedate = datetime.today().strftime('%Y%m%d_%H%M%S')
-    run_scrape(filedate, test = True)
+    run_scrape(test = True)
