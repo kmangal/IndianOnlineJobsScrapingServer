@@ -100,9 +100,9 @@ def clean():
 # ---------------------------------------------------------------------------
 # Special tasks
 
-def timesjobs_detail_scrape(**kwargs):
-    ds = timesjobs.detailscrape.DetailScraper(kwargs['infile'], kwargs['outfile'], kwargs['log'])
-    ds.run()
+def timesjobs_detail_scrape():
+    filesuffix = get_latest_suffix(os.path.expanduser('~/jobs_scraping/timesjobs/output/mainpage'))
+    timesjobs.scraper.details_scrape(filesuffix)
 
 def shine_detail_scrape(**kwargs):
     SHINE_PATH = os.path.expanduser('~/jobs_scraping/shine')
@@ -157,6 +157,8 @@ if __name__ == '__main__':
         shine.scraper.test_details()
     elif sys.argv[1] == 'monster-detail':
         monster_detail_scrape()
+    elif sys.argv[1] == 'timesjobs-detail':
+        timesjobs_detail_scrape()
     elif sys.argv[1] == 'clean':
         clean()
     else:
