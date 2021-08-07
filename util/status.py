@@ -14,7 +14,10 @@ sys.path.append(parentdir)
 import config
 
 def format_time(time):
-    return time.strftime('%m/%d/%Y %I:%M:%S %p %Z')
+    if time:
+        return time.strftime('%m/%d/%Y %I:%M:%S %p %Z')
+    else:
+        return "---"
 
 def worker_name(worker):
     return worker.name
