@@ -15,12 +15,9 @@ def redo_shine_details(infile, outfile, logfile):
         'log' : logfile},
         job_timeout = 60 * 60 * 24 * 7)
         
-def redo_timesjobs_details(infile, outfile, logfile):
+def redo_timesjobs_details():
     q = Queue(connection = config.redis)
     result = q.enqueue(tasks.timesjobs_detail_scrape, 
-       kwargs = {'infile' : infile,
-        'outfile' : outfile,
-        'log' : logfile},
         job_timeout = 60 * 60 * 24 * 7)
 
 
@@ -52,3 +49,5 @@ if __name__ == '__main__':
         redo_teamlease_details()
     elif sys.argv[1] == 'monster-details':
         redo_monster_details()
+    elif sys.argv[1] == 'timesjobs-details':
+        redo_timesjobs_details()
