@@ -35,7 +35,7 @@ You can type in the following commands directly in the terminal to manage tasks:
 	- jobs = lists all currently scheduled jobs within the next 7 days. If a task is repeating, only the next immediate instance will be returned.
 
 ## Test environment
-I set up a test environment on my laptop within Anaconda. `conda install m2-base` allows me to access linux commands within my Anaconda environment.
+You can set up a test environment on your local machine within Anaconda. If you're using Windows, run `conda install m2-base` to access linux commands within the Anaconda environment.
 
 ## Misc Notes
 * Aasan jobs changed its name to Waah Jobs.
