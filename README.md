@@ -2,6 +2,12 @@
 
 This repository contains a set of files designed to run as an automated server to continuously scrape various online job portals in India.
 
+Current websites included:
+* [Shine](https://www.shine.com/)
+* Waah Jobs (previously Asaan Jobs; now no longer operating)
+* [Times Jobs](https://www.timesjobs.com/)
+* [TeamLease](https://www.teamlease.com/)
+
 Overall flow:
 * The scraper cycles through each of the job portals on a regular cycle.
 * The scraper downloads the "main page" listings and keeps track of the overall job count.
