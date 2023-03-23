@@ -4,6 +4,7 @@ This repository contains a set of files designed to run as an automated server t
 
 Each website is designed in a specific way, so there are seperate scripts to handle each site. This repository includes scripts for the following online job portals:
 * [Shine](https://www.shine.com/)
+* [Work India](https://www.workindia.in/)
 * Waah Jobs (previously Asaan Jobs; now no longer operating)
 * [Times Jobs](https://www.timesjobs.com/)
 * [TeamLease](https://www.teamlease.com/)
