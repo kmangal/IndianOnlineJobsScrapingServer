@@ -2,7 +2,7 @@
 
 This repository contains a set of files designed to run as an automated server to continuously scrape various online job portals in India.
 
-Current websites included:
+Each website is designed in a specific way, so there are seperate scripts to handle each site. This repository includes scripts for the following online job portals:
 * [Shine](https://www.shine.com/)
 * Waah Jobs (previously Asaan Jobs; now no longer operating)
 * [Times Jobs](https://www.timesjobs.com/)
