@@ -1,5 +1,21 @@
 # India Online Jobs Scraping Server
 
+This repository contains a set of files designed to run as an automated server to continuously scrape various online job portals in India.
+
+Overall flow:
+* The scraper cycles through each of the job portals on a regular cycle.
+* The scraper downloads the "main page" listings and keeps track of the overall job count.
+* Next, for each of the listings, it checks whether the "details page" has been visited before, and if not it downlaods the information there.
+* The data is automatically saved to Dropbox, and the data from the server is deleted on a regular basis to save storage space.
+
+Features:
+* The scraper cycles through user agent headers to avoid getting blocked too quickly
+* There are a range of utility files to track the status of the current scrapes and debug problems.
+
+Caveats:
+* The code was developed in 2021, so it may be out of date.
+* I had trouble getting around the website's bot detection systems, so it was hard to get the code to run continuously.
+
 ## Installation
 
 This code is designed to run on an Amazon Linux EC2 instance that uses the Ubunutu operating system. 
