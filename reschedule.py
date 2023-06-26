@@ -1,3 +1,9 @@
+'''
+    Reschedule task
+
+    Use this script in case a scrape has failed and you want to add it to the queue again
+'''
+
 import sys
 
 from rq_scheduler import Scheduler
@@ -24,10 +30,10 @@ def reschedule(scheduler, job, site):
     if site == 'waahjobs':
         dayskip = 1
         scheduler.schedule(
-            scheduled_time=  datetime.utcnow(),                            # Time for first execution, in UTC timezone
-            func= TASK_DICT[site],                  # Function to be queued
+            scheduled_time=  datetime.utcnow(),                   # Time for first execution, in UTC timezone
+            func= TASK_DICT[site],                                # Function to be queued
             kwargs={'test': False},                               # Keyword arguments passed into function when executed
-            interval = 60 * 60 * 24 * dayskip,                               # Interval in seconds
+            interval = 60 * 60 * 24 * dayskip,                    # Interval in seconds
             repeat= None,                                         # Repeat this number of times (None means repeat forever)
             queue_name= 'default',                                # In which queue the job should be put in
             meta= {'site': site, 'type' : 'scrape', 'name' : site},                                  # Arbitrary pickleable data on the job itself
@@ -37,11 +43,11 @@ def reschedule(scheduler, job, site):
         dayskip = 7
     
         scheduler.schedule(
-            scheduled_time=  datetime.utcnow(),                            # Time for first execution, in UTC timezone
-            func= TASK_DICT[site],                  # Function to be queued
-            interval = 60 * 60 * 24 * (dayskip-1),                               # Interval in seconds
-            repeat= None,                                         # Repeat this number of times (None means repeat forever)
-            queue_name= 'default',                                # In which queue the job should be put in
+            scheduled_time=  datetime.utcnow(),                     # Time for first execution, in UTC timezone
+            func= TASK_DICT[site],                                  # Function to be queued
+            interval = 60 * 60 * 24 * (dayskip-1),                  # Interval in seconds
+            repeat= None,                                           # Repeat this number of times (None means repeat forever)
+            queue_name= 'default',                                  # In which queue the job should be put in
             meta= {'site': site, 'type' : 'scrape', 'name' : site},                                  # Arbitrary pickleable data on the job itself
             timeout = 60 * 60 * 24 * dayskip
         )

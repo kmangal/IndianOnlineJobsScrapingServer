@@ -2,17 +2,18 @@
 
 This repository contains a set of files designed to run as an automated server to continuously scrape various online job portals in India.
 
-Each website is designed in a specific way, so there are seperate scripts to handle each site. This repository includes scripts for the following online job portals:
+There are seperate scripts to handle each website. This repository includes scripts for the following online job portals:
 * [Shine](https://www.shine.com/)
 * [Work India](https://www.workindia.in/)
 * Waah Jobs (previously Asaan Jobs; now no longer operating)
 * [Times Jobs](https://www.timesjobs.com/)
 * [TeamLease](https://www.teamlease.com/)
+* Monster (currently Foundit)
 
 Overall flow:
 * The scraper cycles through each of the job portals on a regular cycle.
 * The scraper downloads the "main page" listings and keeps track of the overall job count.
-* Next, for each of the listings, it checks whether the "details page" has been visited before, and if not it downlaods the information there.
+* Next, for each of the listings, the code checks whether the "details page" has been visited before, and if not it downlaods the information there. The pages that have been visited before are tracked in a MySQL database.
 * The data is automatically saved to Dropbox, and the data from the server is deleted on a regular basis to save storage space.
 
 Features:

@@ -1,3 +1,5 @@
+# Starts workers for the task queue
+
 from redis import Redis
 from rq import Connection, Queue, Worker
 
